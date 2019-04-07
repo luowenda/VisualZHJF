@@ -6,12 +6,9 @@
 
 <div id="main" style="width: 600px;height:400px;"></div>
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
-hello
     <script type="text/javascript">
-        // 初始化这块画布
-
         var myChart = echarts.init(document.getElementById('main'));
-        // 显示准备好的图表布置
+        // 图表配置
 		myChart.setOption({
 			title: {
         text: {{name|tojson}}
@@ -45,7 +42,5 @@ hello
         
     }]
 		});
-		
-		
     </script>
 {% endblock %}

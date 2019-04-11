@@ -1,0 +1,21 @@
+
+[
+    {
+        "stuid":1001,
+        "name":"战三",
+        "classid":"02",
+        "grade":89
+    },
+    {
+        "stuid":1002,
+        "name":"李四",
+        "classid":"02",
+        "grade":80
+    },
+    {
+        "stuid":1003,
+        "name":"王五",
+        "classid":"01",
+        "grade":60
+    }
+]

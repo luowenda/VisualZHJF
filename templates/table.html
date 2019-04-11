@@ -1,0 +1,47 @@
+
+        {% extends 'base.html' %}
+
+        {% block title %}表格页面{% endblock %}
+
+        {% block main %}
+
+        <body style="height: 100%; margin: 0">
+            <h4 style="text-align: left">学生成绩</h1>
+            <div id="container" style="height: 100%">
+        <table border="1" class="dataframe table table-striped">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>stuid</th>
+      <th>name</th>
+      <th>classid</th>
+      <th>grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001</td>
+      <td>战三</td>
+      <td>02</td>
+      <td>89</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1002</td>
+      <td>李四</td>
+      <td>02</td>
+      <td>80</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1003</td>
+      <td>王五</td>
+      <td>01</td>
+      <td>60</td>
+    </tr>
+  </tbody>
+</table>
+            </div>
+            {% endblock %}
+        

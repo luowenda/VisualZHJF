@@ -15,7 +15,7 @@
     |  models.py     #不知道干嘛的     
     ├─data        # 造的数据  
     │  info.json  
-       data.json  # table数据
+       data.json  # table数据  
     ├─static        # 静态文件  
     │  │    
     │  ├─css  
@@ -28,11 +28,11 @@
     │  └─js  
     │            
     └─templates     
-            base.html  
-            index.html  
-            radar.html
-            table.html
-            zhexian.html
+            base.html    
+            index.html    
+            radar.html  
+            table.html  
+            zhexian.html   
 
 #### TODO 
 

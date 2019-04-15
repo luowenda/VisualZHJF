@@ -1,11 +1,11 @@
-#encoding:utf-8
+# encoding:utf-8
 
 
-from flask import Flask,render_template
+from flask import Flask, render_template,request
 import config
 import os
 import json
-#EG
+# EG
 import numpy as np
 import pandas as pd
 from IPython.display import HTML
@@ -14,44 +14,50 @@ from IPython.display import HTML
 app = Flask(__name__)
 app.config.from_object(config)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/radar')
 def radar():
     id = "201611580516"
     with open('data/info.json', encoding='utf-8') as json_file:
-	    data = json.load(json_file)
+        data = json.load(json_file)
     score = data[id]["score"]
     name = data[id]["name"]
-    return render_template('radar.html',score = score,name = name)
+    return render_template('radar.html', score=score, name=name)
+
 
 @app.route('/zhexian')
 def zhexian():
-    A_data=[3.17, 3.75, 3.21, 3.46, 3.43, 3.31, 3.08, 3.61]
-    B_data=[3.1, 3.00, 3.38, 3.01, 3.52, 3.87, 3.37, 3.85]
-    return render_template('zhexian.html',A_data=A_data,B_data=B_data)
+    A_data = [3.17, 3.75, 3.21, 3.46, 3.43, 3.31, 3.08, 3.61]
+    B_data = [3.1, 3.00, 3.38, 3.01, 3.52, 3.87, 3.37, 3.85]
+    return render_template('zhexian.html', A_data=A_data, B_data=B_data)
 
-#EG
+# EG
+
+
 @app.route('/table')
 def table():
-    data = open('data/data.json',encoding='utf8').read()
-    columns = ["stuid","name","classid","grade"]
+    data = open('data/data.json', encoding='utf8').read()
+    columns = ["stuid", "name", "classid", "grade"]
     dat = json.loads(data)
     dic = {
-        "stuid":[],
-        "name":[],
-        "classid":[],
-        "grade":[]
-    } 
+        "stuid": [],
+        "name": [],
+        "classid": [],
+        "grade": []
+    }
     for stu in dat:
         dic['stuid'].append(stu['stuid'])
         dic['name'].append(stu[u'name'])
         dic['classid'].append(stu['classid'])
         dic['grade'].append(stu['grade'])
-    df = pd.DataFrame(data = dic, columns = columns)
-    convert = df.to_html(classes = 'table table-striped',border=None, justify=None)
+    df = pd.DataFrame(data=dic, columns=columns)
+    convert = df.to_html(classes='table table-striped',
+                         border=None, justify=None)
     head = '''
         {% extends 'base.html' %}
 
@@ -67,12 +73,35 @@ def table():
             </div>
             {% endblock %}
         '''
-    with open('templates/table.html', 'w',encoding='utf8') as f:
+    with open('templates/table.html', 'w', encoding='utf8') as f:
         f.write(head)
         f.write(convert)
         f.write(tail)
     return render_template('table.html')
 
+
+@app.route("/search", methods=['GET', 'POST'])
+def search():
+    if request.method == 'GET':
+        return render_template('search.html',
+                               sid1_name = None,
+                               sid2_name = None,
+                               sid1_score = None,
+                               sid2_score = None)
+    else:
+        sid1 = request.form.get('sid1')
+        sid2 = request.form.get('sid2')
+        with open('data/info.json', encoding='utf-8') as json_file:
+            data = json.load(json_file)
+        sid1_name = data[sid1]["name"]
+        sid2_name = data[sid2]["name"]
+        sid1_score = data[sid1]["com_score"]
+        sid2_score = data[sid2]["com_score"]
+        return render_template('search.html',
+                               sid1_name = sid1_name,
+                               sid2_name = sid2_name,
+                               sid1_score = sid1_score,
+                               sid2_score = sid2_score)
 
 
 if __name__ == '__main__':

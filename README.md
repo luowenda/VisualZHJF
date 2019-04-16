@@ -16,6 +16,10 @@
     ├─data        # 造的数据  
     │  info.json  
        data.json  # table数据  
+       16cs1.json  
+       16cs2.json  
+       17cs1.json  
+       17cs2.json  
     ├─static        # 静态文件  
     │  │    
     │  ├─css  
@@ -27,12 +31,15 @@
     │  │        
     │  └─js  
     │            
-    └─templates     
-            base.html    
-            index.html    
+    └─templates 
+            base.html  
+            index.html   
             radar.html  
             table.html  
-            zhexian.html   
+            zhexian.html  
+            radar_search.html #查找学号匹配  
+            404.html  
+            500.html  
 
 #### TODO 
 

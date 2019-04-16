@@ -40,6 +40,7 @@
             radar_search.html #查找学号匹配  
             404.html  
             500.html  
+            pie.html  
 
 #### TODO 
 

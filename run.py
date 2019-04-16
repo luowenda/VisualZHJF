@@ -9,10 +9,30 @@ import json
 import numpy as np
 import pandas as pd
 from IPython.display import HTML
+from flask import Flask, render_template, session, redirect, url_for
+from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 
 
 app = Flask(__name__)
 app.config.from_object(config)
+#EG
+bootstrap = Bootstrap(app)
+
+#EG
+class NameForm(FlaskForm):
+    id = StringField('What is the student id?', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+#EG
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
 
 @app.route('/')
 def index():
@@ -26,6 +46,28 @@ def radar():
     score = data[id]["score"]
     name = data[id]["name"]
     return render_template('radar.html',score = score,name = name)
+
+#EG
+@app.route('/radar_search', methods=['GET', 'POST'])
+def radar_search():
+    form = NameForm()
+    score = None
+    name = None
+    
+    if form.validate_on_submit():
+        session['id'] = form.id.data
+        return redirect(url_for('radar_search'))
+        #form.id.data = ''
+    
+    id = session.get('id')
+    with open('data/info.json', encoding='utf-8') as json_file:
+	    data = json.load(json_file)
+    #EG
+    
+    if (data.get(id)):
+        score = data.get(id)["score"]
+        name  = data.get(id)["name"]
+    return render_template('radar_search.html',form = form,score = score,name = name)
 
 @app.route('/zhexian')
 def zhexian():

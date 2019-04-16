@@ -83,23 +83,38 @@ def zhexian():
 
 @app.route('/table')
 def table():
-    data = open('data/data.json', encoding='utf8').read()
-    columns = ["stuid", "name", "classid", "grade"]
+    data = open('data/16cs1.json', encoding='utf8').read()
+    columns = ["学号", "高数1","高数2","线性代数"]
     dat = json.loads(data)
-    dic = {
-        "stuid": [],
-        "name": [],
-        "classid": [],
-        "grade": []
+    dic = { #dict中key应和columns一致
+        "学号": [],
+        "高数1": [],
+        "高数2": [],
+        "线性代数": []
     }
-    for stu in dat:
-        dic['stuid'].append(stu['stuid'])
-        dic['name'].append(stu[u'name'])
-        dic['classid'].append(stu['classid'])
-        dic['grade'].append(stu['grade'])
+    for stu in dat['2016CS1']:
+        dic['学号'].append(stu)
+        dic['高数1'].append(dat['2016CS1'][stu]['3250300106'])
+        dic['高数2'].append(dat['2016CS1'][stu]['3250300204'])
+        dic['线性代数'].append(dat['2016CS1'][stu]['3250300303'])
     df = pd.DataFrame(data=dic, columns=columns)
-    convert = df.to_html(classes='table table-striped table-hover table-sm thead-light',
-                         border=None, justify=None)
+    convert = df.to_html(classes='table table-striped table-hover table-sm table-borderless',
+                            border=None, justify=None)
+
+    # data = open('data/data.json', encoding='utf8').read()
+    # columns = ["stuid", "name", "classid", "grade"]
+    # dat = json.loads(data)
+    # dic = {
+    #     "stuid": [],
+    #     "name": [],
+    #     "classid": [],
+    #     "grade": []
+    # }
+    # for stu in dat:
+    #     dic['stuid'].append(stu['stuid'])
+    #     dic['name'].append(stu[u'name'])
+    #     dic['classid'].append(stu['classid'])
+    #     dic['grade'].append(stu['grade'])
    
     return render_template('table.html',table = convert)
 

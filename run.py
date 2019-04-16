@@ -23,8 +23,8 @@ bootstrap = Bootstrap(app)
 
 #EG
 class NameForm(FlaskForm):
-    id = StringField('What is the student id?', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    id = StringField('请输入学号：', validators=[DataRequired()])
+    submit = SubmitField('提交')
 
 #EG
 @app.errorhandler(404)
@@ -78,8 +78,15 @@ def zhexian():
     B_data = [3.1, 3.00, 3.38, 3.01, 3.52, 3.87, 3.37, 3.85]
     return render_template('zhexian.html', A_data=A_data, B_data=B_data)
 
-# EG
 
+@app.route('/pie')
+def pie():
+    return render_template('pie.html')
+
+@app.route('/column')
+def column():
+    dataz=[2,4,6,10,8]
+    return render_template('column.html',data=dataz)
 
 @app.route('/table')
 def table():

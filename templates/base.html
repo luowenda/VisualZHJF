@@ -32,31 +32,26 @@
         <li class="nav-item active">
           <a class="nav-link" href="\">首页 <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="\radar">雷达图</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="\zhexian">折线图</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="\table">表格图</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="\radar_search">搜索雷达图</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="\search">搜索</a>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              成绩
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="\table">成绩浏览</a>
+              <a class="dropdown-item" href="\search">成绩对比</a>
+              <a class="dropdown-item" href="\column">成绩分布</a>
+            </div>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            Dropdown
+            综合积分
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <a class="dropdown-item" href="\radar_search">总览</a>
+            <a class="dropdown-item" href="\pie">附加分详情</a>
+            <!--<div class="dropdown-divider"></div>-->
           </div>
         </li>
       </ul>

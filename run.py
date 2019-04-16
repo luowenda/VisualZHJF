@@ -98,28 +98,10 @@ def table():
         dic['classid'].append(stu['classid'])
         dic['grade'].append(stu['grade'])
     df = pd.DataFrame(data=dic, columns=columns)
-    convert = df.to_html(classes='table table-striped',
+    convert = df.to_html(classes='table table-striped table-hover table-sm thead-light',
                          border=None, justify=None)
-    head = '''
-        {% extends 'base.html' %}
-
-        {% block title %}表格页面{% endblock %}
-
-        {% block main %}
-
-        <body style="height: 100%; margin: 0">
-            <h4 style="text-align: left">学生成绩</h1>
-            <div id="container" style="height: 100%">
-        '''
-    tail = '''
-            </div>
-            {% endblock %}
-        '''
-    with open('templates/table.html', 'w', encoding='utf8') as f:
-        f.write(head)
-        f.write(convert)
-        f.write(tail)
-    return render_template('table.html')
+   
+    return render_template('table.html',table = convert)
 
 
 @app.route("/search", methods=['GET', 'POST'])

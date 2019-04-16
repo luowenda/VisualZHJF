@@ -15,7 +15,6 @@
     |  models.py     #不知道干嘛的     
     ├─data        # 造的数据  
     │  info.json  
-       data.json  # table数据  
        16cs1.json  
        16cs2.json  
        17cs1.json  
@@ -24,6 +23,7 @@
     │  │    
     │  ├─css  
     │  │      base.css  
+              index.css  
     │  ├─fonts  
     │  │        
     │  ├─image  
@@ -38,9 +38,11 @@
             table.html  
             zhexian.html  
             radar_search.html #查找学号匹配  
+            search.html #对比学生GPA
             404.html  
             500.html  
             pie.html  
+            column.html  
 
 #### TODO 
 

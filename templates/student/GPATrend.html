@@ -1,0 +1,84 @@
+<!--GPA走向界面-->
+{% extends 'student/base.html' %}
+
+{% block title %}折线图页面{% endblock %}
+
+{% block main %}
+
+<div id="main2" style="width: 800px;height:500px;margin: 0 auto;"></div>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+<script type="text/javascript">
+	var myChart2 = echarts.init(document.getElementById('main2'));
+	// 指定图表的配置项和数据
+		var option2 = {
+                title : {
+                    text: '学生的成绩走向与对比',
+                    subtext: '纯属虚构'
+                },
+            tooltip : {
+                trigger: 'axis'
+            },
+			
+            legend: {
+                data:['A同学','B同学']
+            },
+			
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            
+			calculable : true,
+            
+			xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : ['大一上','大一下','大二上','大二下','大三上','大三下','大四上','大四下']
+                }
+            ],
+            
+			yAxis : [
+                {
+                    type : 'value',
+                    axisLabel : {
+                        formatter: '{value}'
+                    }
+                }
+            ],
+			
+            series : [
+                {
+                    name:'A同学',
+                    type:'line',
+                    data:{{A_data|tojson}},
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                },
+				
+                {
+                    name:'B同学',
+                    type:'line',
+                    data:{{B_data|tojson}},
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                }
+            ]
+        };
+    myChart2.setOption(option2);
+</script>
+{% endblock %}

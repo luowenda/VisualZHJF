@@ -1,0 +1,12 @@
+<!--个人成绩界面（根据课程属性筛选）-->
+        {% extends 'student/base.html' %}
+
+        {% block title %}成绩浏览{% endblock %}
+
+        {% block main %}
+        <div style="height:30px;margin: 0 auto;"></div>
+        <div style="width: 350px;height:500px;margin: 0 auto;">
+          {{table|safe}}
+        </div>
+        {% endblock %}
+        

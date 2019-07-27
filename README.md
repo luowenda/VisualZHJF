@@ -13,7 +13,7 @@
     │  manage.py     #不知道干嘛的  
     |  exts.py       #不知道干嘛的  
     |  models.py     #不知道干嘛的     
-    ├─data        # 造的数据  
+    ├─data        # 造的数据（改为使用数据库）  
     │  info.json  
        16cs1.json  
        16cs2.json  
@@ -31,7 +31,22 @@
     │  │        
     │  └─js  
     │            
-    └─templates 
+    └─templates  
+       |
+       ├─student #学生界面
+              base.html #界面模板（需补充最上方用户信息栏）  
+              index.html #学生界面首页（界面内容待更改）  
+              GradeByAttri.html #个人成绩 按照课程属性分类  
+              GradeBySemester.html #个人成绩 按照学期分类  
+              GPACalculator.html #GPA查询  
+              GPATrend.html #GPA走向  
+              MyExtra.html #我的附加分  
+              MyComprehensiveEval.html #我的综合积分  
+              TotalComprehensiveEval.html #综合积分汇总
+       ├─teacher #辅导员界面
+
+         404.html  
+         500.html
             base.html  
             index.html   
             radar.html  
@@ -39,8 +54,6 @@
             zhexian.html  
             radar_search.html #查找学号匹配  
             search.html #对比学生GPA
-            404.html  
-            500.html  
             pie.html  
             column.html  
 

@@ -14,7 +14,16 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
+import pymssql
 
+conn = pymssql.connect(host='.',
+                       user='sa',
+                       password='ZHJF2019eggs',
+                       database='zhjfdemo1',
+                       charset='utf8')
+
+#查看连接是否成功
+cursor = conn.cursor()
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -98,23 +107,23 @@ def GPATrend():
     B_data = [3.1, 3.00, 3.38, 3.01, 3.52, 3.87, 3.37, 3.85]
     return render_template('student/GPATrend.html', A_data=A_data, B_data=B_data)
 
-#我的附加分界面（表格）
+#我的附加分界面（表格）#TODO修正表格编号方式
 @app.route('/student/MyExtra')
 def MyExtra():
-    data = open('data/16cs1.json', encoding='utf8').read()
-    columns = ["学号", "高数1","高数2","线性代数"]
-    dat = json.loads(data)
+    userID = '1031101' #TODO需要从登录信息获取
+    sql = 'select content, semester, bonusValue from bonusItem2user as t1,bonusItem as t2 where ownerId={} and t1.bonusItemID=t2.bonusItemID'.format(userID)
+    cursor.execute(sql)
+    items = cursor.fetchall()
+    columns = ["项目内容", "分数","第1/2学期"]
     dic = { #dict中key应和columns一致
-        "学号": [],
-        "高数1": [],
-        "高数2": [],
-        "线性代数": []
+        "项目内容": [],
+        "分数": [],
+        "第1/2学期": [],
     }
-    for stu in dat['2016CS1']:
-        dic['学号'].append(stu)
-        dic['高数1'].append(dat['2016CS1'][stu]['3250300106'])
-        dic['高数2'].append(dat['2016CS1'][stu]['3250300204'])
-        dic['线性代数'].append(dat['2016CS1'][stu]['3250300303'])
+    for item in items:
+        dic['项目内容'].append(item[0])
+        dic['分数'].append(item[1])
+        dic['第1/2学期'].append(item[2])
     df = pd.DataFrame(data=dic, columns=columns)
     convert = df.to_html(classes='table table-striped table-hover table-sm table-borderless',
                             border=None, justify=None)
@@ -123,34 +132,45 @@ def MyExtra():
 #我的综合积分界面（雷达）
 @app.route('/student/MyComprehensiveEval')
 def MyComprehensiveEval():
-    id = "201611580516"
-    with open('data/info.json', encoding='utf-8') as json_file:
-        data = json.load(json_file)
-    score = data[id]["score"]
-    name = data[id]["name"]
-    return render_template('student/MyComprehensiveEval.html', score=score, name=name)
+    userID = '1031101' #TODO需要从登录信息获取
+    sql = 'select moralScore,intellectualScore,socialScore,bonus from evaluationFinalScore where userId={}'.format(userID)
+    cursor.execute(sql)
+    scores = cursor.fetchall()
+    return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=userID)
 
-#综合积分汇总界面（表格）
+#综合积分汇总界面（表格）#TODO增加排序功能 #TODO修正表格编号方式
 @app.route('/student/TotalComprehensiveEval')
 def TotalComprehensiveEval():
-    data = open('data/16cs1.json', encoding='utf8').read()
-    columns = ["学号", "高数1","高数2","线性代数"]
-    dat = json.loads(data)
+    userID = '1031101' #TODO需要从登录信息获取
+    sql = 'select grade, departId from EvaluationFinalScore where userId={}'.format(userID)
+    cursor.execute(sql)
+    content = cursor.fetchall()
+    grade = content[0][0]
+    depart = content[0][1]
+    #使用user表必须使用[user]才不会报错
+    sql = 'select userName,moralScore,intellectualScore,socialScore,bonus,finalScore from [EvaluationFinalScore],[user] where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'.format(grade,depart)
+    cursor.execute(sql)
+    all_data = cursor.fetchall()
+    columns = ["姓名", "德育", "智育", "体育", "附加分", "总分"]
     dic = { #dict中key应和columns一致
-        "学号": [],
-        "高数1": [],
-        "高数2": [],
-        "线性代数": []
+        "姓名": [],
+        "德育": [],
+        "智育": [],
+        "体育": [],
+        "附加分": [],
+        "总分": []
     }
-    for stu in dat['2016CS1']:
-        dic['学号'].append(stu)
-        dic['高数1'].append(dat['2016CS1'][stu]['3250300106'])
-        dic['高数2'].append(dat['2016CS1'][stu]['3250300204'])
-        dic['线性代数'].append(dat['2016CS1'][stu]['3250300303'])
+    for item in all_data:
+        dic['姓名'].append(item[0])
+        dic['德育'].append(item[1])
+        dic['智育'].append(item[2])
+        dic['体育'].append(item[3])
+        dic['附加分'].append(item[4])
+        dic['总分'].append(item[5])
     df = pd.DataFrame(data=dic, columns=columns)
     convert = df.to_html(classes='table table-striped table-hover table-sm table-borderless',
                             border=None, justify=None)
-    return render_template('student/TotalComprehensiveEval.html',table = convert)
+    return render_template('student/MyExtra.html',table = convert)
 
 
 if __name__ == '__main__':

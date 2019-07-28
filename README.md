@@ -42,20 +42,20 @@
               GPATrend.html #GPA走向  
               MyExtra.html #我的附加分  
               MyComprehensiveEval.html #我的综合积分  
-              TotalComprehensiveEval.html #综合积分汇总
+              TotalComprehensiveEval.html #综合积分汇总  
        ├─teacher #辅导员界面
 
          404.html  
          500.html
-            base.html  
-            index.html   
-            radar.html  
-            table.html  
-            zhexian.html  
-            radar_search.html #查找学号匹配  
-            search.html #对比学生GPA
-            pie.html  
-            column.html  
+         base.html  
+         index.html   
+         radar.html  
+         table.html  
+         zhexian.html  
+         radar_search.html #查找学号匹配  
+         search.html #对比学生GPA
+         pie.html  
+         column.html  
 
 #### TODO 
 

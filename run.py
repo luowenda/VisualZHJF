@@ -172,6 +172,53 @@ def TotalComprehensiveEval():
                             border=None, justify=None)
     return render_template('student/MyExtra.html',table = convert)
 
+#-----------------------------------------------------------------------------------------------
+#教师界面
+
+#教师首页
+@app.route('/teacher')
+def tea_index():
+    return render_template('/teacher/index.html')
+
+#专业总览
+@app.route('/teacher/MajorOverview')
+def MajorOverview():
+    return render_template('/teacher/MajorOverview.html')
+
+#课程总览
+@app.route('/teacher/CourseOverview')
+def CourseOverview():
+    return render_template('/teacher/CourseOverview.html')
+
+#个人查询-成绩走向
+@app.route('/teacher/GradeTrend')
+def GradeTrend():
+    return render_template('/teacher/GradeTrend.html')
+
+#个人查询-挂科情况统计
+@app.route('/teacher/FailedCourses')
+def FailedCourses():
+    return render_template('/teacher/FailedCourses.html')
+
+#个人查询-附加分统计
+@app.route('/teacher/Bonus')
+def Bonus():
+    return render_template('/teacher/Bonus.html')
+
+#多人（班级）比较-学生成绩
+@app.route('/teacher/ComByStu')
+def ComByStu():
+    return render_template('/teacher/ComByStu.html')
+
+#多人（班级）比较-班级成绩对比
+@app.route('/teacher/CompByClass')
+def CompByClass():
+    return render_template('/teacher/CompByClass.html')
+
+#多人（班级）比较-各届成绩对比
+@app.route('/teacher/CompByYear')
+def CompByYear():
+    return render_template('/teacher/CompByYear.html')
 
 if __name__ == '__main__':
     app.run()

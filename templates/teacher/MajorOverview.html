@@ -3,5 +3,28 @@
 {% block title %}专业总览{% endblock %}
 
 {% block main %}
-专业总览
+
+<select class="custom-select" name="grade" method="GET" action="/">
+    <option selected>年级</option> 
+    {% for gradeitem in grade %} 
+     <option value="{{gradeitem}}">{{  gradeitem  }}</option>" 
+    {% endfor %} 
+</select> 
+
+<select class="custom-select" name="year" method="GET" action="/">
+  <option selected>学年</option> 
+  {% for yearitem in year %} 
+   <option value="{{yearitem}}">{{  yearitem  }}</option>" 
+  {% endfor %} 
+</select> 
+
+<select class="custom-select" name="depart" method="GET" action="/"> 
+  <option selected>专业</option>
+  {% for departitem in depart %} 
+   <option value="{{departitem}}">{{  departitem  }}</option>" 
+  {% endfor %} 
+</select> 
+
+<input class="btn btn-primary" type="submit" value="查询">
+
 {% endblock %}

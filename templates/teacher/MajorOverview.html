@@ -4,6 +4,7 @@
 
 {% block main %}
 
+<form action="{{  url_for('MajorOverview') }}" method=post>
 <select class="custom-select" name="grade" method="GET" action="/">
     <option selected>年级</option> 
     {% for gradeitem in grade %} 
@@ -26,5 +27,28 @@
 </select> 
 
 <input class="btn btn-primary" type="submit" value="查询">
+</form>
 
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>姓名</th>
+      <th>智育分</th>
+      <th>德育分</th>
+      <th>体育附加分</th>
+      <th>附加分</th>
+      <th>总分</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for line in result %}
+		<tr>
+      {% for item in line %}
+			<td name="{{item}}">{{item}}</td>
+			{% endfor %}
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
 {% endblock %}

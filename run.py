@@ -198,11 +198,28 @@ def MajorOverview():
                                         (select departID 
                                         from evaluationFinalScore)'''
     depart = getList(getDepart)
+    result = None
+    if request.method == "POST":   
+        selectedGrade = request.values.get("grade")
+        selectedYear = request.values.get("year")
+        selectedDepart = request.values.get("depart")
+        
+        getDepartID = '''select departID 
+                         from department 
+                         where departName = \'{}\''''.format(selectedDepart)
+        deprtID = int(getList(getDepartID)[0])
 
+        getResult = '''select userName,intellectualScore,moralScore,socialScore,bonus,finalScore
+                       from evaluationFinalScore inner join [user] on evaluationFinalScore.userID = [user].userID
+                       where departID = {} and academicYear = \'{}\' and grade = {}'''.format(deprtID,selectedYear,int(selectedGrade))
+        cursor.execute(getResult)
+        result = cursor.fetchall()
+                                
     return render_template('/teacher/MajorOverview.html',
                             grade = grade,
                             year = year,
-                            depart = depart)
+                            depart = depart,
+                            result = result)
 
 def getList(search):
     cursor.execute(search)

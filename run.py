@@ -229,9 +229,58 @@ def getList(search):
     return showList
 
 #课程总览
-@app.route('/teacher/CourseOverview')
+@app.route('/teacher/CourseOverview',methods=['GET','POST'])
 def CourseOverview():
-    return render_template('/teacher/CourseOverview.html')
+    result=[]
+    getGrade = '''select distinct grade 
+                from currGrade'''
+    grade = getList(getGrade)
+    
+    getYear = '''select distinct academicYear 
+                from currGrade'''
+    year = getList(getYear)
+
+    getSemester = '''select distinct semester
+                    from currGrade'''
+    semester = getList(getSemester)
+
+    if request.method == "POST":   
+        selectedGrade = request.values.get("grade")
+        selectedYear = request.values.get("year")
+        selectedSeme = request.values.get("semester")
+        courseName = request.values.get("courseName")
+        
+        getCurrID = '''select currID 
+                       from curriculum
+                       where currName = \'{}\''''.format(courseName)
+        curID = int(getList(getCurrID)[0])
+
+        under60 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),0,61)
+        result.append(under60[0])
+        btw67 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),60,71)
+        result.append(btw67[0])
+        btw78 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),70,81)
+        result.append(btw78[0])
+        btw89 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),80,91)
+        result.append(btw89[0])
+        above90 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),90,101)
+        result.append(above90[0])
+
+    return render_template('/teacher/CourseOverview.html',
+                            grade = grade,
+                            year = year,
+                            semester = semester,
+                            result = result)
+
+def countUser(currID,grade,year,seme,lowgrade,highgrade):
+    getUserNum = '''select count(examGrade)
+                    from currGrade
+                    where currID = {} and grade = {} and academicYear = \'{}\' 
+                    and semester = {} and examGrade between {} and {}'''.format(currID,grade,year,seme,lowgrade,highgrade)
+    cursor.execute(getUserNum)
+    num = (cursor.fetchall())[0]
+    print(num)
+    return num
 
 #个人查询-成绩走向
 @app.route('/teacher/GradeTrend')

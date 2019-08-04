@@ -5,6 +5,7 @@ from flask import Flask, render_template,request
 import config
 import os
 import json
+import re
 # EG
 import numpy as np
 import pandas as pd
@@ -181,9 +182,34 @@ def tea_index():
     return render_template('/teacher/index.html')
 
 #专业总览
-@app.route('/teacher/MajorOverview')
+@app.route('/teacher/MajorOverview', methods=['GET','POST'])
 def MajorOverview():
-    return render_template('/teacher/MajorOverview.html')
+    getGrade = '''select distinct grade 
+                from evaluationFinalScore'''
+    grade = getList(getGrade)
+    
+    getYear = '''select distinct academicYear 
+                from evaluationFinalScore'''
+    year = getList(getYear)
+
+    getDepart = '''select distinct departName 
+                    from department 
+                    where departID in 
+                                        (select departID 
+                                        from evaluationFinalScore)'''
+    depart = getList(getDepart)
+
+    return render_template('/teacher/MajorOverview.html',
+                            grade = grade,
+                            year = year,
+                            depart = depart)
+
+def getList(search):
+    cursor.execute(search)
+    showList = cursor.fetchall()
+    for i,item in enumerate(showList):
+        showList[i] = str(item[0])
+    return showList
 
 #课程总览
 @app.route('/teacher/CourseOverview')

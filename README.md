@@ -59,7 +59,7 @@
 
 #### TODO 
 
-**MajorOverview**
--[ ] 下拉菜单CSS  
--[ ] 表格CSS  
--[ ] 设置选项session(选择后显示选项？)  
+**MajorOverview**  
+- [ ] 下拉菜单CSS  
+- [ ] 表格CSS  
+- [ ] 设置选项session(选择后显示选项？)  

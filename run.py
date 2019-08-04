@@ -198,7 +198,7 @@ def MajorOverview():
                                         (select departID 
                                         from evaluationFinalScore)'''
     depart = getList(getDepart)
-    result = None
+    result = []
     if request.method == "POST":   
         selectedGrade = request.values.get("grade")
         selectedYear = request.values.get("year")

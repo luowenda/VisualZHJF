@@ -99,7 +99,65 @@ def GradeBySemester():
 #GPA计算界面
 @app.route('/student/GPACalculator')
 def GPACalculator():
-    return render_template('student/GPACalculator.html')
+    userID = '1031101' #TODO需要从登录信息获取
+    #获取classID
+    sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID) #匹配字符串用like
+    cursor.execute(sql)
+    content1 = cursor.fetchall()
+    classID = content1[0][0]
+    #获取departID
+    sql = 'select departID from [class] where classID={}'.format(classID)
+    cursor.execute(sql)
+    content2 = cursor.fetchall()
+    departID = content2[0][0]
+    #获取大纲课程currID列表
+    sql = 'select distinct t2.currID from [currGrade] as t1, [currArrange] as t2 \
+        where userID={}  and t2.departID={}\
+        and t1.currID = t2.currID \
+        and t1.grade = t2.grade \
+        and t1.academicYear like t2.academicYear \
+        and t1.semester = t2.semester'.format(userID,departID)
+    cursor.execute(sql)
+    content3 = cursor.fetchall()
+    currList = []
+    for i in content3:
+        currList.append(i[0])
+    #获取该学生的成绩和学分
+    gradeList=[] #该学生的所有成绩
+    creditList=[] #每个成绩对应课程的学分
+    for j in currList:
+        sql = 'select examGrade, credit from [currGrade] as t1, [curriculum] as t2 \
+        where userID={} and t1.currID={}\
+        and t1.currID = t2.currID \
+        and isReexam=0'.format(userID,j)
+        cursor.execute(sql)
+        content = cursor.fetchall()
+        gradeList.append(content[0][0])
+        creditList.append(content[0][1])
+    #计算GPA(未排除得分为0课程)
+    pointList=[]
+    for m in gradeList:
+        if(m<=60): point=0
+        elif(m>60 and m<=63): point=1.0
+        elif(m>63 and m<=67): point=1.5
+        elif(m>67 and m<=71): point=2.0
+        elif(m>71 and m<=74): point=2.3
+        elif(m>74 and m<=77): point=2.7
+        elif(m>77 and m<=81): point=3.0
+        elif(m>81 and m<=84): point=3.3
+        elif(m>84 and m<=89): point=3.7
+        else: point=4.0
+        pointList.append(point)
+    pointSum=0
+    creditSum=0
+    n=0
+    for n in range(len(pointList)):
+        pointSum+=(pointList[n]*creditList[n])
+        creditSum+=creditList[n]
+    gpa = pointSum/creditSum
+
+    return render_template('student/GPACalculator.html',GPA=round(gpa,2))
+
 
 #查看GPA走向界面（折线）
 @app.route('/student/GPATrend')

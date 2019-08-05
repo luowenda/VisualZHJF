@@ -5,6 +5,7 @@ from flask import Flask, render_template,request
 import config
 import os
 import json
+import re
 # EG
 import numpy as np
 import pandas as pd
@@ -230,6 +231,144 @@ def TotalComprehensiveEval():
                             border=None, justify=None)
     return render_template('student/MyExtra.html',table = convert)
 
+#-----------------------------------------------------------------------------------------------
+#教师界面
+
+#教师首页
+@app.route('/teacher')
+def tea_index():
+    return render_template('/teacher/index.html')
+
+#专业总览
+@app.route('/teacher/MajorOverview', methods=['GET','POST'])
+def MajorOverview():
+    getGrade = '''select distinct grade 
+                from evaluationFinalScore'''
+    grade = getList(getGrade)
+    
+    getYear = '''select distinct academicYear 
+                from evaluationFinalScore'''
+    year = getList(getYear)
+
+    getDepart = '''select distinct departName 
+                    from department 
+                    where departID in 
+                                        (select departID 
+                                        from evaluationFinalScore)'''
+    depart = getList(getDepart)
+    result = []
+    if request.method == "POST":   
+        selectedGrade = request.values.get("grade")
+        selectedYear = request.values.get("year")
+        selectedDepart = request.values.get("depart")
+        
+        getDepartID = '''select departID 
+                         from department 
+                         where departName = \'{}\''''.format(selectedDepart)
+        deprtID = int(getList(getDepartID)[0])
+
+        getResult = '''select userName,intellectualScore,moralScore,socialScore,bonus,finalScore
+                       from evaluationFinalScore inner join [user] on evaluationFinalScore.userID = [user].userID
+                       where departID = {} and academicYear = \'{}\' and grade = {}'''.format(deprtID,selectedYear,int(selectedGrade))
+        cursor.execute(getResult)
+        result = cursor.fetchall()
+                                
+    return render_template('/teacher/MajorOverview.html',
+                            grade = grade,
+                            year = year,
+                            depart = depart,
+                            result = result)
+
+def getList(search):
+    cursor.execute(search)
+    showList = cursor.fetchall()
+    for i,item in enumerate(showList):
+        showList[i] = str(item[0])
+    return showList
+
+#课程总览
+@app.route('/teacher/CourseOverview',methods=['GET','POST'])
+def CourseOverview():
+    result=[]
+    getGrade = '''select distinct grade 
+                from currGrade'''
+    grade = getList(getGrade)
+    
+    getYear = '''select distinct academicYear 
+                from currGrade'''
+    year = getList(getYear)
+
+    getSemester = '''select distinct semester
+                    from currGrade'''
+    semester = getList(getSemester)
+
+    if request.method == "POST":   
+        selectedGrade = request.values.get("grade")
+        selectedYear = request.values.get("year")
+        selectedSeme = request.values.get("semester")
+        courseName = request.values.get("courseName")
+        
+        getCurrID = '''select currID 
+                       from curriculum
+                       where currName = \'{}\''''.format(courseName)
+        curID = int(getList(getCurrID)[0])
+
+        under60 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),0,61)
+        result.append(under60[0])
+        btw67 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),60,71)
+        result.append(btw67[0])
+        btw78 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),70,81)
+        result.append(btw78[0])
+        btw89 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),80,91)
+        result.append(btw89[0])
+        above90 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),90,101)
+        result.append(above90[0])
+
+    return render_template('/teacher/CourseOverview.html',
+                            grade = grade,
+                            year = year,
+                            semester = semester,
+                            result = result)
+
+def countUser(currID,grade,year,seme,lowgrade,highgrade):
+    getUserNum = '''select count(examGrade)
+                    from currGrade
+                    where currID = {} and grade = {} and academicYear = \'{}\' 
+                    and semester = {} and examGrade between {} and {}'''.format(currID,grade,year,seme,lowgrade,highgrade)
+    cursor.execute(getUserNum)
+    num = (cursor.fetchall())[0]
+    print(num)
+    return num
+
+#个人查询-成绩走向
+@app.route('/teacher/GradeTrend')
+def GradeTrend():
+    return render_template('/teacher/GradeTrend.html')
+
+#个人查询-挂科情况统计
+@app.route('/teacher/FailedCourses')
+def FailedCourses():
+    return render_template('/teacher/FailedCourses.html')
+
+#个人查询-附加分统计
+@app.route('/teacher/Bonus')
+def Bonus():
+    return render_template('/teacher/Bonus.html')
+
+#多人（班级）比较-学生成绩
+@app.route('/teacher/ComByStu')
+def ComByStu():
+    return render_template('/teacher/ComByStu.html')
+
+#多人（班级）比较-班级成绩对比
+@app.route('/teacher/CompByClass')
+def CompByClass():
+    return render_template('/teacher/CompByClass.html')
+
+#多人（班级）比较-各届成绩对比
+@app.route('/teacher/CompByYear')
+def CompByYear():
+    return render_template('/teacher/CompByYear.html')
 
 if __name__ == '__main__':
     app.run()

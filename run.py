@@ -101,22 +101,22 @@ def GradeBySemester():
 def GPACalculator():
     userID = '1031101' #TODO需要从登录信息获取
     #获取classID
-    sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID) #匹配字符串用like
+    sql = '''select classID from [UserRoleMapping] where userID like {}'''.format(userID) #匹配字符串用like
     cursor.execute(sql)
     content1 = cursor.fetchall()
     classID = content1[0][0]
     #获取departID
-    sql = 'select departID from [class] where classID={}'.format(classID)
+    sql = '''select departID from [class] where classID={}'''.format(classID)
     cursor.execute(sql)
     content2 = cursor.fetchall()
     departID = content2[0][0]
     #获取大纲课程currID列表
-    sql = 'select distinct t2.currID from [currGrade] as t1, [currArrange] as t2 \
-        where userID={}  and t2.departID={}\
-        and t1.currID = t2.currID \
-        and t1.grade = t2.grade \
-        and t1.academicYear like t2.academicYear \
-        and t1.semester = t2.semester'.format(userID,departID)
+    sql = '''select distinct t2.currID from [currGrade] as t1, [currArrange] as t2 
+        where userID={}  and t2.departID={} 
+        and t1.currID = t2.currID 
+        and t1.grade = t2.grade 
+        and t1.academicYear like t2.academicYear 
+        and t1.semester = t2.semester'''.format(userID,departID)
     cursor.execute(sql)
     content3 = cursor.fetchall()
     currList = []
@@ -126,28 +126,31 @@ def GPACalculator():
     gradeList=[] #该学生的所有成绩
     creditList=[] #每个成绩对应课程的学分
     for j in currList:
-        sql = 'select examGrade, credit from [currGrade] as t1, [curriculum] as t2 \
-        where userID={} and t1.currID={}\
-        and t1.currID = t2.currID \
-        and isReexam=0'.format(userID,j)
+        sql = '''select examGrade, credit from [currGrade] as t1, [curriculum] as t2 
+                where userID={} and t1.currID={} 
+                and t1.currID = t2.currID 
+                and isReexam=0'''.format(userID,j)
         cursor.execute(sql)
         content = cursor.fetchall()
         gradeList.append(content[0][0])
         creditList.append(content[0][1])
-    #计算GPA(未排除得分为0课程)
+    #计算GPA(排除得分为0课程)
     pointList=[]
-    for m in gradeList:
-        if(m<=60): point=0
-        elif(m>60 and m<=63): point=1.0
-        elif(m>63 and m<=67): point=1.5
-        elif(m>67 and m<=71): point=2.0
-        elif(m>71 and m<=74): point=2.3
-        elif(m>74 and m<=77): point=2.7
-        elif(m>77 and m<=81): point=3.0
-        elif(m>81 and m<=84): point=3.3
-        elif(m>84 and m<=89): point=3.7
+    creditListPoped=[]
+    for m in range(len(gradeList)):
+        if(gradeList[m]<=60): point=0
+        elif(gradeList[m]>60 and gradeList[m]<=63): point=1.0
+        elif(gradeList[m]>63 and gradeList[m]<=67): point=1.5
+        elif(gradeList[m]>67 and gradeList[m]<=71): point=2.0
+        elif(gradeList[m]>71 and gradeList[m]<=74): point=2.3
+        elif(gradeList[m]>74 and gradeList[m]<=77): point=2.7
+        elif(gradeList[m]>77 and gradeList[m]<=81): point=3.0
+        elif(gradeList[m]>81 and gradeList[m]<=84): point=3.3
+        elif(gradeList[m]>84 and gradeList[m]<=89): point=3.7
         else: point=4.0
-        pointList.append(point)
+        if(gradeList[m]>0): 
+            pointList.append(point)
+            creditListPoped.append(creditList[m])
     pointSum=0
     creditSum=0
     n=0
@@ -170,7 +173,9 @@ def GPATrend():
 @app.route('/student/MyExtra')
 def MyExtra():
     userID = '1031101' #TODO需要从登录信息获取
-    sql = 'select content, semester, bonusValue from bonusItem2user as t1,bonusItem as t2 where ownerId={} and t1.bonusItemID=t2.bonusItemID'.format(userID)
+    sql = '''select content, semester, bonusValue 
+            from bonusItem2user as t1,bonusItem as t2 
+            where ownerId={} and t1.bonusItemID=t2.bonusItemID'''.format(userID)
     cursor.execute(sql)
     items = cursor.fetchall()
     columns = ["项目内容", "分数","第1/2学期"]
@@ -192,7 +197,9 @@ def MyExtra():
 @app.route('/student/MyComprehensiveEval')
 def MyComprehensiveEval():
     userID = '1031101' #TODO需要从登录信息获取
-    sql = 'select moralScore,intellectualScore,socialScore,bonus from evaluationFinalScore where userId={}'.format(userID)
+    sql = '''select moralScore,intellectualScore,socialScore,bonus 
+            from evaluationFinalScore 
+            where userId={}'''.format(userID)
     cursor.execute(sql)
     scores = cursor.fetchall()
     return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=userID)
@@ -201,13 +208,17 @@ def MyComprehensiveEval():
 @app.route('/student/TotalComprehensiveEval')
 def TotalComprehensiveEval():
     userID = '1031101' #TODO需要从登录信息获取
-    sql = 'select grade, departId from EvaluationFinalScore where userId={}'.format(userID)
+    sql = '''select grade, departId 
+            from EvaluationFinalScore 
+            where userId={}'''.format(userID)
     cursor.execute(sql)
     content = cursor.fetchall()
     grade = content[0][0]
     depart = content[0][1]
     #使用user表必须使用[user]才不会报错
-    sql = 'select userName,moralScore,intellectualScore,socialScore,bonus,finalScore from [EvaluationFinalScore],[user] where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'.format(grade,depart)
+    sql = '''select userName,moralScore,intellectualScore,socialScore,bonus,finalScore 
+            from [EvaluationFinalScore],[user] 
+            where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
     cursor.execute(sql)
     all_data = cursor.fetchall()
     columns = ["姓名", "德育", "智育", "体育", "附加分", "总分"]

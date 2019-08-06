@@ -364,14 +364,38 @@ def getName(userID):
     return name
 
 #个人查询-挂科情况统计
-@app.route('/teacher/FailedCourses')
+@app.route('/teacher/FailedCourses',methods=['GET','POST'])
 def FailedCourses():
-    return render_template('/teacher/FailedCourses.html')
+    name = ''
+    courses = []
+    if request.method == "POST":   
+        userID = request.values.get("userID")
+        name = getName(userID)
+        courses = getCourses(userID)
+    return render_template('/teacher/FailedCourses.html',
+                            name = name,
+                            courses = courses)
+
+def getCourses(userID):
+    getFailedCur = '''select currGrade.currID,currName,credit,examGrade
+                      from currGrade inner join curriculum on currGrade.currID = curriculum.currID
+                      where userID = \'{}\' and examGrade < 60'''.format(userID)
+    cursor.execute(getFailedCur)                          
+    failedCur = cursor.fetchall()
+    return failedCur
 
 #个人查询-附加分统计
-@app.route('/teacher/Bonus')
+@app.route('/teacher/Bonus',methods=['GET','POST'])
 def Bonus():
-    return render_template('/teacher/Bonus.html')
+    name = ''
+    convert = ''
+    if request.method == "POST":   
+        userID = request.values.get("userID")
+        name = getName(userID)
+        convert = getBonus(userID)
+    return render_template('/teacher/Bonus.html',
+                                name = name,
+                                table = convert)
 
 #多人（班级）比较-学生成绩
 @app.route('/teacher/ComByStu')

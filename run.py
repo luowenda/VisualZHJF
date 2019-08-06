@@ -100,6 +100,10 @@ def GradeBySemester():
 @app.route('/student/GPACalculator')
 def GPACalculator():
     userID = '1031101' #TODO需要从登录信息获取
+    gpa = getGPA(userID)
+    return render_template('student/GPACalculator.html',GPA=round(gpa,2))
+
+def getGPA(userID):
     #获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID) #匹配字符串用like
     cursor.execute(sql)
@@ -155,9 +159,7 @@ def GPACalculator():
         pointSum+=(pointList[n]*creditList[n])
         creditSum+=creditList[n]
     gpa = pointSum/creditSum
-
-    return render_template('student/GPACalculator.html',GPA=round(gpa,2))
-
+    return gpa
 
 #查看GPA走向界面（折线）
 @app.route('/student/GPATrend')
@@ -170,6 +172,10 @@ def GPATrend():
 @app.route('/student/MyExtra')
 def MyExtra():
     userID = '1031101' #TODO需要从登录信息获取
+    convert = getBonus(userID)
+    return render_template('student/MyExtra.html',table = convert)
+
+def getBonus(userID):
     sql = 'select content, semester, bonusValue from bonusItem2user as t1,bonusItem as t2 where ownerId={} and t1.bonusItemID=t2.bonusItemID'.format(userID)
     cursor.execute(sql)
     items = cursor.fetchall()
@@ -186,7 +192,7 @@ def MyExtra():
     df = pd.DataFrame(data=dic, columns=columns)
     convert = df.to_html(classes='table table-striped table-hover table-sm table-borderless',
                             border=None, justify=None)
-    return render_template('student/MyExtra.html',table = convert)
+    return convert
 
 #我的综合积分界面（雷达）
 @app.route('/student/MyComprehensiveEval')
@@ -337,13 +343,25 @@ def countUser(currID,grade,year,seme,lowgrade,highgrade):
                     and semester = {} and examGrade between {} and {}'''.format(currID,grade,year,seme,lowgrade,highgrade)
     cursor.execute(getUserNum)
     num = (cursor.fetchall())[0]
-    print(num)
     return num
 
 #个人查询-成绩走向
-@app.route('/teacher/GradeTrend')
+@app.route('/teacher/GradeTrend',methods=['GET','POST'])
 def GradeTrend():
+    if request.method == "POST":   
+        userID = request.values.get("userID")
+        name = getName(userID)
+        gpa = getGPA(userID)
+        return render_template('/teacher/GradeTrend.html',
+                            name = name,
+                            GPA = round(gpa,2))
     return render_template('/teacher/GradeTrend.html')
+
+def getName(userID):
+    getUserName = 'select userName from [user] where userID = \'{}\''.format(userID)
+    cursor.execute(getUserName)
+    name = (cursor.fetchall())[0][0]
+    return name
 
 #个人查询-挂科情况统计
 @app.route('/teacher/FailedCourses')

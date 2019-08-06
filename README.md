@@ -79,3 +79,7 @@
 - [ ] 显示请求查询内容  
 - [ ] 专选课问题  
 
+**GradeTrend**
+- [ ] 连按两次查询按钮显示list index out of range  
+- [ ] 整体CSS  
+- [ ] 成绩走向？（目前之显示当前GPA）    

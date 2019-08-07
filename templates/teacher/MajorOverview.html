@@ -1,0 +1,54 @@
+{% extends 'teacher/base.html' %}
+
+{% block title %}专业总览{% endblock %}
+
+{% block main %}
+
+<form action="{{  url_for('MajorOverview') }}" method=post>
+<select class="custom-select" name="grade" method="GET" action="/">
+    <option selected>年级</option> 
+    {% for gradeitem in grade %} 
+     <option value="{{gradeitem}}">{{  gradeitem  }}</option>" 
+    {% endfor %} 
+</select> 
+
+<select class="custom-select" name="year" method="GET" action="/">
+  <option selected>学年</option> 
+  {% for yearitem in year %} 
+   <option value="{{yearitem}}">{{  yearitem  }}</option>" 
+  {% endfor %} 
+</select> 
+
+<select class="custom-select" name="depart" method="GET" action="/"> 
+  <option selected>专业</option>
+  {% for departitem in depart %} 
+   <option value="{{departitem}}">{{  departitem  }}</option>" 
+  {% endfor %} 
+</select> 
+
+<input class="btn btn-primary" type="submit" value="查询">
+</form>
+
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>姓名</th>
+      <th>智育分</th>
+      <th>德育分</th>
+      <th>体育附加分</th>
+      <th>附加分</th>
+      <th>总分</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for line in result %}
+		<tr>
+      {% for item in line %}
+			<td name="{{item}}">{{item}}</td>
+			{% endfor %}
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

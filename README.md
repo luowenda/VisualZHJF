@@ -70,7 +70,8 @@
 **MajorOverview**  
 - [ ] 下拉菜单CSS  
 - [ ] 表格CSS  
-- [ ] 设置选项session(选择后显示选项？)  
+- [ ] 设置选项session(选择后显示选项？)  （班级信息）
+- [ ] 分数格式
 
 **CourseOverview**  
 - [ ] 下拉菜单CSS  
@@ -79,3 +80,19 @@
 - [ ] 显示请求查询内容  
 - [ ] 专选课问题  
 
+**GradeTrend**
+- [ ] 连按两次查询按钮显示list index out of range  
+- [ ] 整体CSS  
+- [ ] 成绩走向？（目前之显示当前GPA）   
+
+**Bonus**
+- [ ] list index out of range
+- [ ] 查询框CSS
+- [ ] 整体CSS
+- [ ] 无附加分显示
+
+**FailedCourses**
+- [ ] 专选课
+- [ ] 无挂科显示
+- [ ] 姓名显示
+- [ ] CSS

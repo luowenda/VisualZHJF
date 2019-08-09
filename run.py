@@ -163,6 +163,8 @@ def getGPA(userID):
         creditSum+=creditList[n]
     gpa = pointSum/creditSum
     return gpa
+    
+
 
 #查看GPA走向界面（折线）
 @app.route('/student/GPATrend')
@@ -171,31 +173,20 @@ def GPATrend():
     B_data = [3.1, 3.00, 3.38, 3.01, 3.52, 3.87, 3.37, 3.85]
     return render_template('student/GPATrend.html', A_data=A_data, B_data=B_data)
 
-#我的附加分界面（表格）#TODO修正表格编号方式
+#我的附加分界面（表格）
 @app.route('/student/MyExtra')
 def MyExtra():
     userID = '1031101' #TODO需要从登录信息获取
-    convert = getBonus(userID)
-    return render_template('student/MyExtra.html',table = convert)
+    items = getBonus(userID)
+    return render_template('student/MyExtra.html',result = items)
 
 def getBonus(userID):
-    sql = 'select content, semester, bonusValue from bonusItem2user as t1,bonusItem as t2 where ownerId={} and t1.bonusItemID=t2.bonusItemID'.format(userID)
+    sql = '''select content, bonusValue, semester
+            from bonusItem2user as t1,bonusItem as t2 
+            where ownerId={} and t1.bonusItemID=t2.bonusItemID'''.format(userID)
     cursor.execute(sql)
     items = cursor.fetchall()
-    columns = ["项目内容", "分数","第1/2学期"]
-    dic = { #dict中key应和columns一致
-        "项目内容": [],
-        "分数": [],
-        "第1/2学期": [],
-    }
-    for item in items:
-        dic['项目内容'].append(item[0])
-        dic['分数'].append(item[1])
-        dic['第1/2学期'].append(item[2])
-    df = pd.DataFrame(data=dic, columns=columns)
-    convert = df.to_html(classes='table table-striped table-hover table-sm table-borderless',
-                            border=None, justify=None)
-    return convert
+    return items
 
 #我的综合积分界面（雷达）
 @app.route('/student/MyComprehensiveEval')
@@ -208,8 +199,8 @@ def MyComprehensiveEval():
     scores = cursor.fetchall()
     return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=userID)
 
-#综合积分汇总界面（表格）#TODO增加排序功能 #TODO修正表格编号方式
-@app.route('/student/TotalComprehensiveEval')
+#综合积分汇总界面（表格）
+@app.route('/student/TotalComprehensiveEval', methods=['GET','POST'])
 def TotalComprehensiveEval():
     userID = '1031101' #TODO需要从登录信息获取
     sql = '''select grade, departId 
@@ -223,28 +214,34 @@ def TotalComprehensiveEval():
     sql = '''select userName,moralScore,intellectualScore,socialScore,bonus,finalScore 
             from [EvaluationFinalScore],[user] 
             where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
+    sortList=[0,0,0,0,0]
+    scoreList=["moralScore","intellectualScore","socialScore","bonus","finalScore"]
+    flag=0 #是否有排序条件
+    if request.method == "POST":   
+        Moral = request.values.get("moralGrade")
+        sortList[0]=Moral
+        Intel = request.values.get("intelGrade")
+        sortList[1]=Intel
+        Social = request.values.get("socialGrade")
+        sortList[2]=Social
+        Extra = request.values.get("extraGrade")
+        sortList[3]=Extra
+        Total = request.values.get("totalGrade")
+        sortList[4]=Total
+    for i in range(5):
+        if (sortList[i] != 0): 
+            flag = 1
+            sql += " order by "
+            break
+    if (flag):
+        for i in range(5):
+            if (sortList[i] == "asc"): sql += (scoreList[i]+",")
+            elif (sortList[i] == "desc"): sql += (scoreList[i]+" desc,")
+        sql = sql[:-1] #去掉最后一个,
+    
     cursor.execute(sql)
     all_data = cursor.fetchall()
-    columns = ["姓名", "德育", "智育", "体育", "附加分", "总分"]
-    dic = { #dict中key应和columns一致
-        "姓名": [],
-        "德育": [],
-        "智育": [],
-        "体育": [],
-        "附加分": [],
-        "总分": []
-    }
-    for item in all_data:
-        dic['姓名'].append(item[0])
-        dic['德育'].append(item[1])
-        dic['智育'].append(item[2])
-        dic['体育'].append(item[3])
-        dic['附加分'].append(item[4])
-        dic['总分'].append(item[5])
-    df = pd.DataFrame(data=dic, columns=columns)
-    convert = df.to_html(classes='table table-striped table-hover table-sm table-borderless',
-                            border=None, justify=None)
-    return render_template('student/MyExtra.html',table = convert)
+    return render_template('student/TotalComprehensiveEval.html',result = all_data)
 
 #-----------------------------------------------------------------------------------------------
 #教师界面

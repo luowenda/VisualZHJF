@@ -3,5 +3,14 @@
 {% block title %}成绩走向{% endblock %}
 
 {% block main %}
-成绩走向
+<form action="{{  url_for('GradeTrend') }}" method='POST'>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="请输入学号" aria-label="userID"
+            name = "userID" aria-describedby="button-addon2">
+        <div class="input-group-append">
+            <input class="btn btn-primary" type="submit" value="查询">
+        </div>
+    </div>
+</form>
+<div>截至目前，{{name}}的GPA是{{GPA}}</div>
 {% endblock %}

@@ -4,9 +4,39 @@
         {% block title %}个人成绩{% endblock %}
 
         {% block main %}
-        <div style="height:30px;margin: 0 auto;"></div>
-        <div style="width: 350px;height:500px;margin: 0 auto;">
-          {{table|safe}}
-        </div>
+        <form action="{{  url_for('GradeBySemester') }}" method=post>
+        <select class="custom-select" name="year" method="GET" action="/">
+             <option selected>学年</option>
+            {% for yearitem in year %}
+             <option value="{{yearitem}}">{{  yearitem  }}</option>"
+            {% endfor %}
+        </select>
+		<select class="custom-select" name="semester" method="GET" action="/">
+             <option selected>学期</option>
+            {% for semesteritem in semester %}
+             <option value="{{semesteritem}}">{{  semesteritem  }}</option>"
+            {% endfor %}
+        </select>
+        <input class="btn btn-primary" type="submit" value="查询"></form>
+
+        <table class="table table-striped" style="width: 500px;height:500px;margin: 0 auto">
+	        <thead>
+		        <tr>
+			        <th>课程名称</th>
+                    <th>学时</th>
+                    <th>学分</th>
+                    <th>成绩</th>
+                </tr>
+	        </thead>
+	        <tbody>
+	        {% for line in result %}
+		        <tr>
+                {% for item in line %}
+			    <td name="{{item}}">{{item}}</td>
+			    {% endfor %}
+		        </tr>
+	        {% endfor %}
+	        </tbody>
+        </table>
         {% endblock %}
         

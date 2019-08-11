@@ -12,15 +12,15 @@
 	// 指定图表的配置项和数据
 		var option2 = {
                 title : {
-                    text: '学生的成绩走向与对比',
-                    subtext: '纯属虚构'
+                    text: '你的GPA走向',
+                    subtext: '基于累积GPA'
                 },
             tooltip : {
                 trigger: 'axis'
             },
 			
             legend: {
-                data:['A同学','B同学']
+                data:[{{name|tojson}}]
             },
 			
             toolbox: {
@@ -55,9 +55,9 @@
 			
             series : [
                 {
-                    name:'A同学',
+                    name:{{name|tojson}},
                     type:'line',
-                    data:{{A_data|tojson}},
+                    data:{{data|tojson}},
                     markPoint : {
                         data : [
                             {type : 'max', name: '最大值'},
@@ -66,17 +66,6 @@
                     },
                 },
 				
-                {
-                    name:'B同学',
-                    type:'line',
-                    data:{{B_data|tojson}},
-                    markPoint : {
-                        data : [
-                            {type : 'max', name: '最大值'},
-                            {type : 'min', name: '最小值'}
-                        ]
-                    },
-                }
             ]
         };
     myChart2.setOption(option2);

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,redirect,url_for,flash
 import pymssql
 import json
 import numpy as np
@@ -6,7 +6,7 @@ import pandas as pd
 global userID
 userID=0
 conn=pymssql.connect(
-        server='172.16.108.153',
+        server='172.16.108.155',
         #host='.',
 		user=r'sa',password='123456',database='zhjfdemo1')
 cursor=conn.cursor()
@@ -18,16 +18,11 @@ def welcome():
 
 @app.route('/', methods = ['POST'])
 def login():
+	error=None
 	global userID 
 	userID = request.form['username']
 	pwd = request.form['passwd']
-	'''
-	conn=pymssql.connect(
-        server='172.16.108.153',
-        #host='.',
-		user=r'sa',password='123456',database='zhjfdemo1')
-	cursor=conn.cursor()
-	'''
+
 	sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
 	sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
 	cursor.execute(sql1)
@@ -45,7 +40,8 @@ def login():
 		else:
 			return '你是老师'
 	else:
-			return '登陆失败'
+		error="账号或密码错误"
+		return render_template('welcome.html',error = error)
 
 @app.route('/student')
 def stu_index():

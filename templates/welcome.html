@@ -6,7 +6,7 @@
 <style type="text/css">
 body {
 
-background-image:url(static/image/my_wife.jpg);
+background-image:url(static/my_wife.jpg);
 background-size:cover;
 }
 </style>
@@ -25,6 +25,10 @@ background-size:cover;
 	<!--<input type="button" onclick="checkOk();" name="提交" value="登陆"/>
 	-->
 	</form>
+{% if error %}
+{{error}}
+{% endif %}
+
 <!--
 <script>
 //当点击提交时调用的方法

@@ -1,0 +1,19 @@
+{% extends 'teacher/base.html' %}
+
+{% block title %}附加分统计{% endblock %}
+
+{% block main %}
+<form action="{{  url_for('Bonus') }}" method='POST'>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="请输入学号" aria-label="userID" name="userID"
+            aria-describedby="button-addon2">
+        <div class="input-group-append">
+            <input class="btn btn-primary" type="submit" value="查询">
+        </div>
+    </div>
+</form>
+<div style="height:30px;margin: 0 auto;"></div>
+<div style="width: 500px;height:500px;margin: 0 auto;">
+    {{table|safe}}
+</div>
+{% endblock %}

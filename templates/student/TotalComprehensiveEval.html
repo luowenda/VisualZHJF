@@ -4,9 +4,66 @@
         {% block title %}综合积分汇总{% endblock %}
 
         {% block main %}
+        <!--排序选项-->
+        <form action="{{  url_for('TotalComprehensiveEval') }}" method=post>
+          按照：德育
+          <select class="custom-select" name="moralGrade" method="GET" action="/" style="width:80px;margin: 0 auto;">
+            <option selected>默认</option>   
+            <option value="asc">升序</option>
+            <option value="desc">降序</option>
+          </select> 
+          智育
+          <select class="custom-select" name="intelGrade" method="GET" action="/" style="width:80px;margin: 0 auto;">
+            <option selected>默认</option> 
+            <option value="asc">升序</option>
+            <option value="desc">降序</option>
+          </select> 
+          体育
+          <select class="custom-select" name="socialGrade" method="GET" action="/" style="width:80px;margin: 0 auto;"> 
+            <option selected>默认</option>
+            <option value="asc">升序</option>
+            <option value="desc">降序</option>
+          </select> 
+          附加分
+          <select class="custom-select" name="extraGrade" method="GET" action="/" style="width:80px;margin: 0 auto;">
+            <option selected>默认</option> 
+            <option value="asc">升序</option>
+            <option value="desc">降序</option>
+          </select>
+          总分
+          <select class="custom-select" name="totalGrade" method="GET" action="/" style="width:80px;margin: 0 auto;">
+            <option selected>默认</option> 
+            <option value="asc">升序</option>
+            <option value="desc">降序</option>
+          </select>  
+          排序
+          <input class="btn btn-primary" type="submit" value="查询">
+          </form>
+          
+
         <div style="height:30px;margin: 0 auto;"></div>
         <div style="width: 1000px;height:1000px;margin: 0 auto;">
-          {{table|safe}}
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>姓名</th>
+                <th>德育分</th>
+                <th>智育分</th>
+                <th>体育附加分</th>
+                <th>附加分</th>
+                <th>总分</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for line in result %}
+              <tr>
+                {% for item in line %}
+                <td name="{{item}}">{{item}}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
         </div>
         {% endblock %}
         

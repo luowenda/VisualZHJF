@@ -17,10 +17,9 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 import pymssql
 
-conn = pymssql.connect(#host='.',
-                        server='172.16.108.155',
+conn = pymssql.connect(host='.',
                        user='sa',
-                       password='123456',
+                       password='ZHJF2019eggs',
                        database='zhjfdemo1',
                        charset='utf8')
 

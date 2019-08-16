@@ -1,50 +1,26 @@
 <!DOCTYPE html>
-<html>
-
-
 <head>
-<style type="text/css">
-body {
 
-background-image:url(static/my_wife.jpg);
-background-size:cover;
-}
-</style>
-<title>登陆界面</title>
+<link rel="stylesheet" href="../static/css/welcome.css">
+<title>综合积分查询登陆界面</title>
 </head>
-
 <body>
-	<p id=lwd>{{name}}</p>
-	<form name="input" method="post" >
-		<pre>
-		<input type="text" name="username" id="username"placeholder="用户名" /></br>
-		<input  type="password" name="passwd" id="passwd"
-		placeholder="密码"/></br>
-			<input type="submit" name="提交" value="登陆" >
-		</pre>
-	<!--<input type="button" onclick="checkOk();" name="提交" value="登陆"/>
-	-->
+<div class="bg">
+    <div class="welcome">欢迎访问综合积分系统</div>
+    
+    <form  method="post" >
+		
+		<input type="text"name="username" class="username" id="username"placeholder="username" /></br></br>
+	    <input type="password"name="passwd" class="passwd" id="passwd"placeholder="password"/></br>
+		<input id="submit" type="submit" name="提交" value="登陆" >
+
 	</form>
-{% if error %}
-{{error}}
-{% endif %}
+    <div>
+		{% if error %}
+			{{error}}
+		{% endif %}
+	</div>
+   
 
-<!--
-<script>
-//当点击提交时调用的方法
-function checkOk(){
-//从窗口中获取username与passwd对象
-var name = document.getElementById("username");
-var passwd = document.getElementById("passwd");
-//判断是否正确
-if (name.value=="111" && passwd.value=="222"){
-alert("right");
-}else{
-alert("用户名或密码不正确！");
-}
-}
-</script>
--->
+</div>
 </body>
-</html>
-

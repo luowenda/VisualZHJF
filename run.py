@@ -17,9 +17,10 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 import pymssql
 
-conn = pymssql.connect(host='.',
+conn = pymssql.connect(#host='.',
+                        server='172.16.108.155',
                        user='sa',
-                       password='ZHJF2019eggs',
+                       password='123456',
                        database='zhjfdemo1',
                        charset='utf8')
 
@@ -140,6 +141,40 @@ def getGPA(userID,grade,year,semester):
     else:
         gpa = pointSum/creditSum
     return round(gpa,2) 
+
+
+
+#登陆界面
+@app.route('/',methods=['get'])
+def welcome():
+	return render_template('welcome.html')
+
+@app.route('/', methods = ['POST'])
+def login():
+	error=None
+	global userID 
+	userID = request.form['username']
+	pwd = request.form['passwd']
+
+	sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
+	sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
+	cursor.execute(sql1)
+	#用一个rs_***变量获取数据
+	rs_userid = cursor.fetchall()
+	num=0
+	for data in rs_userid:
+		num=num+1
+	if(num!=0):
+		cursor.execute(sql2)
+		rs_roleid= cursor.fetchone()
+		roleID=rs_roleid[0]
+		if(roleID==1):
+			return stu_index()
+		else:
+			return tea_index()
+	else:
+		error="账号或密码错误"
+		return render_template('welcome.html',error = error)
 
 #学生界面首页
 @app.route('/student')
@@ -451,7 +486,7 @@ def CompByYear():
     return render_template('/teacher/CompByYear.html')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
 
 #以下为原代码，参考这些
 # @app.route('/')

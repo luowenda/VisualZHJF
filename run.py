@@ -486,7 +486,7 @@ def CompByYear():
     return render_template('/teacher/CompByYear.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run()
 
 #以下为原代码，参考这些
 # @app.route('/')

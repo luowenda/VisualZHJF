@@ -1,0 +1,41 @@
+.bg {
+    background-image: url('../image/login_bg.png');
+    width: 866px;
+    height: 486px;
+    margin: 40px auto;
+	box-shadow:0 0 8px #afaeae;
+	border-radius:10px;
+}
+
+.welcome {
+    position:Absolute; 
+    color: #3d9ddd;
+    font-size: 30px;
+    margin: 100px 0px 0px 510px;
+    padding: 10px 5px;
+}
+
+.loginbtn {
+    position:Absolute; 
+    font-size: 14px;
+    border: none;
+    margin: 290px 0px 0px 620px;
+	padding-bottom:10px;
+}
+form{
+    position: absolute;
+    margin: 210px 0px 0px 580px;
+
+}
+.username,.passwd{
+    width: 140px;
+    height: 20px;
+    
+}
+#submit{
+    background-color: #3d9ddd;
+    color: aliceblue;
+    position: relative;
+    left: 40px;
+    top:10px;
+}

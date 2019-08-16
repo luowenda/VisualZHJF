@@ -141,6 +141,9 @@ def getGPA(userID,grade,year,semester):
     else:
         gpa = pointSum/creditSum
     return round(gpa,2) 
+
+
+
 #登陆界面
 @app.route('/',methods=['get'])
 def welcome():

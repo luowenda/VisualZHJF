@@ -1,3 +1,4 @@
+
 # encoding:utf-8
 
 
@@ -182,48 +183,100 @@ def stu_index():
     return render_template('/student/index.html')
 
 #个人成绩界面（根据课程属性筛选）（表格）
-@app.route('/student/GradeByAttri')
+@app.route('/student/GradeByAttri', methods=['GET','POST'])
 def GradeByAttri():
-    data = open('data/16cs1.json', encoding='utf8').read()
-    columns = ["学号", "高数1","高数2","线性代数"]
-    dat = json.loads(data)
-    dic = { #dict中key应和columns一致
-        "学号": [],
-        "高数1": [],
-        "高数2": [],
-        "线性代数": []
-    }
-    for stu in dat['2016CS1']:
-        dic['学号'].append(stu)
-        dic['高数1'].append(dat['2016CS1'][stu]['3250300106'])
-        dic['高数2'].append(dat['2016CS1'][stu]['3250300204'])
-        dic['线性代数'].append(dat['2016CS1'][stu]['3250300303'])
-    df = pd.DataFrame(data=dic, columns=columns)
-    convert = df.to_html(classes='table table-striped table-hover table-sm table-borderless',
-                            border=None, justify=None)
-    return render_template('/student/GradeByAttri.html',table = convert)
+    userID = '1031101' #TODO需要从登录信息获取
+    #获取classID
+    sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID) #匹配字符串用like
+    cursor.execute(sql)
+    content1 = cursor.fetchall()
+    classID = content1[0][0]
+    #获取departID
+    sql = 'select departID from [class] where classID={}'.format(classID)
+    cursor.execute(sql)
+    content2 = cursor.fetchall()
+    departID = content2[0][0]
+
+    result = []
+    attri = ['isSpec', 'isCompulsory', 'isIntern']
+    #attri = ['专业课', '必修课', '公共课']
+    if request.method == "POST":
+        selectedAttri = request.values.get("attri")
+        if selectedAttri == '专业课':
+            selectedAttri = 'isSpec'
+        elif selectedAttri == '必修课':
+            selectedAttri = 'isCompulsory'
+        elif selectedAttri == '公共课':
+            selectedAttri = 'isIntern'
+
+        #获取属性课程列表
+        sql = '''select distinct currName, period, credit, examGrade  \
+                  from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 \
+                  where userID={} and t2.departID={}\
+                  and t1.currID = t2.currID \
+                  and t1.currID = t3.currID \
+                  and t1.grade = t2.grade \
+                  and t1.academicYear like t2.academicYear \
+                  and t1.semester = t2.semester\
+                  and {} = 1'''.format(userID, departID, selectedAttri)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    return render_template('student/GradeByAttri.html',attri = attri, result = result)
+
 
 #个人成绩界面（根据学期筛选）（表格）
-@app.route('/student/GradeBySemester')
+@app.route('/student/GradeBySemester', methods=['GET','POST'])
 def GradeBySemester():
-    data = open('data/16cs1.json', encoding='utf8').read()
-    columns = ["学号", "高数1","高数2","线性代数"]
-    dat = json.loads(data)
-    dic = { #dict中key应和columns一致
-        "学号": [],
-        "高数1": [],
-        "高数2": [],
-        "线性代数": []
-    }
-    for stu in dat['2016CS1']:
-        dic['学号'].append(stu)
-        dic['高数1'].append(dat['2016CS1'][stu]['3250300106'])
-        dic['高数2'].append(dat['2016CS1'][stu]['3250300204'])
-        dic['线性代数'].append(dat['2016CS1'][stu]['3250300303'])
-    df = pd.DataFrame(data=dic, columns=columns)
-    convert = df.to_html(classes='table table-striped table-hover table-sm table-borderless',
-                            border=None, justify=None)
-    return render_template('/student/GradeBySemester.html',table = convert)
+    userID = '1031101'  # TODO需要从登录信息获取
+    # 获取classID
+    sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like
+    cursor.execute(sql)
+    content1 = cursor.fetchall()
+    classID = content1[0][0]
+    # 获取departID
+    sql = 'select departID from [class] where classID={}'.format(classID)
+    cursor.execute(sql)
+    content2 = cursor.fetchall()
+    departID = content2[0][0]
+
+    getYear = '''select distinct academicYear 
+                    from currArrange'''
+    year = getList(getYear)
+    getSemester = '''select distinct semester 
+                    from currArrange'''
+    semester = getList(getSemester)
+
+    result = []
+    if request.method == "POST":
+        selectedYear = request.values.get("year")
+        selectedSemester = request.values.get("semester")
+
+        print(semester)
+        print(year)
+        print(selectedYear)
+        print(selectedSemester)
+
+        # 获取属性课程列表
+        sql = '''select distinct currName, period, credit, examGrade  \
+                      from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 \
+                      where userID={} and t2.departID={}\
+                      and t1.currID = t2.currID \
+                      and t1.currID = t3.currID \
+                      and t1.grade = t2.grade \
+                      and t1.academicYear like t2.academicYear \
+                      and t1.semester = t2.semester \
+                      and t1.semester = {} \
+                      and t1.academicYear = \'{}\' '''.format(userID, departID, selectedSemester, selectedYear)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+    return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result)
+
+def getList(search):
+    cursor.execute(search)
+    showList = cursor.fetchall()
+    for i,item in enumerate(showList):
+        showList[i] = str(item[0])
+    return showList
 
 #GPA计算界面
 @app.route('/student/GPACalculator')
@@ -610,7 +663,4 @@ if __name__ == '__main__':
 #                                sid2_name = sid2_name,
 #                                sid1_score = sid1_score,
 #                                sid2_score = sid2_score)
-
-
-
 

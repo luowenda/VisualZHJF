@@ -1,0 +1,36 @@
+{% extends 'teacher/base.html' %}
+
+{% block title %}挂科情况统计{% endblock %}
+
+{% block main %}
+<form action="{{  url_for('FailedCourses') }}" method='POST'>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="请输入学号" aria-label="userID" name="userID"
+            aria-describedby="button-addon2">
+        <div class="input-group-append">
+            <input class="btn btn-primary" type="submit" value="查询">
+        </div>
+    </div>
+</form>
+
+<div>{{name}}</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>课程编号</th>
+            <th>课程名</th>
+            <th>学分</th>
+            <th>成绩</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in courses %}
+        <tr>
+            {% for item in course %}
+            <td name="{{item}}">{{item}}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

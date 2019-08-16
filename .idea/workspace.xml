@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6402e9f3-9901-433c-936d-a66a497329e2" name="默认" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/run.py" afterPath="$PROJECT_DIR$/run.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/student/GradeByAttri.html" afterPath="$PROJECT_DIR$/templates/student/GradeByAttri.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/student/GradeBySemester.html" afterPath="$PROJECT_DIR$/templates/student/GradeBySemester.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,7 +12,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/VisualZHJF$VisualZHJF.coverage" NAME="VisualZHJF Coverage Results" MODIFIED="1565516003868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/VisualZHJF$VisualZHJF.coverage" NAME="VisualZHJF Coverage Results" MODIFIED="1565529583071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
@@ -25,44 +23,44 @@
             <state relative-caret-position="-3696">
               <caret line="320" column="53" lean-forward="false" selection-start-line="320" selection-start-column="53" selection-end-line="320" selection-end-column="53" />
               <folding>
-                <marker date="1565516369541" expanded="true" signature="1346:1402" ph="select class... " />
-                <marker date="1565516369541" expanded="true" signature="1546:1589" ph="select depar... " />
-                <marker date="1565516369541" expanded="true" signature="2148:2384" ph="select disti... " />
-                <marker date="1565516369541" expanded="true" signature="2148:2585" ph="select disti... " />
-                <marker date="1565516369541" expanded="true" signature="2148:2615" ph="select disti... " />
-                <marker date="1565516369541" expanded="true" signature="2984:3040" ph="select class... " />
-                <marker date="1565516369541" expanded="true" signature="3187:3230" ph="select depar... " />
-                <marker date="1565516369541" expanded="true" signature="3355:3421" ph="select disti... currArrange" />
-                <marker date="1565516369541" expanded="true" signature="3474:3536" ph="select disti... evaluationFinalScore" />
-                <marker date="1565516369541" expanded="true" signature="3876:4430" ph="select disti... " />
-                <marker date="1565516369541" expanded="true" signature="3876:4431" ph="select disti... " />
-                <marker date="1565516369541" expanded="true" signature="3876:4435" ph="select disti... " />
-                <marker date="1565516369541" expanded="true" signature="3876:4439" ph="select disti... " />
-                <marker date="1565516369541" expanded="true" signature="3876:5102" ph="select disti... " />
-                <marker date="1565516369541" expanded="true" signature="5102:5158" ph="select class... " />
-                <marker date="1565516369541" expanded="true" signature="5102:6025" ph="select class... " />
-                <marker date="1565516369541" expanded="true" signature="5302:5345" ph="select depar... " />
-                <marker date="1565516369541" expanded="true" signature="5483:5758" ph="select disti... " />
-                <marker date="1565516369541" expanded="true" signature="6025:6195" ph="select examG... " />
-                <marker date="1565516369541" expanded="true" signature="6025:7536" ph="select examG... " />
-                <marker date="1565516369541" expanded="true" signature="7536:7665" ph="select conte... bonusItem2user" />
-                <marker date="1565516369541" expanded="true" signature="7536:10279" ph="select conte... bonusItem2user" />
-                <marker date="1565516369541" expanded="true" signature="8355:8448" ph="select moral... evaluationFinalScore" />
-                <marker date="1565516369541" expanded="true" signature="8785:8847" ph="select grade... EvaluationFinalScore" />
-                <marker date="1565516369541" expanded="true" signature="9014:9199" ph="select userN... " />
-                <marker date="1565516369541" expanded="true" signature="10282:10346" ph="select disti... evaluationFinalScore" />
-                <marker date="1565516369541" expanded="true" signature="10397:10468" ph="select disti... evaluationFinalScore" />
-                <marker date="1565516369541" expanded="true" signature="10520:10748" ph="select disti... department" />
-                <marker date="1565516369541" expanded="true" signature="10665:10747" ph="select depar... evaluationFinalScore" />
-                <marker date="1565516369541" expanded="true" signature="11017:11126" ph="select depar... department" />
-                <marker date="1565516369541" expanded="true" signature="11224:11493" ph="select userN... evaluationFinalScore" />
-                <marker date="1565516369541" expanded="true" signature="12179:12232" ph="select disti... currGrade" />
-                <marker date="1565516369541" expanded="true" signature="12288:12348" ph="select disti... currGrade" />
-                <marker date="1565516369541" expanded="true" signature="12402:12461" ph="select disti... currGrade" />
-                <marker date="1565516369541" expanded="true" signature="12780:12880" ph="select currI... curriculum" />
-                <marker date="1565516369541" expanded="true" signature="13877:14083" ph="select count... currGrade" />
-                <marker date="1565516369541" expanded="true" signature="14691:14740" ph="select userN... " />
-                <marker date="1565516369541" expanded="true" signature="15311:15522" ph="select currG... currGrade" />
+                <marker date="1565521929045" expanded="true" signature="1346:1402" ph="select class... " />
+                <marker date="1565521929045" expanded="true" signature="1546:1589" ph="select depar... " />
+                <marker date="1565521929045" expanded="true" signature="2148:2384" ph="select disti... " />
+                <marker date="1565521929045" expanded="true" signature="2148:2585" ph="select disti... " />
+                <marker date="1565521929045" expanded="true" signature="2148:2615" ph="select disti... " />
+                <marker date="1565521929045" expanded="true" signature="2984:3040" ph="select class... " />
+                <marker date="1565521929045" expanded="true" signature="3187:3230" ph="select depar... " />
+                <marker date="1565521929045" expanded="true" signature="3355:3421" ph="select disti... currArrange" />
+                <marker date="1565521929045" expanded="true" signature="3474:3536" ph="select disti... evaluationFinalScore" />
+                <marker date="1565521929045" expanded="true" signature="3876:4430" ph="select disti... " />
+                <marker date="1565521929045" expanded="true" signature="3876:4431" ph="select disti... " />
+                <marker date="1565521929045" expanded="true" signature="3876:4435" ph="select disti... " />
+                <marker date="1565521929045" expanded="true" signature="3876:4439" ph="select disti... " />
+                <marker date="1565521929045" expanded="true" signature="3876:5102" ph="select disti... " />
+                <marker date="1565521929045" expanded="true" signature="5102:5158" ph="select class... " />
+                <marker date="1565521929045" expanded="true" signature="5102:6025" ph="select class... " />
+                <marker date="1565521929045" expanded="true" signature="5302:5345" ph="select depar... " />
+                <marker date="1565521929045" expanded="true" signature="5483:5758" ph="select disti... " />
+                <marker date="1565521929045" expanded="true" signature="6025:6195" ph="select examG... " />
+                <marker date="1565521929045" expanded="true" signature="6025:7536" ph="select examG... " />
+                <marker date="1565521929045" expanded="true" signature="7536:7665" ph="select conte... bonusItem2user" />
+                <marker date="1565521929045" expanded="true" signature="7536:10279" ph="select conte... bonusItem2user" />
+                <marker date="1565521929045" expanded="true" signature="8355:8448" ph="select moral... evaluationFinalScore" />
+                <marker date="1565521929045" expanded="true" signature="8785:8847" ph="select grade... EvaluationFinalScore" />
+                <marker date="1565521929045" expanded="true" signature="9014:9199" ph="select userN... " />
+                <marker date="1565521929045" expanded="true" signature="10282:10346" ph="select disti... evaluationFinalScore" />
+                <marker date="1565521929045" expanded="true" signature="10397:10468" ph="select disti... evaluationFinalScore" />
+                <marker date="1565521929045" expanded="true" signature="10520:10748" ph="select disti... department" />
+                <marker date="1565521929045" expanded="true" signature="10665:10747" ph="select depar... evaluationFinalScore" />
+                <marker date="1565521929045" expanded="true" signature="11017:11126" ph="select depar... department" />
+                <marker date="1565521929045" expanded="true" signature="11224:11493" ph="select userN... evaluationFinalScore" />
+                <marker date="1565521929045" expanded="true" signature="12179:12232" ph="select disti... currGrade" />
+                <marker date="1565521929045" expanded="true" signature="12288:12348" ph="select disti... currGrade" />
+                <marker date="1565521929045" expanded="true" signature="12402:12461" ph="select disti... currGrade" />
+                <marker date="1565521929045" expanded="true" signature="12780:12880" ph="select currI... curriculum" />
+                <marker date="1565521929045" expanded="true" signature="13877:14083" ph="select count... currGrade" />
+                <marker date="1565521929045" expanded="true" signature="14691:14740" ph="select userN... " />
+                <marker date="1565521929045" expanded="true" signature="15311:15522" ph="select currG... currGrade" />
               </folding>
             </state>
           </provider>
@@ -88,10 +86,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
-    <option name="y" value="-9" />
-    <option name="width" value="1938" />
-    <option name="height" value="1048" />
+    <option name="x" value="837" />
+    <option name="y" value="96" />
+    <option name="width" value="1013" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -313,8 +311,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1048" extended-state="7" />
-    <editor active="true" />
+    <frame x="837" y="96" width="1013" height="1038" extended-state="0" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -325,7 +322,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32491767" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32852387" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -355,44 +352,44 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1565516369541" expanded="true" signature="1346:1402" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="1546:1589" ph="select depar... " />
-            <marker date="1565516369541" expanded="true" signature="2148:2384" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="2148:2585" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="2148:2615" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="2984:3040" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="3187:3230" ph="select depar... " />
-            <marker date="1565516369541" expanded="true" signature="3355:3421" ph="select disti... currArrange" />
-            <marker date="1565516369541" expanded="true" signature="3474:3536" ph="select disti... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="3876:4430" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:4431" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:4435" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:4439" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:5102" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="5102:5158" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="5102:6025" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="5302:5345" ph="select depar... " />
-            <marker date="1565516369541" expanded="true" signature="5483:5758" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="6025:6195" ph="select examG... " />
-            <marker date="1565516369541" expanded="true" signature="6025:7536" ph="select examG... " />
-            <marker date="1565516369541" expanded="true" signature="7536:7665" ph="select conte... bonusItem2user" />
-            <marker date="1565516369541" expanded="true" signature="7536:10279" ph="select conte... bonusItem2user" />
-            <marker date="1565516369541" expanded="true" signature="8355:8448" ph="select moral... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="8785:8847" ph="select grade... EvaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="9014:9199" ph="select userN... " />
-            <marker date="1565516369541" expanded="true" signature="10282:10346" ph="select disti... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="10397:10468" ph="select disti... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="10520:10748" ph="select disti... department" />
-            <marker date="1565516369541" expanded="true" signature="10665:10747" ph="select depar... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="11017:11126" ph="select depar... department" />
-            <marker date="1565516369541" expanded="true" signature="11224:11493" ph="select userN... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="12179:12232" ph="select disti... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="12288:12348" ph="select disti... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="12402:12461" ph="select disti... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="12780:12880" ph="select currI... curriculum" />
-            <marker date="1565516369541" expanded="true" signature="13877:14083" ph="select count... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="14691:14740" ph="select userN... " />
-            <marker date="1565516369541" expanded="true" signature="15311:15522" ph="select currG... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="1346:1402" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="1546:1589" ph="select depar... " />
+            <marker date="1565521929045" expanded="true" signature="2148:2384" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="2148:2585" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="2148:2615" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="2984:3040" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="3187:3230" ph="select depar... " />
+            <marker date="1565521929045" expanded="true" signature="3355:3421" ph="select disti... currArrange" />
+            <marker date="1565521929045" expanded="true" signature="3474:3536" ph="select disti... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="3876:4430" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:4431" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:4435" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:4439" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:5102" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="5102:5158" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="5102:6025" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="5302:5345" ph="select depar... " />
+            <marker date="1565521929045" expanded="true" signature="5483:5758" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="6025:6195" ph="select examG... " />
+            <marker date="1565521929045" expanded="true" signature="6025:7536" ph="select examG... " />
+            <marker date="1565521929045" expanded="true" signature="7536:7665" ph="select conte... bonusItem2user" />
+            <marker date="1565521929045" expanded="true" signature="7536:10279" ph="select conte... bonusItem2user" />
+            <marker date="1565521929045" expanded="true" signature="8355:8448" ph="select moral... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="8785:8847" ph="select grade... EvaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="9014:9199" ph="select userN... " />
+            <marker date="1565521929045" expanded="true" signature="10282:10346" ph="select disti... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="10397:10468" ph="select disti... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="10520:10748" ph="select disti... department" />
+            <marker date="1565521929045" expanded="true" signature="10665:10747" ph="select depar... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="11017:11126" ph="select depar... department" />
+            <marker date="1565521929045" expanded="true" signature="11224:11493" ph="select userN... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="12179:12232" ph="select disti... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="12288:12348" ph="select disti... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="12402:12461" ph="select disti... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="12780:12880" ph="select currI... curriculum" />
+            <marker date="1565521929045" expanded="true" signature="13877:14083" ph="select count... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="14691:14740" ph="select userN... " />
+            <marker date="1565521929045" expanded="true" signature="15311:15522" ph="select currG... currGrade" />
           </folding>
         </state>
       </provider>
@@ -410,44 +407,44 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1565516369541" expanded="true" signature="1346:1402" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="1546:1589" ph="select depar... " />
-            <marker date="1565516369541" expanded="true" signature="2148:2384" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="2148:2585" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="2148:2615" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="2984:3040" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="3187:3230" ph="select depar... " />
-            <marker date="1565516369541" expanded="true" signature="3355:3421" ph="select disti... currArrange" />
-            <marker date="1565516369541" expanded="true" signature="3474:3536" ph="select disti... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="3876:4430" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:4431" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:4435" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:4439" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:5102" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="5102:5158" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="5102:6025" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="5302:5345" ph="select depar... " />
-            <marker date="1565516369541" expanded="true" signature="5483:5758" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="6025:6195" ph="select examG... " />
-            <marker date="1565516369541" expanded="true" signature="6025:7536" ph="select examG... " />
-            <marker date="1565516369541" expanded="true" signature="7536:7665" ph="select conte... bonusItem2user" />
-            <marker date="1565516369541" expanded="true" signature="7536:10279" ph="select conte... bonusItem2user" />
-            <marker date="1565516369541" expanded="true" signature="8355:8448" ph="select moral... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="8785:8847" ph="select grade... EvaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="9014:9199" ph="select userN... " />
-            <marker date="1565516369541" expanded="true" signature="10282:10346" ph="select disti... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="10397:10468" ph="select disti... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="10520:10748" ph="select disti... department" />
-            <marker date="1565516369541" expanded="true" signature="10665:10747" ph="select depar... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="11017:11126" ph="select depar... department" />
-            <marker date="1565516369541" expanded="true" signature="11224:11493" ph="select userN... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="12179:12232" ph="select disti... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="12288:12348" ph="select disti... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="12402:12461" ph="select disti... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="12780:12880" ph="select currI... curriculum" />
-            <marker date="1565516369541" expanded="true" signature="13877:14083" ph="select count... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="14691:14740" ph="select userN... " />
-            <marker date="1565516369541" expanded="true" signature="15311:15522" ph="select currG... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="1346:1402" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="1546:1589" ph="select depar... " />
+            <marker date="1565521929045" expanded="true" signature="2148:2384" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="2148:2585" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="2148:2615" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="2984:3040" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="3187:3230" ph="select depar... " />
+            <marker date="1565521929045" expanded="true" signature="3355:3421" ph="select disti... currArrange" />
+            <marker date="1565521929045" expanded="true" signature="3474:3536" ph="select disti... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="3876:4430" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:4431" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:4435" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:4439" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:5102" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="5102:5158" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="5102:6025" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="5302:5345" ph="select depar... " />
+            <marker date="1565521929045" expanded="true" signature="5483:5758" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="6025:6195" ph="select examG... " />
+            <marker date="1565521929045" expanded="true" signature="6025:7536" ph="select examG... " />
+            <marker date="1565521929045" expanded="true" signature="7536:7665" ph="select conte... bonusItem2user" />
+            <marker date="1565521929045" expanded="true" signature="7536:10279" ph="select conte... bonusItem2user" />
+            <marker date="1565521929045" expanded="true" signature="8355:8448" ph="select moral... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="8785:8847" ph="select grade... EvaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="9014:9199" ph="select userN... " />
+            <marker date="1565521929045" expanded="true" signature="10282:10346" ph="select disti... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="10397:10468" ph="select disti... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="10520:10748" ph="select disti... department" />
+            <marker date="1565521929045" expanded="true" signature="10665:10747" ph="select depar... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="11017:11126" ph="select depar... department" />
+            <marker date="1565521929045" expanded="true" signature="11224:11493" ph="select userN... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="12179:12232" ph="select disti... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="12288:12348" ph="select disti... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="12402:12461" ph="select disti... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="12780:12880" ph="select currI... curriculum" />
+            <marker date="1565521929045" expanded="true" signature="13877:14083" ph="select count... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="14691:14740" ph="select userN... " />
+            <marker date="1565521929045" expanded="true" signature="15311:15522" ph="select currG... currGrade" />
           </folding>
         </state>
       </provider>
@@ -479,44 +476,44 @@
         <state relative-caret-position="-3696">
           <caret line="320" column="53" lean-forward="false" selection-start-line="320" selection-start-column="53" selection-end-line="320" selection-end-column="53" />
           <folding>
-            <marker date="1565516369541" expanded="true" signature="1346:1402" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="1546:1589" ph="select depar... " />
-            <marker date="1565516369541" expanded="true" signature="2148:2384" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="2148:2585" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="2148:2615" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="2984:3040" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="3187:3230" ph="select depar... " />
-            <marker date="1565516369541" expanded="true" signature="3355:3421" ph="select disti... currArrange" />
-            <marker date="1565516369541" expanded="true" signature="3474:3536" ph="select disti... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="3876:4430" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:4431" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:4435" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:4439" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="3876:5102" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="5102:5158" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="5102:6025" ph="select class... " />
-            <marker date="1565516369541" expanded="true" signature="5302:5345" ph="select depar... " />
-            <marker date="1565516369541" expanded="true" signature="5483:5758" ph="select disti... " />
-            <marker date="1565516369541" expanded="true" signature="6025:6195" ph="select examG... " />
-            <marker date="1565516369541" expanded="true" signature="6025:7536" ph="select examG... " />
-            <marker date="1565516369541" expanded="true" signature="7536:7665" ph="select conte... bonusItem2user" />
-            <marker date="1565516369541" expanded="true" signature="7536:10279" ph="select conte... bonusItem2user" />
-            <marker date="1565516369541" expanded="true" signature="8355:8448" ph="select moral... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="8785:8847" ph="select grade... EvaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="9014:9199" ph="select userN... " />
-            <marker date="1565516369541" expanded="true" signature="10282:10346" ph="select disti... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="10397:10468" ph="select disti... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="10520:10748" ph="select disti... department" />
-            <marker date="1565516369541" expanded="true" signature="10665:10747" ph="select depar... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="11017:11126" ph="select depar... department" />
-            <marker date="1565516369541" expanded="true" signature="11224:11493" ph="select userN... evaluationFinalScore" />
-            <marker date="1565516369541" expanded="true" signature="12179:12232" ph="select disti... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="12288:12348" ph="select disti... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="12402:12461" ph="select disti... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="12780:12880" ph="select currI... curriculum" />
-            <marker date="1565516369541" expanded="true" signature="13877:14083" ph="select count... currGrade" />
-            <marker date="1565516369541" expanded="true" signature="14691:14740" ph="select userN... " />
-            <marker date="1565516369541" expanded="true" signature="15311:15522" ph="select currG... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="1346:1402" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="1546:1589" ph="select depar... " />
+            <marker date="1565521929045" expanded="true" signature="2148:2384" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="2148:2585" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="2148:2615" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="2984:3040" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="3187:3230" ph="select depar... " />
+            <marker date="1565521929045" expanded="true" signature="3355:3421" ph="select disti... currArrange" />
+            <marker date="1565521929045" expanded="true" signature="3474:3536" ph="select disti... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="3876:4430" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:4431" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:4435" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:4439" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="3876:5102" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="5102:5158" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="5102:6025" ph="select class... " />
+            <marker date="1565521929045" expanded="true" signature="5302:5345" ph="select depar... " />
+            <marker date="1565521929045" expanded="true" signature="5483:5758" ph="select disti... " />
+            <marker date="1565521929045" expanded="true" signature="6025:6195" ph="select examG... " />
+            <marker date="1565521929045" expanded="true" signature="6025:7536" ph="select examG... " />
+            <marker date="1565521929045" expanded="true" signature="7536:7665" ph="select conte... bonusItem2user" />
+            <marker date="1565521929045" expanded="true" signature="7536:10279" ph="select conte... bonusItem2user" />
+            <marker date="1565521929045" expanded="true" signature="8355:8448" ph="select moral... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="8785:8847" ph="select grade... EvaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="9014:9199" ph="select userN... " />
+            <marker date="1565521929045" expanded="true" signature="10282:10346" ph="select disti... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="10397:10468" ph="select disti... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="10520:10748" ph="select disti... department" />
+            <marker date="1565521929045" expanded="true" signature="10665:10747" ph="select depar... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="11017:11126" ph="select depar... department" />
+            <marker date="1565521929045" expanded="true" signature="11224:11493" ph="select userN... evaluationFinalScore" />
+            <marker date="1565521929045" expanded="true" signature="12179:12232" ph="select disti... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="12288:12348" ph="select disti... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="12402:12461" ph="select disti... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="12780:12880" ph="select currI... curriculum" />
+            <marker date="1565521929045" expanded="true" signature="13877:14083" ph="select count... currGrade" />
+            <marker date="1565521929045" expanded="true" signature="14691:14740" ph="select userN... " />
+            <marker date="1565521929045" expanded="true" signature="15311:15522" ph="select currG... currGrade" />
           </folding>
         </state>
       </provider>

@@ -169,9 +169,9 @@ def login():
 		rs_roleid= cursor.fetchone()
 		roleID=rs_roleid[0]
 		if(roleID==1):
-			return stu_index()
+			return redirect(url_for('stu_index'))
 		else:
-			return tea_index()
+			return redirect(url_for('tea_index'))
 	else:
 		error="账号或密码错误"
 		return render_template('welcome.html',error = error)

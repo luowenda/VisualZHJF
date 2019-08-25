@@ -2,7 +2,7 @@
 # encoding:utf-8
 
 
-from flask import Flask, render_template,request
+from flask import Flask, render_template, request, session, redirect, url_for
 import config
 import os
 import json
@@ -11,7 +11,6 @@ import re
 import numpy as np
 import pandas as pd
 from IPython.display import HTML
-from flask import Flask, render_template, session, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
@@ -169,9 +168,9 @@ def login():
 		rs_roleid= cursor.fetchone()
 		roleID=rs_roleid[0]
 		if(roleID==1):
-			return stu_index()
+			return redirect(url_for('stu_index'))
 		else:
-			return tea_index()
+			return redirect(url_for('tea_index'))
 	else:
 		error="账号或密码错误"
 		return render_template('welcome.html',error = error)
@@ -184,7 +183,7 @@ def stu_index():
 #个人成绩界面（根据课程属性筛选）（表格）
 @app.route('/student/GradeByAttri', methods=['GET','POST'])
 def GradeByAttri():
-    userID = '1031101' #TODO需要从登录信息获取
+    global userID
     #获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID) #匹配字符串用like
     cursor.execute(sql)
@@ -226,7 +225,7 @@ def GradeByAttri():
 #个人成绩界面（根据学期筛选）（表格）
 @app.route('/student/GradeBySemester', methods=['GET','POST'])
 def GradeBySemester():
-    userID = '1031101'  # TODO需要从登录信息获取
+    global userID
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like
     cursor.execute(sql)
@@ -280,7 +279,7 @@ def getList(search):
 #GPA计算界面
 @app.route('/student/GPACalculator')
 def GPACalculator():
-    userID = '1031101' #TODO需要从登录信息获取
+    global userID
     grade = getGrade(userID)
     gpa = getGPA(userID,grade,4,2)
     return render_template('student/GPACalculator.html',GPA=gpa)
@@ -288,8 +287,7 @@ def GPACalculator():
 #查看GPA走向界面（折线）
 @app.route('/student/GPATrend')
 def GPATrend():
-    userID = '1031101' #TODO需要从登录信息获取
-    
+    global userID
     grade = getGrade(userID)
     GPA = []
     for i in range(1,5):
@@ -300,7 +298,7 @@ def GPATrend():
 #我的附加分界面（表格）
 @app.route('/student/MyExtra')
 def MyExtra():
-    userID = '1031101' #TODO需要从登录信息获取
+    global userID
     items = getBonus(userID)
     return render_template('student/MyExtra.html',result = items)
 
@@ -315,7 +313,7 @@ def getBonus(userID):
 #我的综合积分界面（雷达）
 @app.route('/student/MyComprehensiveEval')
 def MyComprehensiveEval():
-    userID = '1031101' #TODO需要从登录信息获取
+    global userID
     sql = '''select moralScore,intellectualScore,socialScore,bonus 
             from evaluationFinalScore 
             where userId={}'''.format(userID)
@@ -326,7 +324,7 @@ def MyComprehensiveEval():
 #综合积分汇总界面（表格）
 @app.route('/student/TotalComprehensiveEval', methods=['GET','POST'])
 def TotalComprehensiveEval():
-    userID = '1031101' #TODO需要从登录信息获取
+    global userID
     sql = '''select grade, departId 
             from EvaluationFinalScore 
             where userId={}'''.format(userID)
@@ -373,7 +371,7 @@ def TotalComprehensiveEval():
 #教师首页
 @app.route('/teacher')
 def tea_index():
-    return render_template('/teacher/index.html')
+    return render_template('teacher/index.html')
 
 #专业总览
 @app.route('/teacher/MajorOverview', methods=['GET','POST'])
@@ -525,7 +523,13 @@ def Bonus():
 #多人（班级）比较-学生成绩
 @app.route('/teacher/ComByStu')
 def ComByStu():
-    return render_template('/teacher/ComByStu.html')
+    names = ['张', '李', '王']
+    courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
+    grades = [[67,78,80,78], [79,70,90,50], [80,89,90,95]]
+    return render_template('/teacher/ComByStu.html', 
+                                names = names, 
+                                courses = courses, 
+                                grades = grades)
 
 #多人（班级）比较-班级成绩对比
 @app.route('/teacher/CompByClass')
@@ -601,44 +605,6 @@ if __name__ == '__main__':
 # def column():
 #     dataz=[2,4,6,10,8]
 #     return render_template('column.html',data=dataz)
-
-# @app.route('/table')
-# def table():
-#     data = open('data/16cs1.json', encoding='utf8').read()
-#     columns = ["学号", "高数1","高数2","线性代数"]
-#     dat = json.loads(data)
-#     dic = { #dict中key应和columns一致
-#         "学号": [],
-#         "高数1": [],
-#         "高数2": [],
-#         "线性代数": []
-#     }
-#     for stu in dat['2016CS1']:
-#         dic['学号'].append(stu)
-#         dic['高数1'].append(dat['2016CS1'][stu]['3250300106'])
-#         dic['高数2'].append(dat['2016CS1'][stu]['3250300204'])
-#         dic['线性代数'].append(dat['2016CS1'][stu]['3250300303'])
-#     df = pd.DataFrame(data=dic, columns=columns)
-#     convert = df.to_html(classes='table table-striped table-hover table-sm table-borderless',
-#                             border=None, justify=None)
-
-#     # data = open('data/data.json', encoding='utf8').read()
-#     # columns = ["stuid", "name", "classid", "grade"]
-#     # dat = json.loads(data)
-#     # dic = {
-#     #     "stuid": [],
-#     #     "name": [],
-#     #     "classid": [],
-#     #     "grade": []
-#     # }
-#     # for stu in dat:
-#     #     dic['stuid'].append(stu['stuid'])
-#     #     dic['name'].append(stu[u'name'])
-#     #     dic['classid'].append(stu['classid'])
-#     #     dic['grade'].append(stu['grade'])
-   
-#     return render_template('student/table.html',table = convert)
-
 
 # @app.route("/search", methods=['GET', 'POST'])
 # def search():

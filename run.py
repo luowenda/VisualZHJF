@@ -521,20 +521,30 @@ def Bonus():
                                 table = convert)
 
 #多人（班级）比较-学生成绩
-@app.route('/teacher/ComByStu')
-def ComByStu():
+@app.route('/teacher/CompByStu', methods=['GET','POST'])
+def CompByStu():
     names = ['张', '李', '王']
     courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
     grades = [[67,78,80,78], [79,70,90,50], [80,89,90,95]]
-    return render_template('/teacher/ComByStu.html', 
+    return render_template('/teacher/CompByStu.html', 
                                 names = names, 
                                 courses = courses, 
                                 grades = grades)
 
 #多人（班级）比较-班级成绩对比
-@app.route('/teacher/CompByClass')
+@app.route('/teacher/CompByClass', methods=['GET','POST'])
 def CompByClass():
-    return render_template('/teacher/CompByClass.html')
+    year = [2010, 2011, 2012]
+    major = ['计算机科学', '数字媒体', '信息系统管理']
+    two_class = ["12级计算机1班", "12级计算机2班"] #用字符串拼起来
+    courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
+    grades = [[67,78,80,78], [79,70,90,50]]
+    return render_template('/teacher/CompByClass.html',
+                                year = year,
+                                major = major,
+                                two_class = two_class, 
+                                courses = courses, 
+                                grades = grades)
 
 #多人（班级）比较-各届成绩对比
 @app.route('/teacher/CompByYear')

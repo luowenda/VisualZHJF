@@ -36,15 +36,15 @@ form{
 #submit{
     background-color: #3d9ddd;
     color: aliceblue;
-    position: relative;
-    left: 80px;
-    top:20px;
+    position: absolute;
+    left: 90px;
+    top:150px;
     border: 0px;
     font-size: 18px;
 }
 .tips{
     position: relative;
-    color: red;
+    color:red;
     left: 15px;
     font-size: 10px;
 }

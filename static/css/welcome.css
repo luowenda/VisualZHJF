@@ -24,18 +24,27 @@
 }
 form{
     position: absolute;
-    margin: 210px 0px 0px 580px;
+    margin: 210px 0px 0px 540px;
 
 }
 .username,.passwd{
-    width: 140px;
+    width: 200px;
     height: 20px;
-    
+    margin: 15px;
+    padding: 5px;
 }
 #submit{
     background-color: #3d9ddd;
     color: aliceblue;
     position: relative;
-    left: 40px;
-    top:10px;
+    left: 80px;
+    top:20px;
+    border: 0px;
+    font-size: 18px;
+}
+.tips{
+    position: relative;
+    color: red;
+    left: 15px;
+    font-size: 10px;
 }

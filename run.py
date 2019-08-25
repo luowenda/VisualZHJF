@@ -18,7 +18,7 @@ from wtforms.validators import DataRequired
 import pymssql
 
 conn = pymssql.connect(#host='.',
-                        server='172.16.108.155',
+                        server='172.16.108.151',
                        user='sa',
                        password='123456',
                        database='zhjfdemo1',
@@ -142,7 +142,7 @@ def getGPA(userID,grade,year,semester):
         gpa = pointSum/creditSum
     return round(gpa,2) 
 
-
+userID=None
 
 #登陆界面
 @app.route('/',methods=['get'])
@@ -179,7 +179,11 @@ def login():
 #学生界面首页
 @app.route('/student')
 def stu_index():
-    return render_template('/student/index.html')
+    sql="select userName from dbo.[user] where userID='"+userID+"'"
+    cursor.execute(sql)
+    userName=cursor.fetchall()
+    userName=userName[0][0]
+    return render_template('/student/index.html',username=userName)
 
 #个人成绩界面（根据课程属性筛选）（表格）
 @app.route('/student/GradeByAttri')
@@ -321,7 +325,11 @@ def TotalComprehensiveEval():
 #教师首页
 @app.route('/teacher')
 def tea_index():
-    return render_template('/teacher/index.html')
+    sql="select userName from dbo.[user] where userID='"+userID+"'"
+    cursor.execute(sql)
+    userName=cursor.fetchall()
+    userName=userName[0][0]
+    return render_template('/teacher/index.html',username=userName)
 
 #专业总览
 @app.route('/teacher/MajorOverview', methods=['GET','POST'])

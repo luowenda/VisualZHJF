@@ -147,34 +147,34 @@ userID=None
 #登陆界面
 @app.route('/',methods=['get'])
 def welcome():
-	return render_template('welcome.html')
+    return render_template('welcome.html')
 
 @app.route('/', methods = ['POST'])
 def login():
-	error=None
-	global userID 
-	userID = request.form['username']
-	pwd = request.form['passwd']
+    error=None
+    global userID
+    userID = request.form['username']
+    pwd = request.form['passwd']
 
-	sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
-	sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
-	cursor.execute(sql1)
-	#用一个rs_***变量获取数据
-	rs_userid = cursor.fetchall()
-	num=0
-	for data in rs_userid:
-		num=num+1
-	if(num!=0):
-		cursor.execute(sql2)
-		rs_roleid= cursor.fetchone()
-		roleID=rs_roleid[0]
-		if(roleID==1):
-			return redirect(url_for('stu_index'))
-		else:
-			return redirect(url_for('tea_index'))
-	else:
-		error="账号或密码错误"
-		return render_template('welcome.html',error = error)
+    sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
+    sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
+    cursor.execute(sql1)
+    #用一个rs_***变量获取数据
+    rs_userid = cursor.fetchall()
+    num=0
+    for data in rs_userid:
+        num=num+1
+    if(num!=0):
+        cursor.execute(sql2)
+        rs_roleid= cursor.fetchone()
+        roleID=rs_roleid[0]
+        if(roleID==1):
+            return redirect(url_for('stu_index'))
+        else:
+            return redirect(url_for('tea_index'))
+    else:
+        error="账号或密码错误"
+        return render_template('welcome.html',error = error)
 
 #学生界面首页
 @app.route('/student')

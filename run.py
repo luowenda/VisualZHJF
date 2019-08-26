@@ -21,7 +21,7 @@ import pymssql
 
 
 conn = pymssql.connect(#host='.',
-                        server='172.16.108.151',
+                        server='172.16.108.152',
                        user='sa',
                        password='123456',
                        database='zhjfdemo1',
@@ -150,11 +150,20 @@ def fillinusername():
     userName=cursor.fetchall()
     userName=userName[0][0]
     return userName
+def userIDisNone():
+    global userID
+    if userID == None:
+        return 1
+    else:
+        return 0
+
 userID=None
 
 #登陆界面
 @app.route('/',methods=['get'])
 def welcome():
+    global userID
+    userID = None
     return render_template('welcome.html')
 
 @app.route('/', methods = ['POST'])
@@ -163,7 +172,13 @@ def login():
     global userID
     userID = request.form['username']
     pwd = request.form['passwd']
-
+    if not all([userID,pwd]):
+        if userID == "":
+            error = "请输入用户名"
+            return render_template('welcome.html',error=error)
+        else:
+            error = "请输入密码"
+            return render_template('welcome.html',error=error)
     sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
     sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
     cursor.execute(sql1)
@@ -187,12 +202,15 @@ def login():
 #学生界面首页
 @app.route('/student')
 def stu_index():
-
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     return render_template('/student/index.html',username=fillinusername())
 
 #个人成绩界面（根据课程属性筛选）（表格）
 @app.route('/student/GradeByAttri', methods=['GET','POST'])
 def GradeByAttri():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     userID = '1031101' #TODO需要从登录信息获取
     #获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID) #匹配字符串用like
@@ -235,6 +253,8 @@ def GradeByAttri():
 #个人成绩界面（根据学期筛选）（表格）
 @app.route('/student/GradeBySemester', methods=['GET','POST'])
 def GradeBySemester():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     userID = '1031101'  # TODO需要从登录信息获取
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like
@@ -289,6 +309,8 @@ def getList(search):
 #GPA计算界面
 @app.route('/student/GPACalculator')
 def GPACalculator():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     userID = '1031101' #TODO需要从登录信息获取
     grade = getGrade(userID)
     gpa = getGPA(userID,grade,4,2)
@@ -297,6 +319,8 @@ def GPACalculator():
 #查看GPA走向界面（折线）
 @app.route('/student/GPATrend')
 def GPATrend():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     userID = '1031101' #TODO需要从登录信息获取
     
     grade = getGrade(userID)
@@ -309,6 +333,8 @@ def GPATrend():
 #我的附加分界面（表格）
 @app.route('/student/MyExtra')
 def MyExtra():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     userID = '1031101' #TODO需要从登录信息获取
     items = getBonus(userID)
     return render_template('student/MyExtra.html',result = items,username=fillinusername())
@@ -324,6 +350,8 @@ def getBonus(userID):
 #我的综合积分界面（雷达）
 @app.route('/student/MyComprehensiveEval')
 def MyComprehensiveEval():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     userID = '1031101' #TODO需要从登录信息获取
     sql = '''select moralScore,intellectualScore,socialScore,bonus 
             from evaluationFinalScore 
@@ -335,6 +363,8 @@ def MyComprehensiveEval():
 #综合积分汇总界面（表格）
 @app.route('/student/TotalComprehensiveEval', methods=['GET','POST'])
 def TotalComprehensiveEval():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     userID = '1031101' #TODO需要从登录信息获取
     sql = '''select grade, departId 
             from EvaluationFinalScore 
@@ -382,11 +412,15 @@ def TotalComprehensiveEval():
 #教师首页
 @app.route('/teacher')
 def tea_index():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     return render_template('/teacher/index.html',username=fillinusername())
 
 #专业总览
 @app.route('/teacher/MajorOverview', methods=['GET','POST'])
 def MajorOverview():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     getGrade = '''select distinct grade 
                 from evaluationFinalScore'''
     grade = getList(getGrade)
@@ -435,6 +469,8 @@ def getList(search):
 #课程总览
 @app.route('/teacher/CourseOverview',methods=['GET','POST'])
 def CourseOverview():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     result=[]
     getGrade = '''select distinct grade 
                 from currGrade'''
@@ -489,6 +525,8 @@ def countUser(currID,grade,year,seme,lowgrade,highgrade):
 #个人查询-成绩走向
 @app.route('/teacher/GradeTrend',methods=['GET','POST'])
 def GradeTrend():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     if request.method == "POST":   
         userID = request.values.get("userID")
         name = getName(userID)
@@ -502,6 +540,8 @@ def GradeTrend():
 #个人查询-挂科情况统计
 @app.route('/teacher/FailedCourses',methods=['GET','POST'])
 def FailedCourses():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     name = ''
     courses = []
     if request.method == "POST":   
@@ -524,6 +564,8 @@ def getCourses(userID):
 #个人查询-附加分统计
 @app.route('/teacher/Bonus',methods=['GET','POST'])
 def Bonus():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     name = ''
     convert = ''
     if request.method == "POST":   
@@ -538,20 +580,26 @@ def Bonus():
 #多人（班级）比较-学生成绩
 @app.route('/teacher/ComByStu')
 def ComByStu():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     return render_template('/teacher/ComByStu.html',username=fillinusername())
 
 #多人（班级）比较-班级成绩对比
 @app.route('/teacher/CompByClass')
 def CompByClass():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     return render_template('/teacher/CompByClass.html',username=fillinusername())
 
 #多人（班级）比较-各届成绩对比
 @app.route('/teacher/CompByYear')
 def CompByYear():
+    if userIDisNone():
+        return redirect(url_for('welcome'))
     return render_template('/teacher/CompByYear.html',username=fillinusername())
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
 
 #以下为原代码，参考这些
 # @app.route('/')

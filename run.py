@@ -153,30 +153,30 @@ def welcome():
 
 @app.route('/', methods = ['POST'])
 def login():
-	error=None
-	global userID 
-	userID = request.form['username']
-	pwd = request.form['passwd']
+    error=None
+    global userID
+    userID = request.form['username']
+    pwd = request.form['passwd']
 
-	sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
-	sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
-	cursor.execute(sql1)
-	#用一个rs_***变量获取数据
-	rs_userid = cursor.fetchall()
-	num=0
-	for data in rs_userid:
-		num=num+1
-	if(num!=0):
-		cursor.execute(sql2)
-		rs_roleid= cursor.fetchone()
-		roleID=rs_roleid[0]
-		if(roleID==1):
-			return redirect(url_for('stu_index'))
-		else:
-			return redirect(url_for('tea_index'))
-	else:
-		error="账号或密码错误"
-		return render_template('welcome.html',error = error)
+    sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
+    sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
+    cursor.execute(sql1)
+    #用一个rs_***变量获取数据
+    rs_userid = cursor.fetchall()
+    num=0
+    for data in rs_userid:
+        num=num+1
+    if(num!=0):
+        cursor.execute(sql2)
+        rs_roleid= cursor.fetchone()
+        roleID=rs_roleid[0]
+        if(roleID==1):
+            return redirect(url_for('stu_index'))
+        else:
+            return redirect(url_for('tea_index'))
+    else:
+        error="账号或密码错误"
+        return render_template('welcome.html',error = error)
 
 #学生界面首页
 @app.route('/student')
@@ -538,6 +538,12 @@ def CompByStu():
     names = ['张', '李', '王']
     courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
     grades = [[67,78,80,78], [79,70,90,50], [80,89,90,95]]
+    if request.method == "POST":
+        stuID = request.values.get("MultiID")
+        stuList = stuID.split(" ")
+        for ID in stuList:
+            names.append(getName(ID))
+
     return render_template('/teacher/CompByStu.html', 
                                 names = names, 
                                 courses = courses, 
@@ -546,15 +552,81 @@ def CompByStu():
 #多人（班级）比较-班级成绩对比
 @app.route('/teacher/CompByClass', methods=['GET','POST'])
 def CompByClass():
-    year = [2010, 2011, 2012]
-    major = ['计算机科学', '数字媒体', '信息系统管理']
-    two_class = ["12级计算机1班", "12级计算机2班"] #用字符串拼起来
-    courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
-    grades = [[67,78,80,78], [79,70,90,50]]
+    two_class = []
+
+    getYear = 'select distinct yearIn from class'
+    year = getList(getYear)
+
+    getMajor = '''select distinct departName 
+                    from department 
+                    where departID in 
+                                        (select departID 
+                                        from class)'''
+    major = getList(getMajor)
+
+    getClass = 'select distinct className from class'
+    classes = getList(getClass)
+
+    c1 = []
+    c2 = []
+    courses = []
+    grades = []
+    if request.method == "POST":   
+        selectedYear = request.values.get("year")
+        selectedMajor = request.values.get("major")
+        selectedClass1 = request.values.get("class1")
+        selectedClass2 = request.values.get("class2")
+        
+        two_class.append(selectedYear+selectedMajor+selectedClass1)
+        two_class.append(selectedYear+selectedMajor+selectedClass2)
+
+        getDepartID = '''select departID 
+                         from department 
+                         where departName = \'{}\''''.format(selectedMajor)
+        deprtID = int(getList(getDepartID)[0])
+        
+        getClass1ID = '''select classID
+                         from class
+                         where className = \'{}\' and departID = {} and yearIn = {}'''.format(selectedClass1,deprtID,selectedYear)
+        class1ID = int(getList(getClass1ID)[0])
+
+        getClass2ID = '''select classID
+                         from class
+                         where className = \'{}\' and departID = {} and yearIn = {}'''.format(selectedClass2,deprtID,selectedYear)
+        class2ID = int(getList(getClass2ID)[0])
+
+        getResult = '''select currName,round(avg(examGrade),2) as avgGrade into c1
+                        from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
+                        inner join curriculum on currGrade.currID = curriculum.currID
+                        where classID = {} and grade = {} and examGrade != 0
+                        group by currName
+
+                        select currName,round(avg(examGrade),2) as avgGrade into c2
+                        from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
+                        inner join curriculum on currGrade.currID = curriculum.currID
+                        where classID = {} and grade = {} and examGrade != 0
+                        group by currName
+
+                        select c1.currName,c1.avgGrade as c1Grade,c2.avgGrade as c2Grade
+                        from c1 inner join c2 on c1.currName  = c2.currName
+
+                        drop table c1
+                        drop table c2'''.format(int(class1ID),int(selectedYear),int(class2ID),int(selectedYear))
+        cursor.execute(getResult)
+        result = cursor.fetchall()
+        
+        for item in result:
+            courses.append(item[0])
+            c1.append(item[1])
+            c2.append(item[2])
+        grades.append(c1)
+        grades.append(c2)
+
     return render_template('/teacher/CompByClass.html',
                                 year = year,
                                 major = major,
-                                two_class = two_class, 
+                                classes = classes, 
+                                two_class = two_class,
                                 courses = courses, 
                                 grades = grades)
 

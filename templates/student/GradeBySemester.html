@@ -4,21 +4,46 @@
         {% block title %}个人成绩{% endblock %}
 
         {% block main %}
-        <form action="{{  url_for('GradeBySemester') }}" method=post>
-        <select class="custom-select" name="year" method="GET" action="/">
-             <option selected>学年</option>
+        <script type="text/javascript" >
+        
+        function setBlank(){
+        var value1 = document.getElementById('year').value;
+        var value2 = document.getElementById('semester').value;
+        localStorage.setItem("user_selected_year", value1);
+        localStorage.setItem("user_selected_semester", value2);}
+
+        function getYear(){
+        return localStorage.getItem("user_selected_year");}
+
+        function getSemester(){
+        return localStorage.getItem("user_selected_semester");}
+        </script>
+        <form action="{{  url_for('GradeBySemester') }}" method="POST" onsubmit="setBlank()">
+        <script type="text/javascript">
+        </script>
+        <br />
+        &nbsp&nbsp&nbsp&nbsp请选择学年：
+        <select class="custom-select" name="year" id="year" method="GET" action="/" style="width:200px;margin: 0 auto;">
             {% for yearitem in year %}
-             <option value="{{yearitem}}">{{  yearitem  }}</option>"
+             <option value="{{yearitem}}"> {{  yearitem  }}</option>"
             {% endfor %}
         </select>
-		<select class="custom-select" name="semester" method="GET" action="/">
-             <option selected>学期</option>
+        <script type="text/javascript">
+            document.getElementById('year').value = getYear();
+        </script>
+        &nbsp&nbsp&nbsp&nbsp请选择学期：
+		<select class="custom-select" name="semester" id="semester" method="GET" action="/" style="width:200px;margin: 0 auto;">
             {% for semesteritem in semester %}
              <option value="{{semesteritem}}">{{  semesteritem  }}</option>"
             {% endfor %}
         </select>
+        <script type="text/javascript">
+            document.getElementById('semester').value = getSemester();
+        </script>
+        &nbsp&nbsp&nbsp&nbsp
         <input class="btn btn-primary" type="submit" value="查询"></form>
-
+        <br />
+        <br />
         <table class="table table-striped" style="width: 500px;height:500px;margin: 0 auto">
 	        <thead>
 		        <tr>

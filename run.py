@@ -282,11 +282,6 @@ def GradeBySemester():
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
 
-        print(semester)
-        print(year)
-        print(selectedYear)
-        print(selectedSemester)
-
         # 获取属性课程列表
         sql = '''select distinct currName, period, credit, examGrade  \
                       from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 \
@@ -629,88 +624,4 @@ def CompByYear():
 if __name__ == '__main__':
     app.run(debug=True)
 
-#以下为原代码，参考这些
-# @app.route('/')
-# def index():
-#     return render_template('index.html')
-
-
-# @app.route('/radar')
-# def radar():
-#     id = "201611580516"
-#     with open('data/info.json', encoding='utf-8') as json_file:
-#         data = json.load(json_file)
-#     score = data[id]["score"]
-#     name = data[id]["name"]
-#     return render_template('radar.html', score=score, name=name)
-
-
-# @app.route('/radar')
-# def radar():
-#     id = "201611580516"
-#     with open('data/info.json', encoding='utf-8') as json_file:
-#         data = json.load(json_file)
-#     score = data[id]["score"]
-#     name = data[id]["name"]
-#     return render_template('radar.html', score=score, name=name)
-
-# @app.route('/radar_search', methods=['GET', 'POST'])
-# def radar_search():
-#     form = NameForm()
-#     score = None
-#     name = None
-    
-#     if form.validate_on_submit():
-#         session['id'] = form.id.data
-#         return redirect(url_for('radar_search'))
-#         #form.id.data = ''
-    
-#     id = session.get('id')
-#     with open('data/info.json', encoding='utf-8') as json_file:
-# 	    data = json.load(json_file)
-#     #EG
-    
-#     if (data.get(id)):
-#         score = data.get(id)["score"]
-#         name  = data.get(id)["name"]
-#     return render_template('radar_search.html',form = form,score = score,name = name)
-
-# @app.route('/zhexian')
-# def zhexian():
-#     A_data = [3.17, 3.75, 3.21, 3.46, 3.43, 3.31, 3.08, 3.61]
-#     B_data = [3.1, 3.00, 3.38, 3.01, 3.52, 3.87, 3.37, 3.85]
-#     return render_template('student/zhexian.html', A_data=A_data, B_data=B_data)
-
-
-# @app.route('/pie')
-# def pie():
-#     return render_template('pie.html')
-
-# @app.route('/column')
-# def column():
-#     dataz=[2,4,6,10,8]
-#     return render_template('column.html',data=dataz)
-
-# @app.route("/search", methods=['GET', 'POST'])
-# def search():
-#     if request.method == 'GET':
-#         return render_template('search.html',
-#                                sid1_name = None,
-#                                sid2_name = None,
-#                                sid1_score = None,
-#                                sid2_score = None)
-#     else:
-#         sid1 = request.form.get('sid1')
-#         sid2 = request.form.get('sid2')
-#         with open('data/info.json', encoding='utf-8') as json_file:
-#             data = json.load(json_file)
-#         sid1_name = data[sid1]["name"]
-#         sid2_name = data[sid2]["name"]
-#         sid1_score = data[sid1]["com_score"]
-#         sid2_score = data[sid2]["com_score"]
-#         return render_template('search.html',
-#                                sid1_name = sid1_name,
-#                                sid2_name = sid2_name,
-#                                sid1_score = sid1_score,
-#                                sid2_score = sid2_score)
 

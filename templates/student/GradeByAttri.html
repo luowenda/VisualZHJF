@@ -4,13 +4,27 @@
         {% block title %}个人成绩{% endblock %}
 
         {% block main %}
-       <form action="{{  url_for('GradeByAttri') }}" method=post>
-        <select class="custom-select" name="attri" method="GET" action="/">
-             <option selected>课程属性</option>
+        <script type="text/javascript" >
+        
+            function setAttri(){
+            var value = document.getElementById('attri').value;
+            localStorage.setItem("user_selected_attri", value);}
+    
+            function getAttri(){
+            return localStorage.getItem("user_selected_attri");}
+        </script>
+       <form action="{{  url_for('GradeByAttri') }}" method="POST" onsubmit="setAttri()">
+        <br />
+        &nbsp&nbsp&nbsp&nbsp请选择课程属性：
+        <select class="custom-select" name="attri" id="attri" method="GET" action="/" style="width:200px;margin: 0 auto;">
             {% for attriitem in attri %}
              <option value="{{attriitem}}">{{  attriitem  }}</option>"
             {% endfor %}
         </select>
+        <script type="text/javascript">
+            document.getElementById('attri').value = getAttri();
+        </script>
+        &nbsp&nbsp&nbsp&nbsp
         <input class="btn btn-primary" type="submit" value="查询"></form>
 
         <table class="table table-striped" style="width: 500px;height:500px;margin: 0 auto">

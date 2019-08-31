@@ -256,11 +256,6 @@ def GradeBySemester():
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
 
-        print(semester)
-        print(year)
-        print(selectedYear)
-        print(selectedSemester)
-
         # 获取属性课程列表
         sql = '''select distinct currName, period, credit, examGrade  \
                       from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 \

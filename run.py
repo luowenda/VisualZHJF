@@ -462,13 +462,6 @@ def MajorOverview():
                             result = result,
                             username=fillinusername())
 
-def getList(search):
-    cursor.execute(search)
-    showList = cursor.fetchall()
-    for i,item in enumerate(showList):
-        showList[i] = str(item[0])
-    return showList
-
 #课程总览
 @app.route('/teacher/CourseOverview',methods=['GET','POST'])
 def CourseOverview():
@@ -585,20 +578,38 @@ def Bonus():
 def CompByStu():
     if userIDisNone():
         return redirect(url_for('welcome'))
-    names = ['张', '李', '王']
-    courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
-    grades = [[67,78,80,78], [79,70,90,50], [80,89,90,95]]
+    names = []
+    courses = []
+    grades = []
     if request.method == "POST":
         stuID = request.values.get("MultiID")
-        stuList = stuID.split(" ")
+        stuList = stuID.split(",")
+        ID = stuList[0]
+        getStuCour = '''select curriculum.currName
+                        from currGrade inner join curriculum on currGrade.currID = curriculum.currID
+                        where userID = \'{}\''''.format(ID)
+        courses = getList(getStuCour)
         for ID in stuList:
-            names.append(getName(ID))
-
+            name = getName(int(ID))
+            names.append(name)
+            currStuCour = getList(getStuCour)
+            courses = list(set(currStuCour).intersection(set(courses)))
+        for ID in stuList:
+            gradeList = []
+            for course in courses:
+                getCourGrade = '''select examGrade
+                                    from currGrade inner join curriculum on currGrade.currID = curriculum.currID
+                                    where userID = \'{}\' and currName = \'{}\''''.format(ID,course)
+                grade = getList(getCourGrade)[0]
+                gradeList.append(grade)
+            grades.append(gradeList)
     return render_template('/teacher/CompByStu.html', 
-                                username=fillinusername(),
-                                names = names, 
-                                courses = courses, 
-                                grades = grades)
+                                    username=fillinusername(),
+                                    names = names, 
+                                    courses = courses, 
+                                    grades = grades)
+
+    
 
 #多人（班级）比较-班级成绩对比
 @app.route('/teacher/CompByClass', methods=['GET','POST'])

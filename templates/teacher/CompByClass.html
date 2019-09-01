@@ -1,7 +1,107 @@
 {% extends 'teacher/base.html' %}
 
-{% block title %}班级成绩对比{% endblock %}
+{% block title %}多班级比较{% endblock %}
 
 {% block main %}
-班级成绩对比
+
+<form action="{{  url_for('CompByClass') }}" method="POST">
+    请选择待比较班级：
+    <select class="custom-select" name="year" method="GET" action="/">
+        <option selected>年级</option> 
+        {% for yearitem in year %} 
+         <option value="{{yearitem}}">{{  yearitem  }}</option>" 
+        {% endfor %} 
+    </select> 
+    <select class="custom-select" name="major" method="GET" action="/">
+      <option selected>专业</option> 
+      {% for majoritem in major %} 
+       <option value="{{majoritem}}">{{  majoritem  }}</option>" 
+      {% endfor %}
+    </select>
+    <select class="custom-select" name="class1" method="GET" action="/">
+        <option selected>班级1</option> 
+        {% for class in classes %} 
+         <option value="{{class}}">{{class}}</option>" 
+        {% endfor %} 
+    </select> 
+    <select class="custom-select" name="class2" method="GET" action="/">
+        <option selected>班级2</option> 
+        {% for class in classes %} 
+        <option value="{{class}}">{{class}}</option>" 
+        {% endfor %} 
+    </select> 
+    <input class="btn btn-primary" type="submit" value="比较">
+</form>
+
+<div id="main2" style="width: 800px;height:500px;margin: 0 auto;"></div>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+<script type="text/javascript">
+	var myChart2 = echarts.init(document.getElementById('main2'));
+	// 指定图表的配置项和数据
+		var option2 = {
+                title : {
+                    text: '班级平均成绩对比',
+                    subtext: '基于相同课程'
+                },
+            tooltip : {
+                trigger: 'axis'
+            },
+
+			
+            legend: {
+                data:{{two_class|tojson}}
+            },
+			
+        
+          
+
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            
+			calculable : true,
+            
+			xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : {{courses|tojson}}
+                }
+            ],
+            
+			yAxis : [
+                {
+                    type : 'value',
+                    axisLabel : {
+                        formatter: '{value}'
+                    }
+                }
+            ],
+			
+            series : [
+                {%for class in two_class%}
+                {
+                    name:{{class|tojson}},
+                    type:'line',
+                    data:{{grades[loop.index0]|tojson}},
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                },
+				{%endfor%}
+                
+            ]
+        };
+    myChart2.setOption(option2);
+</script>
 {% endblock %}

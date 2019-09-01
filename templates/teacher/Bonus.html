@@ -3,17 +3,43 @@
 {% block title %}附加分统计{% endblock %}
 
 {% block main %}
-<form action="{{  url_for('Bonus') }}" method='POST'>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="请输入学号" aria-label="userID" name="userID"
-            aria-describedby="button-addon2">
-        <div class="input-group-append">
+<script type="text/javascript" >
+    function setBlank(){
+    var value1 = document.getElementById('userID').value;
+    localStorage.setItem("user_selected_userID", value1);}
+
+    function getUserID(){
+    return localStorage.getItem("user_selected_userID");}
+    </script>
+<form action="{{  url_for('Bonus') }}" method='POST' onsubmit="setBlank()">
+            &nbsp&nbsp&nbsp&nbsp请输入学号：
+            <input type="text" name="userID" id="userID" method="POST"/>
+            <script type="text/javascript">
+                document.getElementById('userID').value = getUserID();
+            </script>
+                &nbsp&nbsp&nbsp&nbsp
             <input class="btn btn-primary" type="submit" value="查询">
-        </div>
-    </div>
-</form>
-<div style="height:30px;margin: 0 auto;"></div>
-<div style="width: 500px;height:500px;margin: 0 auto;">
-    {{table|safe}}
-</div>
+        </form>
+            <div style="height:30px;margin: 0 auto;"></div>
+            <div style="width: 500px;height:500px;margin: 0 auto;">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>项目内容</th>
+                    <th>分数</th>
+                    <th>学期</th> <!--#数据库存在学期为3，不知道为啥-->
+                  </tr>
+                </thead>
+                <tbody>
+                {% for line in result %}
+                  <tr>
+                    {% for item in line %}
+                    <td name="{{item}}">{{item}}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
 {% endblock %}

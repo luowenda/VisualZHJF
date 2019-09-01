@@ -319,7 +319,7 @@ def GPACalculator():
 def GPATrend():
     if userIDisNone():
         return redirect(url_for('welcome'))
-    userID = '1031101' #TODO需要从登录信息获取
+    
     global userID
     grade = getGrade(userID)
     GPA = []
@@ -333,7 +333,7 @@ def GPATrend():
 def MyExtra():
     if userIDisNone():
         return redirect(url_for('welcome'))
-    userID = '1031101' #TODO需要从登录信息获取
+    
     global userID
     items = getBonus(userID)
     return render_template('student/MyExtra.html',result = items,username=fillinusername())
@@ -571,16 +571,11 @@ def getCourses(userID):
 def Bonus():
     if userIDisNone():
         return redirect(url_for('welcome'))
-    name = ''
-    convert = ''
+    items = []
     if request.method == "POST":   
         userID = request.values.get("userID")
-        name = getName(userID)
-        convert = getBonus(userID)
-    return render_template('/teacher/Bonus.html',
-                                name = name,
-                                table = convert,
-                                username=fillinusername())
+        items = getBonus(userID)
+    return render_template('/teacher/Bonus.html',result = items,username=fillinusername())
 
 #多人（班级）比较-学生成绩
 @app.route('/teacher/CompByStu', methods=['GET','POST'])

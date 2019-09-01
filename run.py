@@ -227,8 +227,7 @@ def GradeByAttri():
     departID = content2[0][0]
 
     result = []
-    attri = ['isSpec', 'isCompulsory', 'isIntern']
-    #attri = ['专业课', '必修课', '公共课']
+    attri = ['专业课', '必修课', '公共课']
     if request.method == "POST":
         selectedAttri = request.values.get("attri")
         if selectedAttri == '专业课':
@@ -239,17 +238,25 @@ def GradeByAttri():
             selectedAttri = 'isIntern'
 
         #获取属性课程列表
-        sql = '''select distinct currName, period, credit, examGrade  \
-                  from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 \
-                  where userID={} and t2.departID={}\
-                  and t1.currID = t2.currID \
-                  and t1.currID = t3.currID \
-                  and t1.grade = t2.grade \
-                  and t1.academicYear like t2.academicYear \
-                  and t1.semester = t2.semester\
-                  and {} = 1'''.format(userID, departID, selectedAttri)
+        sql = '''select distinct currName, period, credit, examGrade, (select count(distinct userID) 
+                                                                       from currGrade where currID = t1.currID) as num,  
+                                                                      (select rank 
+                                                                      from(select  rank() over (order by examGrade desc) rank,*
+                                                                           from currGrade  
+                                                                           where currID = t1.currID ) T
+                                                                      where userID = {}) as ran 
+                          from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 
+                          where userID={} and t2.departID={}
+                          and t1.currID = t2.currID 
+                          and t1.currID = t3.currID 
+                          and t1.grade = t2.grade 
+                          and t1.academicYear like t2.academicYear
+                          and t1.semester = t2.semester
+                          and {} = 1'''.format(userID, userID, departID, selectedAttri)
         cursor.execute(sql)
         result = cursor.fetchall()
+
+
     return render_template('student/GradeByAttri.html',attri = attri, result = result,username=fillinusername())
 
 
@@ -283,16 +290,22 @@ def GradeBySemester():
         selectedSemester = request.values.get("semester")
 
         # 获取属性课程列表
-        sql = '''select distinct currName, period, credit, examGrade  \
-                      from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 \
-                      where userID={} and t2.departID={}\
-                      and t1.currID = t2.currID \
-                      and t1.currID = t3.currID \
-                      and t1.grade = t2.grade \
-                      and t1.academicYear like t2.academicYear \
-                      and t1.semester = t2.semester \
-                      and t1.semester = {} \
-                      and t1.academicYear = \'{}\' '''.format(userID, departID, selectedSemester, selectedYear)
+        sql = '''select distinct currName, period, credit, examGrade,(select count(distinct userID) 
+                                                                       from currGrade where currID = t1.currID) as num,  
+                                                                      (select rank 
+                                                                      from(select  rank() over (order by examGrade desc) rank,*
+                                                                           from currGrade  
+                                                                           where currID = t1.currID ) T
+                                                                      where userID = {}) as ran
+                      from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 
+                      where userID={} and t2.departID={}
+                      and t1.currID = t2.currID 
+                      and t1.currID = t3.currID 
+                      and t1.grade = t2.grade 
+                      and t1.academicYear like t2.academicYear 
+                      and t1.semester = t2.semester 
+                      and t1.semester = {} 
+                      and t1.academicYear = \'{}\' '''.format(userID, userID, departID, selectedSemester, selectedYear)
         cursor.execute(sql)
         result = cursor.fetchall()
     return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result,username=fillinusername())

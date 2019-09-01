@@ -587,7 +587,7 @@ def CompByStu():
         ID = stuList[0]
         getStuCour = '''select curriculum.currName
                         from currGrade inner join curriculum on currGrade.currID = curriculum.currID
-                        where userID = \'{}\''''.format(ID)
+                        where userID = \'{}\' and examGrade != 0'''.format(ID)
         courses = getList(getStuCour)
         for ID in stuList:
             name = getName(int(ID))

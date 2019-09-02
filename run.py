@@ -319,10 +319,7 @@ def GPACalculator():
 def GPATrend():
     if userIDisNone():
         return redirect(url_for('welcome'))
-<<<<<<< HEAD
-    userID = '1031101' #TODO需要从登录信息获取
-=======
->>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
+
     global userID
     grade = getGrade(userID)
     GPA = []
@@ -336,10 +333,7 @@ def GPATrend():
 def MyExtra():
     if userIDisNone():
         return redirect(url_for('welcome'))
-<<<<<<< HEAD
-    userID = '1031101' #TODO需要从登录信息获取
-=======
->>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
+
     global userID
     items = getBonus(userID)
     return render_template('student/MyExtra.html',result = items,username=fillinusername())
@@ -469,16 +463,7 @@ def MajorOverview():
                             depart = depart,
                             result = result,
                             username=fillinusername())
-<<<<<<< HEAD
 
-def getList(search):
-    cursor.execute(search)
-    showList = cursor.fetchall()
-    for i,item in enumerate(showList):
-        showList[i] = str(item[0])
-    return showList
-=======
->>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
 
 #课程总览
 @app.route('/teacher/CourseOverview',methods=['GET','POST'])
@@ -580,40 +565,20 @@ def getCourses(userID):
 def Bonus():
     if userIDisNone():
         return redirect(url_for('welcome'))
-<<<<<<< HEAD
-    name = ''
-    convert = ''
-    if request.method == "POST":   
-        userID = request.values.get("userID")
-        name = getName(userID)
-        convert = getBonus(userID)
-    return render_template('/teacher/Bonus.html',
-                                name = name,
-                                table = convert,
-                                username=fillinusername())
-=======
+
     items = []
     if request.method == "POST":   
         userID = request.values.get("userID")
         items = getBonus(userID)
     return render_template('/teacher/Bonus.html',result = items,username=fillinusername())
->>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
+
 
 #多人（班级）比较-学生成绩
 @app.route('/teacher/CompByStu', methods=['GET','POST'])
 def CompByStu():
     if userIDisNone():
         return redirect(url_for('welcome'))
-<<<<<<< HEAD
-    names = ['张', '李', '王']
-    courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
-    grades = [[67,78,80,78], [79,70,90,50], [80,89,90,95]]
-    return render_template('/teacher/CompByStu.html', 
-                                username=fillinusername(),
-                                names = names, 
-                                courses = courses, 
-                                grades = grades)
-=======
+
     names = []
     courses = []
     grades = []
@@ -646,20 +611,14 @@ def CompByStu():
                                     grades = grades)
 
     
->>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
+
 
 #多人（班级）比较-班级成绩对比
 @app.route('/teacher/CompByClass', methods=['GET','POST'])
 def CompByClass():
     if userIDisNone():
         return redirect(url_for('welcome'))
-<<<<<<< HEAD
-    year = [2010, 2011, 2012]
-    major = ['计算机科学', '数字媒体', '信息系统管理']
-    two_class = ["12级计算机1班", "12级计算机2班"] #用字符串拼起来
-    courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
-    grades = [[67,78,80,78], [79,70,90,50]]
-=======
+
     two_class = []
 
     getYear = 'select distinct yearIn from class'
@@ -730,7 +689,7 @@ def CompByClass():
         grades.append(c1)
         grades.append(c2)
 
->>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
+
     return render_template('/teacher/CompByClass.html',
                                 username=fillinusername(),
                                 year = year,
@@ -749,92 +708,4 @@ def CompByYear():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-<<<<<<< HEAD
-#以下为原代码，参考这些
-# @app.route('/')
-# def index():
-#     return render_template('index.html')
-
-
-# @app.route('/radar')
-# def radar():
-#     id = "201611580516"
-#     with open('data/info.json', encoding='utf-8') as json_file:
-#         data = json.load(json_file)
-#     score = data[id]["score"]
-#     name = data[id]["name"]
-#     return render_template('radar.html', score=score, name=name)
-
-
-# @app.route('/radar')
-# def radar():
-#     id = "201611580516"
-#     with open('data/info.json', encoding='utf-8') as json_file:
-#         data = json.load(json_file)
-#     score = data[id]["score"]
-#     name = data[id]["name"]
-#     return render_template('radar.html', score=score, name=name)
-
-# @app.route('/radar_search', methods=['GET', 'POST'])
-# def radar_search():
-#     form = NameForm()
-#     score = None
-#     name = None
-    
-#     if form.validate_on_submit():
-#         session['id'] = form.id.data
-#         return redirect(url_for('radar_search'))
-#         #form.id.data = ''
-    
-#     id = session.get('id')
-#     with open('data/info.json', encoding='utf-8') as json_file:
-# 	    data = json.load(json_file)
-#     #EG
-    
-#     if (data.get(id)):
-#         score = data.get(id)["score"]
-#         name  = data.get(id)["name"]
-#     return render_template('radar_search.html',form = form,score = score,name = name)
-
-# @app.route('/zhexian')
-# def zhexian():
-#     A_data = [3.17, 3.75, 3.21, 3.46, 3.43, 3.31, 3.08, 3.61]
-#     B_data = [3.1, 3.00, 3.38, 3.01, 3.52, 3.87, 3.37, 3.85]
-#     return render_template('student/zhexian.html', A_data=A_data, B_data=B_data)
-
-
-# @app.route('/pie')
-# def pie():
-#     return render_template('pie.html')
-
-# @app.route('/column')
-# def column():
-#     dataz=[2,4,6,10,8]
-#     return render_template('column.html',data=dataz)
-
-# @app.route("/search", methods=['GET', 'POST'])
-# def search():
-#     if request.method == 'GET':
-#         return render_template('search.html',
-#                                sid1_name = None,
-#                                sid2_name = None,
-#                                sid1_score = None,
-#                                sid2_score = None)
-#     else:
-#         sid1 = request.form.get('sid1')
-#         sid2 = request.form.get('sid2')
-#         with open('data/info.json', encoding='utf-8') as json_file:
-#             data = json.load(json_file)
-#         sid1_name = data[sid1]["name"]
-#         sid2_name = data[sid2]["name"]
-#         sid1_score = data[sid1]["com_score"]
-#         sid2_score = data[sid2]["com_score"]
-#         return render_template('search.html',
-#                                sid1_name = sid1_name,
-#                                sid2_name = sid2_name,
-#                                sid1_score = sid1_score,
-#                                sid2_score = sid2_score)
-=======
->>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
 

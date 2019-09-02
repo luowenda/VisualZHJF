@@ -3,17 +3,26 @@
 {% block title %}挂科情况统计{% endblock %}
 
 {% block main %}
-<form action="{{  url_for('FailedCourses') }}" method='POST'>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="请输入学号" aria-label="userID" name="userID"
-            aria-describedby="button-addon2">
-        <div class="input-group-append">
-            <input class="btn btn-primary" type="submit" value="查询">
-        </div>
-    </div>
-</form>
+<script type="text/javascript" >
+    function setBlank(){
+    var value1 = document.getElementById('userID').value;
+    localStorage.setItem("user_selected_userID", value1);}
 
-<div>{{name}}</div>
+    function getUserID(){
+    return localStorage.getItem("user_selected_userID");}
+    </script>
+<form action="{{  url_for('FailedCourses') }}" method='POST' onsubmit="setBlank()">
+            &nbsp&nbsp&nbsp&nbsp请输入学号：
+            <input type="text" name="userID" id="userID" method="POST"/>
+            <script type="text/javascript">
+                document.getElementById('userID').value = getUserID();
+            </script>
+                &nbsp&nbsp&nbsp&nbsp
+            <input class="btn btn-primary" type="submit" value="查询">
+</form>
+<br />
+<div>&nbsp&nbsp&nbsp&nbsp{{name}}的挂科情况如下：</div>
+<br />
 <table class="table table-striped">
     <thead>
         <tr>

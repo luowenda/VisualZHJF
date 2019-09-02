@@ -282,11 +282,6 @@ def GradeBySemester():
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
 
-        print(semester)
-        print(year)
-        print(selectedYear)
-        print(selectedSemester)
-
         # 获取属性课程列表
         sql = '''select distinct currName, period, credit, examGrade  \
                       from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 \
@@ -324,7 +319,10 @@ def GPACalculator():
 def GPATrend():
     if userIDisNone():
         return redirect(url_for('welcome'))
+<<<<<<< HEAD
     userID = '1031101' #TODO需要从登录信息获取
+=======
+>>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
     global userID
     grade = getGrade(userID)
     GPA = []
@@ -338,7 +336,10 @@ def GPATrend():
 def MyExtra():
     if userIDisNone():
         return redirect(url_for('welcome'))
+<<<<<<< HEAD
     userID = '1031101' #TODO需要从登录信息获取
+=======
+>>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
     global userID
     items = getBonus(userID)
     return render_template('student/MyExtra.html',result = items,username=fillinusername())
@@ -468,6 +469,7 @@ def MajorOverview():
                             depart = depart,
                             result = result,
                             username=fillinusername())
+<<<<<<< HEAD
 
 def getList(search):
     cursor.execute(search)
@@ -475,6 +477,8 @@ def getList(search):
     for i,item in enumerate(showList):
         showList[i] = str(item[0])
     return showList
+=======
+>>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
 
 #课程总览
 @app.route('/teacher/CourseOverview',methods=['GET','POST'])
@@ -576,6 +580,7 @@ def getCourses(userID):
 def Bonus():
     if userIDisNone():
         return redirect(url_for('welcome'))
+<<<<<<< HEAD
     name = ''
     convert = ''
     if request.method == "POST":   
@@ -586,12 +591,20 @@ def Bonus():
                                 name = name,
                                 table = convert,
                                 username=fillinusername())
+=======
+    items = []
+    if request.method == "POST":   
+        userID = request.values.get("userID")
+        items = getBonus(userID)
+    return render_template('/teacher/Bonus.html',result = items,username=fillinusername())
+>>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
 
 #多人（班级）比较-学生成绩
 @app.route('/teacher/CompByStu', methods=['GET','POST'])
 def CompByStu():
     if userIDisNone():
         return redirect(url_for('welcome'))
+<<<<<<< HEAD
     names = ['张', '李', '王']
     courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
     grades = [[67,78,80,78], [79,70,90,50], [80,89,90,95]]
@@ -600,22 +613,130 @@ def CompByStu():
                                 names = names, 
                                 courses = courses, 
                                 grades = grades)
+=======
+    names = []
+    courses = []
+    grades = []
+    if request.method == "POST":
+        stuID = request.values.get("MultiID")
+        stuList = stuID.split(",")
+        ID = stuList[0]
+        getStuCour = '''select curriculum.currName
+                        from currGrade inner join curriculum on currGrade.currID = curriculum.currID
+                        where userID = \'{}\' and examGrade != 0'''.format(ID)
+        courses = getList(getStuCour)
+        for ID in stuList:
+            name = getName(int(ID))
+            names.append(name)
+            currStuCour = getList(getStuCour)
+            courses = list(set(currStuCour).intersection(set(courses)))
+        for ID in stuList:
+            gradeList = []
+            for course in courses:
+                getCourGrade = '''select examGrade
+                                    from currGrade inner join curriculum on currGrade.currID = curriculum.currID
+                                    where userID = \'{}\' and currName = \'{}\''''.format(ID,course)
+                grade = getList(getCourGrade)[0]
+                gradeList.append(grade)
+            grades.append(gradeList)
+    return render_template('/teacher/CompByStu.html', 
+                                    username=fillinusername(),
+                                    names = names, 
+                                    courses = courses, 
+                                    grades = grades)
+
+    
+>>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
 
 #多人（班级）比较-班级成绩对比
 @app.route('/teacher/CompByClass', methods=['GET','POST'])
 def CompByClass():
     if userIDisNone():
         return redirect(url_for('welcome'))
+<<<<<<< HEAD
     year = [2010, 2011, 2012]
     major = ['计算机科学', '数字媒体', '信息系统管理']
     two_class = ["12级计算机1班", "12级计算机2班"] #用字符串拼起来
     courses = ['线性代数', '高等数学', '综合英语', '计算机组成原理']
     grades = [[67,78,80,78], [79,70,90,50]]
+=======
+    two_class = []
+
+    getYear = 'select distinct yearIn from class'
+    year = getList(getYear)
+
+    getMajor = '''select distinct departName 
+                    from department 
+                    where departID in 
+                                        (select departID 
+                                        from class)'''
+    major = getList(getMajor)
+
+    getClass = 'select distinct className from class'
+    classes = getList(getClass)
+
+    c1 = []
+    c2 = []
+    courses = []
+    grades = []
+    if request.method == "POST":   
+        selectedYear = request.values.get("year")
+        selectedMajor = request.values.get("major")
+        selectedClass1 = request.values.get("class1")
+        selectedClass2 = request.values.get("class2")
+        
+        two_class.append(selectedYear+selectedMajor+selectedClass1)
+        two_class.append(selectedYear+selectedMajor+selectedClass2)
+
+        getDepartID = '''select departID 
+                         from department 
+                         where departName = \'{}\''''.format(selectedMajor)
+        deprtID = int(getList(getDepartID)[0])
+        
+        getClass1ID = '''select classID
+                         from class
+                         where className = \'{}\' and departID = {} and yearIn = {}'''.format(selectedClass1,deprtID,selectedYear)
+        class1ID = int(getList(getClass1ID)[0])
+
+        getClass2ID = '''select classID
+                         from class
+                         where className = \'{}\' and departID = {} and yearIn = {}'''.format(selectedClass2,deprtID,selectedYear)
+        class2ID = int(getList(getClass2ID)[0])
+
+        getResult = '''select currName,round(avg(examGrade),2) as avgGrade into c1
+                        from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
+                        inner join curriculum on currGrade.currID = curriculum.currID
+                        where classID = {} and grade = {} and examGrade != 0
+                        group by currName
+
+                        select currName,round(avg(examGrade),2) as avgGrade into c2
+                        from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
+                        inner join curriculum on currGrade.currID = curriculum.currID
+                        where classID = {} and grade = {} and examGrade != 0
+                        group by currName
+
+                        select c1.currName,c1.avgGrade as c1Grade,c2.avgGrade as c2Grade
+                        from c1 inner join c2 on c1.currName  = c2.currName
+
+                        drop table c1
+                        drop table c2'''.format(int(class1ID),int(selectedYear),int(class2ID),int(selectedYear))
+        cursor.execute(getResult)
+        result = cursor.fetchall()
+        
+        for item in result:
+            courses.append(item[0])
+            c1.append(item[1])
+            c2.append(item[2])
+        grades.append(c1)
+        grades.append(c2)
+
+>>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
     return render_template('/teacher/CompByClass.html',
                                 username=fillinusername(),
                                 year = year,
                                 major = major,
-                                two_class = two_class, 
+                                classes = classes, 
+                                two_class = two_class,
                                 courses = courses, 
                                 grades = grades)
 
@@ -629,6 +750,7 @@ def CompByYear():
 if __name__ == '__main__':
     app.run(debug=True)
 
+<<<<<<< HEAD
 #以下为原代码，参考这些
 # @app.route('/')
 # def index():
@@ -713,4 +835,6 @@ if __name__ == '__main__':
 #                                sid2_name = sid2_name,
 #                                sid1_score = sid1_score,
 #                                sid2_score = sid2_score)
+=======
+>>>>>>> 918cf63e1c3e3e47f6bd714a1b4614bac7c8d5aa
 

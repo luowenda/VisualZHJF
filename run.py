@@ -371,7 +371,7 @@ def TotalComprehensiveEval():
     grade = content[0][0]
     depart = content[0][1]
     #使用user表必须使用[user]才不会报错
-    sql = '''select userName,moralScore,intellectualScore,socialScore,bonus,finalScore 
+    sql = '''select userName,round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
             from [EvaluationFinalScore],[user] 
             where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
     sortList=[0,0,0,0,0]
@@ -449,7 +449,7 @@ def MajorOverview():
                          where departName = \'{}\''''.format(selectedDepart)
         deprtID = int(getList(getDepartID)[0])
 
-        getResult = '''select userName,intellectualScore,moralScore,socialScore,bonus,finalScore
+        getResult = '''select userName,round(intellectualScore,2),round(moralScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
                        from evaluationFinalScore inner join [user] on evaluationFinalScore.userID = [user].userID
                        where departID = {} and academicYear = \'{}\' and grade = {}'''.format(deprtID,selectedYear,int(selectedGrade))
         cursor.execute(getResult)

@@ -1,0 +1,53 @@
+<!--班级成绩界面（根据课程名称筛选）-->
+        {% extends 'monitor/base.html' %}
+
+        {% block title %}班级成绩{% endblock %}
+
+        {% block main %}
+        <script type="text/javascript" >
+        function setBlank(){
+        var value1 = document.getElementById('lesson').value;
+        localStorage.setItem("user_selected_lesson", value1);}
+
+        function getLesson(){
+        return localStorage.getItem("user_selected_lesson");}
+        </script>
+        <form action="{{  url_for('Class') }}" method="POST" onsubmit="setBlank()">
+        <br />
+        &nbsp&nbsp&nbsp&nbsp请选择课程：
+        <select class="custom-select" name="lesson" id="lesson" method="GET" action="/" style="width:200px;margin: 0 auto;">
+            {% for lessonitem in lesson %}
+             <option value="{{lessonitem}}"> {{ lessonitem  }}</option>"
+            {% endfor %}
+        </select>
+        <script type="text/javascript">
+            document.getElementById('lesson').value = getLesson();
+        </script>
+        &nbsp&nbsp&nbsp&nbsp
+        <input class="btn btn-primary" type="submit" value="查询"></form>
+        <br />
+        <br />
+        <table class="table table-striped" style="width: 500px;height:500px;margin: 0 auto">
+	        <thead>
+		        <tr>
+			        <th>姓名</th>
+                    <th>成绩</th>
+                </tr>
+	        </thead>
+	        <tbody>
+	        {% for line in result %}
+		        <tr>
+                {% for item in line %}
+			    <td name="{{item}}">{{item}}</td>
+			    {% endfor %}
+		        </tr>
+	        {% endfor %}
+	        </tbody>
+        </table>
+        {% endblock %}
+        
+		
+
+		
+		
+		

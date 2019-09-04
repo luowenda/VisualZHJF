@@ -1,0 +1,66 @@
+<!--个人成绩界面（根据学期筛选）-->
+        {% extends 'monitor/base.html' %}
+
+        {% block title %}个人成绩{% endblock %}
+
+        {% block main %}
+        <script type="text/javascript" >
+        function setBlank(){
+        var value1 = document.getElementById('year').value;
+        var value2 = document.getElementById('semester').value;
+        localStorage.setItem("user_selected_year", value1);
+        localStorage.setItem("user_selected_semester", value2);}
+
+        function getYear(){
+        return localStorage.getItem("user_selected_year");}
+
+        function getSemester(){
+        return localStorage.getItem("user_selected_semester");}
+        </script>
+        <form action="{{  url_for('GradeBySemester') }}" method="POST" onsubmit="setBlank()">
+        <br />
+        &nbsp&nbsp&nbsp&nbsp请选择学年：
+        <select class="custom-select" name="year" id="year" method="GET" action="/" style="width:200px;margin: 0 auto;">
+            {% for yearitem in year %}
+             <option value="{{yearitem}}"> {{  yearitem  }}</option>"
+            {% endfor %}
+        </select>
+        <script type="text/javascript">
+            document.getElementById('year').value = getYear();
+        </script>
+        &nbsp&nbsp&nbsp&nbsp请选择学期：
+		<select class="custom-select" name="semester" id="semester" method="GET" action="/" style="width:200px;margin: 0 auto;">
+            {% for semesteritem in semester %}
+             <option value="{{semesteritem}}">{{  semesteritem  }}</option>"
+            {% endfor %}
+        </select>
+        <script type="text/javascript">
+            document.getElementById('semester').value = getSemester();
+        </script>
+        &nbsp&nbsp&nbsp&nbsp
+        <input class="btn btn-primary" type="submit" value="查询"></form>
+        <br />
+        <br />
+        <table class="table table-striped" style="width: 500px;height:500px;margin: 0 auto">
+	        <thead>
+		        <tr>
+			        <th>课程名称</th>
+                    <th>学时</th>
+                    <th>学分</th>
+                    <th>成绩</th>
+					<th>总人数</th>
+                    <th>名次</th>
+                </tr>
+	        </thead>
+	        <tbody>
+	        {% for line in result %}
+		        <tr>
+                {% for item in line %}
+			    <td name="{{item}}">{{item}}</td>
+			    {% endfor %}
+		        </tr>
+	        {% endfor %}
+	        </tbody>
+        </table>
+        {% endblock %}
+        

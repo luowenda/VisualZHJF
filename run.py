@@ -19,10 +19,10 @@ import pymssql
 
 
 
-conn = pymssql.connect(host='.',
-                       user='sa',
-                       password='ZHJF2019eggs',
-                       database='zhjfdemo1',
+conn = pymssql.connect(server='202.112.194.247',
+                       user='zonghejifenrd',
+                       password='zhjf2019rd',
+                       database='zonghejifen',
                        charset='utf8')
 
 #查看连接是否成功

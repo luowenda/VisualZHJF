@@ -203,11 +203,6 @@ def stu_index():
     if userIDisNone():
         return redirect(url_for('welcome'))
     return render_template('/student/index.html',username=fillinusername())
-    sql="select userName from dbo.[user] where userID='"+userID+"'"
-    cursor.execute(sql)
-    userName=cursor.fetchall()
-    userName=userName[0][0]
-    return render_template('/student/index.html',username=userName)
 
 #个人成绩界面（根据课程属性筛选）（表格）
 @app.route('/student/GradeByAttri', methods=['GET','POST'])
@@ -414,11 +409,7 @@ def tea_index():
     if userIDisNone():
         return redirect(url_for('welcome'))
     return render_template('/teacher/index.html',username=fillinusername())
-    sql="select userName from dbo.[user] where userID='"+userID+"'"
-    cursor.execute(sql)
-    userName=cursor.fetchall()
-    userName=userName[0][0]
-    return render_template('/teacher/index.html',username=userName)
+
 
 
 #专业总览

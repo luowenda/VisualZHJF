@@ -19,6 +19,8 @@ import pymssql
 
 
 
+
+
 conn = pymssql.connect(
                         server='172.16.108.157',
                         user='sa',
@@ -36,15 +38,30 @@ cursor = conn.cursor()
 
 app = Flask(__name__)
 app.config.from_object(config)
+
+#EG
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
 #lwd
 app.secret_key='BLCU is our school'
 
 @app.before_request
 def is_login():
+    
     if request.path == '/':
         return None
     if 'userID'not in session:
         return redirect(url_for('login')) 
+    elif session['role']=='student'and '/student'in request.path:
+        return None
+    elif session['role']=='teacher'and '/teacher'in request.path:
+        return None
+    else:
+        return '你❌❌'
 
 
 #EG
@@ -55,13 +72,7 @@ class NameForm(FlaskForm):
     id = StringField('请输入学号：', validators=[DataRequired()])
     submit = SubmitField('提交')
 
-#EG
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
-@app.errorhandler(500)
-def internal_server_error(e):
-    return render_template('500.html'), 500
+
 
 
 def getName(userID):
@@ -197,7 +208,7 @@ def login():
     for data in rs_userid:
         num=num+1
     if(num!=0):
-        #用户登录设置session
+        #用户登录设置session的userID和username
         session['userID']=userID
         session['username']=fillinusername()
 
@@ -205,8 +216,11 @@ def login():
         rs_roleid= cursor.fetchone()
         roleID=rs_roleid[0]
         if(roleID==1):
+            #将用户角色加入session
+            session['role']='student'
             return redirect(url_for('stu_index'))
         else:
+            session['role']='teacher'
             return redirect(url_for('tea_index'))
     else:
         error="账号或密码错误"

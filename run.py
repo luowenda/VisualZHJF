@@ -18,12 +18,16 @@ from wtforms.validators import DataRequired
 import pymssql
 
 
-
-conn = pymssql.connect(host='202.112.194.247',
-                       user='zonghejifenrd',
-                       password='zhjf2019rd',
-                       database='zonghejifen',
+conn = pymssql.connect(host='.',
+                       user='sa',
+                       password='ZHJF2019eggs',
+                       database='zhjfdemo1',
                        charset='utf8')
+# conn = pymssql.connect(host='202.112.194.247',
+#                        user='zonghejifenrd',
+#                        password='zhjf2019rd',
+#                        database='zonghejifen',
+#                        charset='utf8')
 
 #查看连接是否成功
 cursor = conn.cursor()
@@ -300,9 +304,11 @@ def GradeBySemester():
 def getList(search):
     cursor.execute(search)
     showList = cursor.fetchall()
-    for i,item in enumerate(showList):
-        showList[i] = str(item[0])
-    return showList
+    if(len(showList)):
+        for i,item in enumerate(showList):
+            showList[i] = str(item[0])
+        return showList
+    return None
 
 #GPA计算界面
 @app.route('/student/GPACalculator')
@@ -444,10 +450,23 @@ def MajorOverview():
         selectedYear = request.values.get("year")
         selectedDepart = request.values.get("depart")
         
+        if selectedDepart == None or selectedGrade == None or selectedYear == None:
+            selectedNull = '请选择选项'
+            result = [[]]
+            return render_template('/teacher/MajorOverview.html',
+                            grade = grade,
+                            year = year,
+                            depart = depart,
+                            result = result,
+                            selectedNull = selectedNull,
+                            username=fillinusername())
         getDepartID = '''select departID 
                          from department 
                          where departName = \'{}\''''.format(selectedDepart)
-        deprtID = int(getList(getDepartID)[0])
+        deprtID = 0
+        res = getList(getDepartID)
+        if(res):
+            deprtID = int(res[0])
 
         getResult = '''select userName,round(intellectualScore,2),round(moralScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
                        from evaluationFinalScore inner join [user] on evaluationFinalScore.userID = [user].userID
@@ -460,6 +479,7 @@ def MajorOverview():
                             year = year,
                             depart = depart,
                             result = result,
+                            selectedNull = '',
                             username=fillinusername())
 
 #课程总览

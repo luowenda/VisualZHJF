@@ -431,18 +431,21 @@ def MajorOverview():
     if userIDisNone():
         return redirect(url_for('welcome'))
     getGrade = '''select distinct grade 
-                from evaluationFinalScore'''
+                from evaluationFinalScore
+                order by grade'''
     grade = getList(getGrade)
     
     getYear = '''select distinct academicYear 
-                from evaluationFinalScore'''
+                from evaluationFinalScore
+                order by academicYear '''
     year = getList(getYear)
 
     getDepart = '''select distinct departName 
                     from department 
                     where departID in 
                                         (select departID 
-                                        from evaluationFinalScore)'''
+                                        from evaluationFinalScore)
+                    order by departName'''
     depart = getList(getDepart)
     result = []
     if request.method == "POST":   
@@ -489,15 +492,18 @@ def CourseOverview():
         return redirect(url_for('welcome'))
     result=[]
     getGrade = '''select distinct grade 
-                from currGrade'''
+                from currGrade
+                order by grade'''
     grade = getList(getGrade)
     
     getYear = '''select distinct academicYear 
-                from currGrade'''
+                from currGrade
+                order by academicYear'''
     year = getList(getYear)
 
     getSemester = '''select distinct semester
-                    from currGrade'''
+                    from currGrade
+                    order by semester'''
     semester = getList(getSemester)
 
     if request.method == "POST":   

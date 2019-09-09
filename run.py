@@ -8,9 +8,6 @@ import os
 import json
 import re
 # EG
-import numpy as np
-import pandas as pd
-from IPython.display import HTML
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField

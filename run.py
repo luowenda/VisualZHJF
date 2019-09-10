@@ -8,9 +8,6 @@ import os
 import json
 import re
 # EG
-import numpy as np
-import pandas as pd
-from IPython.display import HTML
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
@@ -180,7 +177,7 @@ userID=None
 def welcome():
     session.clear()
 
-    return render_template('welcome.html')
+    return render_template('welcome.html', error=None)
 
 @app.route('/', methods = ['POST'])
 def login():
@@ -1000,5 +997,5 @@ def Class():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
 

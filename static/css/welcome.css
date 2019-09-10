@@ -1,5 +1,5 @@
 .bg {
-    background-image: url('../image/login_bg.png');
+    background-image: url(../image/login_bg.png);
     width: 866px;
     height: 486px;
     margin: 40px auto;

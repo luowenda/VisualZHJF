@@ -3,33 +3,58 @@
 {% block title %}专业总览{% endblock %}
 
 {% block main %}
-
-<form action="{{  url_for('MajorOverview') }}" method=post>
-<select class="custom-select" name="grade" method="GET" action="/">
-    <option selected>年级</option> 
+<script type="text/javascript" >
+  function setBlank(){
+  var value1 = document.getElementById('grade').value;
+  var value2 = document.getElementById('year').value;
+  var value3 = document.getElementById('depart').value;
+  
+  localStorage.setItem("user_selected_grade", value1);
+  localStorage.setItem("user_selected_year", value2);
+  localStorage.setItem("user_selected_depart", value3);}
+  
+  function getGrade(){
+  return localStorage.getItem("user_selected_grade");}
+  function getYear(){
+  return localStorage.getItem("user_selected_year");}
+  function getDepart(){
+  return localStorage.getItem("user_selected_depart");}
+</script>
+<form action="{{  url_for('MajorOverview') }}" method="POST" onsubmit="setBlank()">
+  <br />
+        &nbsp&nbsp&nbsp&nbsp请选择年级：   
+<select class="custom-select" name="grade" id="grade" method="GET" action="/" style="width:200px;margin: 0 auto;"> 
     {% for gradeitem in grade %} 
      <option value="{{gradeitem}}">{{  gradeitem  }}</option>" 
     {% endfor %} 
 </select> 
-
-<select class="custom-select" name="year" method="GET" action="/">
-  <option selected>学年</option> 
+<script type="text/javascript">
+  document.getElementById('grade').value = getGrade();
+</script>
+&nbsp&nbsp&nbsp&nbsp学年：
+<select class="custom-select" name="year" id="year" method="GET" action="/" style="width:200px;margin: 0 auto;">
   {% for yearitem in year %} 
    <option value="{{yearitem}}">{{  yearitem  }}</option>" 
   {% endfor %} 
 </select> 
-
-<select class="custom-select" name="depart" method="GET" action="/"> 
-  <option selected>专业</option>
+<script type="text/javascript">
+  document.getElementById('year').value = getYear();
+</script>
+&nbsp&nbsp&nbsp&nbsp专业：
+<select class="custom-select" name="depart" id="depart" method="GET" action="/" style="width:200px;margin: 0 auto;"> 
   {% for departitem in depart %} 
    <option value="{{departitem}}">{{  departitem  }}</option>" 
   {% endfor %} 
 </select> 
-
+<script type="text/javascript">
+  document.getElementById('depart').value = getDepart();
+</script>
+&nbsp&nbsp&nbsp&nbsp
 <input class="btn btn-primary" type="submit" value="查询">
 </form>
 
-
+<br />
+<br />
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -42,6 +67,7 @@
 		</tr>
 	</thead>
 	<tbody>
+    {{selectedNull}}
 	{% for line in result %}
 		<tr>
       {% for item in line %}

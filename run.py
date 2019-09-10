@@ -397,9 +397,9 @@ def TotalComprehensiveEval():
         sortList[3]=Extra
         Total = request.values.get("totalGrade")
         sortList[4]=Total
-    print(sortList)
+    #print(sortList)
     for i in range(5):
-        if (sortList[i] != 0): 
+        if (sortList[i] != 0 and sortList[i] != ''): 
             flag = 1
             sql += " order by "
             break

@@ -8,10 +8,10 @@ import os
 import json
 import re
 # EG
-from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+# from flask_bootstrap import Bootstrap
+# from flask_wtf import FlaskForm
+# from wtforms import StringField, SubmitField
+# from wtforms.validators import DataRequired
 import pymssql
 
 
@@ -57,13 +57,13 @@ def is_login():
         return '你❌❌'
 
 
-#EG
-bootstrap = Bootstrap(app)
+# #EG
+# bootstrap = Bootstrap(app)
 
-#EG
-class NameForm(FlaskForm):
-    id = StringField('请输入学号：', validators=[DataRequired()])
-    submit = SubmitField('提交')
+# #EG
+# class NameForm(FlaskForm):
+#     id = StringField('请输入学号：', validators=[DataRequired()])
+#     submit = SubmitField('提交')
 
 
 
@@ -397,12 +397,14 @@ def TotalComprehensiveEval():
         sortList[3]=Extra
         Total = request.values.get("totalGrade")
         sortList[4]=Total
+    print(sortList)
     for i in range(5):
         if (sortList[i] != 0): 
             flag = 1
             sql += " order by "
             break
     if (flag):
+        flag=0
         for i in range(5):
             if (sortList[i] == "asc"): sql += (scoreList[i]+",")
             elif (sortList[i] == "desc"): sql += (scoreList[i]+" desc,")

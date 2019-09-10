@@ -1,0 +1,29 @@
+<!--我的附加分界面-->
+        {% extends 'monitor/base.html' %}
+
+        {% block title %}我的附加分{% endblock %}
+
+        {% block main %}
+        <div style="height:30px;margin: 0 auto;"></div>
+        <div style="width: 500px;height:500px;margin: 0 auto;">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>项目内容</th>
+                <th>分数</th>
+                <th>学期</th> <!--#数据库存在学期为3，不知道为啥-->
+              </tr>
+            </thead>
+            <tbody>
+            {% for line in result %}
+              <tr>
+                {% for item in line %}
+                <td name="{{item}}">{{item}}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endblock %}
+        

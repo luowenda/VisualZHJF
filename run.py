@@ -177,7 +177,7 @@ userID=None
 def welcome():
     session.clear()
 
-    return render_template('welcome.html')
+    return render_template('welcome.html', error=None)
 
 @app.route('/', methods = ['POST'])
 def login():
@@ -709,5 +709,5 @@ def CompByYear():
     return render_template('/teacher/CompByYear.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
 

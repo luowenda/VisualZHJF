@@ -42,31 +42,19 @@ def internal_server_error(e):
 #lwd
 app.secret_key='BLCU is our school'
 
-@app.before_request
-def is_login():
-    
-    if request.path == '/':
-        return None
-    if 'userID'not in session:
-        return redirect(url_for('login')) 
-    elif session['role']=='student'and '/student'in request.path:
-        return None
-    elif session['role']=='teacher'and '/teacher'in request.path:
-        return None
-    else:
-        return '你❌❌'
-
-
-# #EG
-# bootstrap = Bootstrap(app)
-
-# #EG
-# class NameForm(FlaskForm):
-#     id = StringField('请输入学号：', validators=[DataRequired()])
-#     submit = SubmitField('提交')
-
-
-
+# @app.before_request
+# def is_login():
+#     # if request.path == '/':
+#     #     return None
+#     if 'userID' not in session:
+#         return None
+#     elif session['role']=='student'and '/student'in request.path:
+#         return None
+#     elif session['role']=='teacher'and '/teacher'in request.path:
+#         return None
+#     else:
+#         return redirect(url_for('login'))
+#     #   return '无访问权限'
 
 def getName(userID):
     getUserName = 'select userName from [user] where userID = \'{}\''.format(userID)
@@ -172,52 +160,58 @@ def fillinusername():
 
 userID=None
 
-#登陆界面
-@app.route('/',methods=['get'])
-def welcome():
-    session.clear()
+# #登陆界面
+# @app.route('/',methods=['get'])
+# def welcome():
+#     error=None
+#     session.clear()
+#     return render_template('welcome.html', error=error) 
 
-    return render_template('welcome.html', error=None)
-
-@app.route('/', methods = ['POST'])
+@app.route('/', methods = ['POST','GET'])
 def login():
     error=None
-    global userID
-    userID = request.form['username']
-    pwd = request.form['passwd']
-    if not all([userID,pwd]):
-        if userID == "":
-            error = "请输入用户名"
-            return render_template('welcome.html',error=error)
-        else:
-            error = "请输入密码"
-            return render_template('welcome.html',error=error)
-    sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
-    sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
-    cursor.execute(sql1)
-    #用一个rs_***变量获取数据
-    rs_userid = cursor.fetchall()
-    num=0
-    for data in rs_userid:
-        num=num+1
-    if(num!=0):
-        #用户登录设置session的userID和username
-        session['userID']=userID
-        session['username']=fillinusername()
-
-        cursor.execute(sql2)
-        rs_roleid= cursor.fetchone()
-        roleID=rs_roleid[0]
-        if(roleID==1):
-            #将用户角色加入session
-            session['role']='student'
-            return redirect(url_for('stu_index'))
-        else:
-            session['role']='teacher'
-            return redirect(url_for('tea_index'))
+    if request.method == 'GET':
+        return render_template('welcome.html', error=error)
     else:
-        error="账号或密码错误"
-        return render_template('welcome.html',error = error)
+        global userID
+        userID = request.form['username']
+        pwd = request.form['passwd']
+        if not all([userID,pwd]):
+            if userID == "":
+                error = "请输入用户名"
+                return render_template('welcome.html',error=error)
+            else:
+                error = "请输入密码"
+                return render_template('welcome.html',error=error)
+        sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
+        sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
+        cursor.execute(sql1)
+        #用一个rs_***变量获取数据
+        rs_userid = cursor.fetchall()
+        num=0
+        for data in rs_userid:
+            num=num+1
+        if(num!=0):
+            #用户登录设置session的userID和username
+            session['userID']=userID
+            session['username']=fillinusername()
+
+            cursor.execute(sql2)
+            rs_roleid= cursor.fetchone()
+            roleID=rs_roleid[0]
+            if(roleID==1):
+                #将用户角色加入session
+                session['role']='student'
+                return redirect(url_for('stu_index'))
+            else:
+                session['role']='teacher'
+                return redirect(url_for('tea_index'))
+        else:
+            error="账号或密码错误"
+            return render_template('welcome.html',error = error)
+
+def deny():
+    return "Permission denied"
 
 #学生界面首页
 @app.route('/student')

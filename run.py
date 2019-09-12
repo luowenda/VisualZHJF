@@ -20,7 +20,7 @@ import pymssql
 
 
 conn = pymssql.connect(
-                        server='172.16.108.157',
+                        server='172.16.108.171',
                         user='sa',
                         password='123456',
                         database='zhjfdemo1',
@@ -51,20 +51,19 @@ app.secret_key='BLCU is our school'
 @app.before_request
 def is_login():
     
-    if request.path == '/':
+    if request.path =='/':
+        return redirect('/login/')
+    if request.path =='/login/':
         return None
-    if 'userID'not in session:
-        return redirect(url_for('login')) 
-    elif session['role']=='student'and '/student'in request.path:
+    if '/static'in str(request):
         return None
-    elif session['role']=='teacher'and '/teacher'in request.path:
-        return None
-    elif 'static' in request.path:
-        return None
-    elif 'data' in request.path:
-        return None
-    else:
-        return '你❌❌'
+    if session.get('userID')==None:
+        return redirect('/login/') 
+    if session['role']=='student'and '/teacher'in request.path:
+        return '123'
+    if session['role']=='teacher'and '/student'in request.path:
+        return '123'
+
 
 
 #EG
@@ -183,51 +182,51 @@ def fillinusername():
 userID=None
 
 #登陆界面
-@app.route('/',methods=['get'])
-def welcome():
-    session.clear()
-
-    return render_template('welcome.html', error=None)
-
-@app.route('/', methods = ['POST'])
+@app.route('/login/', methods = ['POST','GET'])
 def login():
-    error=None
-    global userID
-    userID = request.form['username']
-    pwd = request.form['passwd']
-    if not all([userID,pwd]):
-        if userID == "":
-            error = "请输入用户名"
-            return render_template('welcome.html',error=error)
-        else:
-            error = "请输入密码"
-            return render_template('welcome.html',error=error)
-    sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
-    sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
-    cursor.execute(sql1)
-    #用一个rs_***变量获取数据
-    rs_userid = cursor.fetchall()
-    num=0
-    for data in rs_userid:
-        num=num+1
-    if(num!=0):
-        #用户登录设置session的userID和username
-        session['userID']=userID
-        session['username']=fillinusername()
+    if request.method=='GET':
+        session.clear()
 
-        cursor.execute(sql2)
-        rs_roleid= cursor.fetchone()
-        roleID=rs_roleid[0]
-        if(roleID==1):
-            #将用户角色加入session
-            session['role']='student'
-            return redirect(url_for('stu_index'))
-        else:
-            session['role']='teacher'
-            return redirect(url_for('tea_index'))
+
+        return render_template('welcome.html', error=None)
     else:
-        error="账号或密码错误"
-        return render_template('welcome.html',error = error)
+        error=None
+        global userID
+        userID = request.form['username']
+        pwd = request.form['passwd']
+        if not all([userID,pwd]):
+            if userID == "":
+                error = "请输入用户名"
+                return render_template('welcome.html',error=error)
+            else:
+                error = "请输入密码"
+                return render_template('welcome.html',error=error)
+        sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
+        sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
+        cursor.execute(sql1)
+        #用一个rs_***变量获取数据
+        rs_userid = cursor.fetchall()
+        num=0
+        for data in rs_userid:
+            num=num+1
+        if(num!=0):
+            #用户登录设置session的userID和username
+            session['userID']=userID
+            session['username']=fillinusername()
+
+            cursor.execute(sql2)
+            rs_roleid= cursor.fetchone()
+            roleID=rs_roleid[0]
+            if(roleID==1):
+                #将用户角色加入session
+                session['role']='student'
+                return redirect(url_for('stu_index'))
+            else:
+                session['role']='teacher'
+                return redirect(url_for('tea_index'))
+        else:
+            error="账号或密码错误"
+            return render_template('welcome.html',error = error)
 
 #学生界面首页
 @app.route('/student')
@@ -964,7 +963,7 @@ def moTotalComprehensiveEval():
 #班级成绩
 @app.route('/monitor/Class', methods=['GET', 'POST'])
 def Class():
-    
+
     global userID
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like
@@ -998,5 +997,7 @@ def Class():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+
+
+    app.run(host='0.0.0.0')
 

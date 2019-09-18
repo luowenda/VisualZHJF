@@ -399,7 +399,7 @@ def MyComprehensiveEval():
             where userId={}'''.format(userID)
     cursor.execute(sql)
     scores = cursor.fetchall()
-    return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=userID)
+    return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=getName(userID))
 
 
 

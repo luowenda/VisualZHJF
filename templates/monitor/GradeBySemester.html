@@ -1,5 +1,5 @@
 <!--个人成绩界面（根据学期筛选）-->
-        {% extends 'student/base.html' %}
+        {% extends 'monitor/base.html' %}
 
         {% block title %}个人成绩{% endblock %}
 
@@ -41,7 +41,6 @@
         <input class="btn btn-primary" type="submit" value="查询"></form>
         <br />
         <br />
-        <div style="width: 1000px;min-height: 500px; height:auto;margin: 0 auto;">
         <table class="table table-striped" style="width: 500px;height:500px;margin: 0 auto">
 	        <thead>
 		        <tr>
@@ -63,6 +62,5 @@
 	        {% endfor %}
 	        </tbody>
         </table>
-    </div>
         {% endblock %}
         

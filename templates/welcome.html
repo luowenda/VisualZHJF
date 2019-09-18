@@ -1,16 +1,18 @@
 <!DOCTYPE html>
+
 <head>
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="../static/css/welcome.css">
-	<title>综合积分查询登陆界面</title>
+	<!-- <link rel="stylesheet" href="../static/css/welcome.css"> -->
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/welcome.css') }}" />
+	<title>综合积分查询登录界面</title>
 </head>
 <body>
 <div class="bg">
 <div class="welcome">欢迎访问综合积分系统</div>
     
-    <form  method="post" >
+    <form action="{{ url_for('login') }}" method="POST" >
 		
 		<input type="text"name="username" class="username" id="username"placeholder="username" /></br>
 		<input type="password"name="passwd" class="passwd" id="passwd"placeholder="password"/></br>
@@ -19,12 +21,12 @@
 			{{error}}
 			{% endif %}
 		</div>
-		<input id="submit" type="submit" name="提交" value="登陆" />
+		<input id="submit" type="submit" name="提交" value="登录" />
 
 	</form>
  
 
 </div>
 
-</div>
 </body>
+

@@ -208,12 +208,52 @@ def index():
 # def deny():
 #     return "Permission denied"
 
-#学生界面首页
-@app.route('/student')
+#学生界面首页（综合积分界面）
+@app.route('/student', methods=['GET','POST'])
 def stu_index():
+    global userID
+    sql = '''select grade, departId 
+            from EvaluationFinalScore 
+            where userId={}'''.format(userID)
+    cursor.execute(sql)
+    content = cursor.fetchall()
+    grade = content[0][0]
+    depart = content[0][1]
+    #使用user表必须使用[user]才不会报错
+    sql = '''select userName,round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
+            from [EvaluationFinalScore],[user] 
+            where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
+    sortList=[0,0,0,0,0]
+    scoreList=["moralScore","intellectualScore","socialScore","bonus","finalScore"]
+    flag=0 #是否有排序条件
+    if request.method == "POST":   
+        Moral = request.values.get("moralGrade")
+        sortList[0]=Moral
+        Intel = request.values.get("intelGrade")
+        sortList[1]=Intel
+        Social = request.values.get("socialGrade")
+        sortList[2]=Social
+        Extra = request.values.get("extraGrade")
+        sortList[3]=Extra
+        Total = request.values.get("totalGrade")
+        sortList[4]=Total
+    #print(sortList)
+    for i in range(5):
+        if (sortList[i] != 0 and sortList[i] != ''): 
+            flag = 1
+            sql += " order by "
+            break
+    if (flag):
+        flag=0
+        for i in range(5):
+            if (sortList[i] == "asc"): sql += (scoreList[i]+",")
+            elif (sortList[i] == "desc"): sql += (scoreList[i]+" desc,")
+        sql = sql[:-1] #去掉最后一个,
     
-    
-    return render_template('/student/index.html')
+    cursor.execute(sql)
+    all_data = cursor.fetchall()
+    return render_template('student/index.html',result = all_data)
+
 
 #个人成绩界面（根据课程属性筛选）（表格）
 @app.route('/student/GradeByAttri', methods=['GET','POST'])
@@ -369,50 +409,7 @@ def MyComprehensiveEval():
     return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=userID)
 
 #综合积分汇总界面（表格）
-@app.route('/student/TotalComprehensiveEval', methods=['GET','POST'])
-def TotalComprehensiveEval():
-    global userID
-    sql = '''select grade, departId 
-            from EvaluationFinalScore 
-            where userId={}'''.format(userID)
-    cursor.execute(sql)
-    content = cursor.fetchall()
-    grade = content[0][0]
-    depart = content[0][1]
-    #使用user表必须使用[user]才不会报错
-    sql = '''select userName,round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
-            from [EvaluationFinalScore],[user] 
-            where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
-    sortList=[0,0,0,0,0]
-    scoreList=["moralScore","intellectualScore","socialScore","bonus","finalScore"]
-    flag=0 #是否有排序条件
-    if request.method == "POST":   
-        Moral = request.values.get("moralGrade")
-        sortList[0]=Moral
-        Intel = request.values.get("intelGrade")
-        sortList[1]=Intel
-        Social = request.values.get("socialGrade")
-        sortList[2]=Social
-        Extra = request.values.get("extraGrade")
-        sortList[3]=Extra
-        Total = request.values.get("totalGrade")
-        sortList[4]=Total
-    #print(sortList)
-    for i in range(5):
-        if (sortList[i] != 0 and sortList[i] != ''): 
-            flag = 1
-            sql += " order by "
-            break
-    if (flag):
-        flag=0
-        for i in range(5):
-            if (sortList[i] == "asc"): sql += (scoreList[i]+",")
-            elif (sortList[i] == "desc"): sql += (scoreList[i]+" desc,")
-        sql = sql[:-1] #去掉最后一个,
-    
-    cursor.execute(sql)
-    all_data = cursor.fetchall()
-    return render_template('student/TotalComprehensiveEval.html',result = all_data)
+
 
 
 

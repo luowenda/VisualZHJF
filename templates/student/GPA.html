@@ -1,9 +1,9 @@
-<!--GPA走向界面-->
 {% extends 'student/base.html' %}
 
-{% block title %}查看GPA走向{% endblock %}
+{% block title %}GPA{% endblock %}
 
 {% block main %}
+<div>截至目前，你的GPA是{{GPA}}/4.0</div>
 
 <div id="main2" style="width: 800px;height:500px;margin: 0 auto;"></div>
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
@@ -70,4 +70,5 @@
         };
     myChart2.setOption(option2);
 </script>
+
 {% endblock %}

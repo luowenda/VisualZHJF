@@ -361,25 +361,18 @@ def getList(search):
         return showList
     return None
 
-#GPA计算界面
-@app.route('/student/GPACalculator')
-def GPACalculator():
+#GPA界面(GPA显示及走向)
+@app.route('/student/GPA')
+def GPA():
     global userID
     grade = getGrade(userID)
     gpa = getGPA(userID,grade,4,2)
-    return render_template('student/GPACalculator.html',GPA=gpa)
-
-#查看GPA走向界面（折线）
-@app.route('/student/GPATrend')
-def GPATrend():
-
-    global userID
-    grade = getGrade(userID)
-    GPA = []
+    GPAlist = []
     for i in range(1,5):
         for j in range(1,3):
-            GPA.append(getGPA(userID,grade,i,j))
-    return render_template('student/GPATrend.html', data=GPA,name=getName(userID))
+            GPAlist.append(getGPA(userID,grade,i,j))
+    return render_template('student/GPA.html',GPA=gpa, data=GPAlist,name=getName(userID))
+
 
 #我的附加分界面（表格）
 @app.route('/student/MyExtra')
@@ -407,8 +400,6 @@ def MyComprehensiveEval():
     cursor.execute(sql)
     scores = cursor.fetchall()
     return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=userID)
-
-#综合积分汇总界面（表格）
 
 
 

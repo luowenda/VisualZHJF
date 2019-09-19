@@ -177,7 +177,7 @@ userID=None
 def login():
     if request.method=='GET':
         session.clear()
-        return render_template('welcome.html', error=None)
+        return render_template('index.html', error=None)
     else:
         error=None
         global userID
@@ -186,18 +186,16 @@ def login():
         if not all([userID,pwd]):
             if userID == "":
                 error = "请输入用户名"
-                return render_template('welcome.html',error=error)
+                return render_template('index.html',error=error)
             else:
                 error = "请输入密码"
-                return render_template('welcome.html',error=error)
+                return render_template('index.html',error=error)
         sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
         sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
         cursor.execute(sql1)
         #用一个rs_***变量获取数据
         rs_userid = cursor.fetchall()
-        num=0
-        for data in rs_userid:
-            num=num+1
+        num=len(rs_userid)
         if(num!=0):
             #用户登录设置session的userID和username
             session['userID']=userID
@@ -215,11 +213,13 @@ def login():
                 return redirect(url_for('tea_index'))
         else:
             error="账号或密码错误"
-            return render_template('welcome.html',error = error)
+            return render_template('index.html',error = error)
 
 def deny():
     return "Permission denied"
 
+# def deny():
+#     return "Permission denied"
 
 #学生界面首页（综合积分界面）
 @app.route('/student', methods=['GET','POST'])

@@ -1,12 +1,9 @@
-{% extends 'base.html' %}
-<!--EG-->
-{% import "bootstrap/wtf.html" as wtf %}
+<!--我的综合积分界面-->
+{% extends 'monitor/base.html' %}
 
-{% block title %}总览{% endblock %}
+{% block title %}我的综合积分{% endblock %}
 
 {% block main %}
-<!--EG-->
-{{ wtf.quick_form(form) }}
 
 <div id="main" style="width: 800px;height:500px;margin: 0 auto;"></div>
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
@@ -19,7 +16,7 @@
     },
     tooltip: {},
     radar: {
-        // shape: 'circle',
+        shape: 'circle',
         name: {
             textStyle: {
                 color: '#fff',
@@ -30,8 +27,8 @@
         },
         indicator: [
            { name: '德育测评分', max: 20},
-           { name: '智育测评分', max: 70},
-           { name: '文体测评分', max: 10},
+           { name: '智育测评分', max: 100},
+           { name: '文体测评分', max: 100},
            { name: '附加分', max: 10}
         ]
     },

@@ -2,10 +2,15 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>{% block title %}{% endblock %}-综合积分系统</title>
 
-  <link rel="stylesheet" type="text/css" href="../../static/css/base.css">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css" rel="stylesheet" media="screen">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/fonts.css') }}" rel="stylesheet">
+
   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <script type = "text/javascript">
@@ -15,7 +20,6 @@
       $("#"+id).addClass("active");
     });
   </script>
-
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -24,18 +28,23 @@
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#"><img class="logo" src="../../static/image/logo.png"></a>
+    <!-- logo -->
+    <a class="navbar-brand" href="#"><img class="logo circle" style="height: 60px" src="../../static/image/logo.png"></a>
+    <!-- mobile navbar-->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
+    <!-- navbar content-->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <li class="nav-item" style="width:80px; text-align:center">
           <a class="nav-link" id="student" href="\student">首页</a>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item" style="width:80px; text-align:center">
+          <a class="nav-link" id="GPA" href="\student\GPA">GPA</a>
+        </li>
+        <li class="nav-item dropdown" style="width:100px; text-align:center">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
               个人成绩
@@ -46,17 +55,8 @@
               
             </div>
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            GPA
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="\student\GPACalculator">GPA查询</a>
-            <a class="dropdown-item" href="\student\GPATrend">查看GPA走向</a>
-          </div>
-        </li>
-        <li class="nav-item dropdown">
+        
+        <li class="nav-item dropdown" style="width:150px; text-align:center">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             综合积分
@@ -64,7 +64,6 @@
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="\student\MyExtra">我的附加分</a>
             <a class="dropdown-item" href="\student\MyComprehensiveEval">我的综合积分</a>
-            <a class="dropdown-item" href="\student\TotalComprehensiveEval">综合积分汇总</a>
           </div>
         </li>
 
@@ -73,11 +72,16 @@
         <li class="nav-item navbar-text ">欢迎你，{%if session['username']%}{{session['username']}}{%endif%}</li>
         <li class="nav-item"> <a  class="nav-link text-warning" href="\" >注销</a></li>
     </ul>
-
+  
     </div>
-  </nav>
-
-  {% block main %}{% endblock %}
+  </nav> 
+  <div style="background-image: linear-gradient( 135deg, #90F7EC 10%, #32CCBC 100%);background-size: auto auto;min-height: 100%">
+    <div class="container z-depth-4" style="background-color: white; min-height: 100%;">
+    {% block main %}{% endblock %}
+    <br>
+    <br>
+    </div>
+</div>
 </body>
 
 </html>

@@ -220,8 +220,6 @@ def login():
 def deny():
     return "Permission denied"
 
-# def deny():
-#     return "Permission denied"
 
 #学生界面首页（综合积分界面）
 @app.route('/student', methods=['GET','POST'])

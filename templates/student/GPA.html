@@ -1,0 +1,88 @@
+{% extends 'student/base.html' %}
+
+{% block title %}GPA{% endblock %}
+
+{% block main %}
+
+
+<div class="row">
+    <div class="col s12 l6 offset-l4">
+        
+            <div class="card teal">
+                <span class="card-title">&nbsp&nbsp截至目前，你的绩点(GPA)为：</span>
+                <h3 style="text-align: center" class="white-text">{{GPA}}</h3>
+                <div class="card-content white-text">
+                <p>基于北大4.0算法，详情请访问<a href="#" class="yellow-text">GPA计算方法</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 l2"></div>
+    </div>
+
+<div id="main2" style="width: 800px;height:500px;margin: 0 auto;"></div>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+<script type="text/javascript">
+	var myChart2 = echarts.init(document.getElementById('main2'));
+	// 指定图表的配置项和数据
+		var option2 = {
+                title : {
+                    text: 'GPA走向',
+                    subtext: '基于累积GPA'
+                },
+            tooltip : {
+                trigger: 'axis'
+            },
+			
+            legend: {
+                data:[{{name|tojson}}]
+            },
+			
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            
+			calculable : true,
+            
+			xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : ['大一上','大一下','大二上','大二下','大三上','大三下','大四上','大四下']
+                }
+            ],
+            
+			yAxis : [
+                {
+                    type : 'value',
+                    axisLabel : {
+                        formatter: '{value}'
+                    }
+                }
+            ],
+			
+            series : [
+                {
+                    name:{{name|tojson}},
+                    type:'line',
+                    data:{{data|tojson}},
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                },
+				
+            ]
+        };
+    myChart2.setOption(option2);
+</script>
+
+{% endblock %}

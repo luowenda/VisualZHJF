@@ -205,8 +205,6 @@ def index():
             error="账号或密码错误"
             return render_template('index.html',error=error)
 
-# def deny():
-#     return "Permission denied"
 
 #学生界面首页（综合积分界面）
 @app.route('/student', methods=['GET','POST'])

@@ -16,9 +16,9 @@ import re
 import pymssql
 
 
-conn = pymssql.connect(host='127.0.0.1:1433',
+conn = pymssql.connect(host='.',
                        user='sa',
-                       password='123456',
+                       password='ZHJF2019eggs',
                        database='zhjfdemo1',
                        charset='utf8')
 # conn = pymssql.connect(host='202.112.194.247',

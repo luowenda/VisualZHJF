@@ -15,9 +15,9 @@ import re
 import pymssql
 
 
-conn = pymssql.connect(host='.',
+conn = pymssql.connect(host='127.0.0.1:1433',
                        user='sa',
-                       password='ZHJF2019eggs',
+                       password='123456',
                        database='zhjfdemo1',
                        charset='utf8')
 # conn = pymssql.connect(host='202.112.194.247',
@@ -726,20 +726,20 @@ def CompByYear():
 
 #-----------------------------------------------------------------------------------------------
 #班长界面
-@app.route('/monitor')
+@app.route('/student')
 def mostu_index():
     if userIDisNone():
         return redirect(url_for('welcome'))
-    return render_template('/monitor/index.html', username=fillinusername())
+    return render_template('/student/index_monitor.html', username=fillinusername())
     sql = "select userName from dbo.[user] where userID='" + userID + "'"
     cursor.execute(sql)
     userName = cursor.fetchall()
     userName = userName[0][0]
-    return render_template('/monitor/index.html', username=userName)
+    return render_template('/student/index_monitor.html', username=userName)
 
 
 # 个人成绩界面（根据课程属性筛选）（表格）
-@app.route('/monitor/GradeByAttri', methods=['GET', 'POST'])
+@app.route('/student/GradeByAttri', methods=['GET', 'POST'])
 def moGradeByAttri():
     if userIDisNone():
         return redirect(url_for('welcome'))
@@ -785,11 +785,11 @@ def moGradeByAttri():
         cursor.execute(sql)
         result = cursor.fetchall()
 
-    return render_template('monitor/GradeByAttri.html', attri=attri, result=result, username=fillinusername())
+    return render_template('student/GradeByAttri.html', attri=attri, result=result, username=fillinusername())
 
 
 # 个人成绩界面（根据学期筛选）（表格）
-@app.route('/monitor/GradeBySemester', methods=['GET', 'POST'])
+@app.route('/student/GradeBySemester', methods=['GET', 'POST'])
 def moGradeBySemester():
     if userIDisNone():
         return redirect(url_for('welcome'))
@@ -836,7 +836,7 @@ def moGradeBySemester():
                       and t1.academicYear = \'{}\' '''.format(userID, userID, departID, selectedSemester, selectedYear)
         cursor.execute(sql)
         result = cursor.fetchall()
-    return render_template('/monitor/GradeBySemester.html', year=year, semester=semester, result=result,
+    return render_template('/student/GradeBySemester.html', year=year, semester=semester, result=result,
                            username=fillinusername())
 
     def getList(search):
@@ -848,18 +848,18 @@ def moGradeBySemester():
 
 
 # GPA计算界面
-@app.route('/monitor/GPACalculator')
+@app.route('/student/GPACalculator')
 def moGPACalculator():
     if userIDisNone():
         return redirect(url_for('welcome'))
     global userID
     grade = getGrade(userID)
     gpa = getGPA(userID, grade, 4, 2)
-    return render_template('monitor/GPACalculator.html', GPA=gpa, username=fillinusername())
+    return render_template('student/GPACalculator.html', GPA=gpa, username=fillinusername())
 
 
 # 查看GPA走向界面（折线）
-@app.route('/monitor/GPATrend')
+@app.route('/student/GPATrend')
 def moGPATrend():
     if userIDisNone():
         return redirect(url_for('welcome'))
@@ -869,17 +869,17 @@ def moGPATrend():
     for i in range(1, 5):
         for j in range(1, 3):
             GPA.append(getGPA(userID, grade, i, j))
-    return render_template('monitor/GPATrend.html', data=GPA, name=getName(userID), username=fillinusername())
+    return render_template('student/GPATrend.html', data=GPA, name=getName(userID), username=fillinusername())
 
 
 # 我的附加分界面（表格）
-@app.route('/monitor/MyExtra')
+@app.route('/student/MyExtra')
 def moMyExtra():
     if userIDisNone():
         return redirect(url_for('welcome'))
     global userID
     items = getBonus(userID)
-    return render_template('monitor/MyExtra.html', result=items, username=fillinusername())
+    return render_template('student/MyExtra.html', result=items, username=fillinusername())
 
 
 def mogetBonus(userID):
@@ -892,7 +892,7 @@ def mogetBonus(userID):
 
 
 # 我的综合积分界面（雷达）
-@app.route('/monitor/MyComprehensiveEval')
+@app.route('/student/MyComprehensiveEval')
 def moMyComprehensiveEval():
     if userIDisNone():
         return redirect(url_for('welcome'))
@@ -902,12 +902,12 @@ def moMyComprehensiveEval():
             where userId={}'''.format(userID)
     cursor.execute(sql)
     scores = cursor.fetchall()
-    return render_template('monitor/MyComprehensiveEval.html', score=list(scores[0]), name=userID,
+    return render_template('student/MyComprehensiveEval.html', score=list(scores[0]), name=userID,
                            username=fillinusername())
 
 
 # 综合积分汇总界面（表格）
-@app.route('/monitor/TotalComprehensiveEval', methods=['GET', 'POST'])
+@app.route('/student/TotalComprehensiveEval', methods=['GET', 'POST'])
 def moTotalComprehensiveEval():
     if userIDisNone():
         return redirect(url_for('welcome'))
@@ -952,11 +952,11 @@ def moTotalComprehensiveEval():
 
     cursor.execute(sql)
     all_data = cursor.fetchall()
-    return render_template('monitor/TotalComprehensiveEval.html', result=all_data, username=fillinusername())
+    return render_template('student/TotalComprehensiveEval.html', result=all_data, username=fillinusername())
 
 
 #班级成绩
-@app.route('/monitor/Class', methods=['GET', 'POST'])
+@app.route('/student/Class', methods=['GET', 'POST'])
 def Class():
     if userIDisNone():
         return redirect(url_for('welcome'))
@@ -987,11 +987,11 @@ def Class():
                  where t1.userID=t2.userID and t2.userID =t3.userID and t2.currID=t4.currID and currName=\'{}\' and classID={} and isReexam=0 and grade>0'''.format(selectedLesson, classID)
         cursor.execute(sql)
         result = cursor.fetchall()
-    return render_template('/monitor/Class.html', lesson=lesson, result=result,
+    return render_template('/student/Class.html', lesson=lesson, result=result,
                            username=fillinusername())
 
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run()#debug=True, host='0.0.0.0'
 

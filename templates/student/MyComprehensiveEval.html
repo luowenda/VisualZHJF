@@ -4,9 +4,10 @@
 {% block title %}我的综合积分{% endblock %}
 
 {% block main %}
-
-<div id="main" style="width: 800px;height:500px;margin: 0 auto;"></div>
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+<div style="height:30px;margin: 0 auto;"></div>
+<div id="main" style="width: 800px;min-height: 500px; height:auto;margin: 0 auto;"></div>
+
     <script type="text/javascript">
         var myChart = echarts.init(document.getElementById('main'));
         // 图表配置
@@ -44,4 +45,5 @@
     }]
 		});
     </script>
+   
 {% endblock %}

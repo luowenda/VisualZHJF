@@ -3,6 +3,7 @@
 
 
 from flask import Flask, render_template, request, session, redirect, url_for
+from flask_material import Material
 import config
 import os
 import json
@@ -30,6 +31,7 @@ conn = pymssql.connect(host='127.0.0.1:1433',
 cursor = conn.cursor()
 
 app = Flask(__name__)
+Material(app)
 app.config.from_object(config)
 
 #EG
@@ -160,6 +162,7 @@ def fillinusername():
 
 userID=None
 
+<<<<<<< HEAD
 # #登陆界面
 # @app.route('/',methods=['get'])
 # def welcome():
@@ -172,25 +175,46 @@ def login():
     error=None
     if request.method == 'GET':
         return render_template('welcome.html', error=error)
+=======
+@app.route('/', methods = ['POST','GET'])
+def index():
+    error=None
+    
+    if request.method == 'GET':
+        session.clear()
+        return render_template('index.html',error=error)
+>>>>>>> 849d28846d3d1a74b4b4f86785e3832a57a11afe
     else:
         global userID
         userID = request.form['username']
         pwd = request.form['passwd']
         if not all([userID,pwd]):
             if userID == "":
+<<<<<<< HEAD
                 error = "请输入用户名"
                 return render_template('welcome.html',error=error)
             else:
                 error = "请输入密码"
                 return render_template('welcome.html',error=error)
+=======
+                error = "请输入学号"
+                return render_template('index.html',error=error)
+            else:
+                error = "请输入密码"
+                return render_template('index.html',error=error)
+>>>>>>> 849d28846d3d1a74b4b4f86785e3832a57a11afe
         sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
         sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
         cursor.execute(sql1)
         #用一个rs_***变量获取数据
         rs_userid = cursor.fetchall()
+<<<<<<< HEAD
         num=0
         for data in rs_userid:
             num=num+1
+=======
+        num=len(rs_userid)
+>>>>>>> 849d28846d3d1a74b4b4f86785e3832a57a11afe
         if(num!=0):
             #用户登录设置session的userID和username
             session['userID']=userID
@@ -208,17 +232,62 @@ def login():
                 return redirect(url_for('tea_index'))
         else:
             error="账号或密码错误"
+<<<<<<< HEAD
             return render_template('welcome.html',error = error)
 
 def deny():
     return "Permission denied"
+=======
+            return render_template('index.html',error=error)
+>>>>>>> 849d28846d3d1a74b4b4f86785e3832a57a11afe
 
-#学生界面首页
-@app.route('/student')
+
+#学生界面首页（综合积分界面）
+@app.route('/student', methods=['GET','POST'])
 def stu_index():
+    global userID
+    sql = '''select grade, departId 
+            from EvaluationFinalScore 
+            where userId={}'''.format(userID)
+    cursor.execute(sql)
+    content = cursor.fetchall()
+    grade = content[0][0]
+    depart = content[0][1]
+    #使用user表必须使用[user]才不会报错
+    sql = '''select userName,round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
+            from [EvaluationFinalScore],[user] 
+            where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
+    sortList=[0,0,0,0,0]
+    scoreList=["moralScore","intellectualScore","socialScore","bonus","finalScore"]
+    flag=0 #是否有排序条件
+    if request.method == "POST":   
+        Moral = request.values.get("moralGrade")
+        sortList[0]=Moral
+        Intel = request.values.get("intelGrade")
+        sortList[1]=Intel
+        Social = request.values.get("socialGrade")
+        sortList[2]=Social
+        Extra = request.values.get("extraGrade")
+        sortList[3]=Extra
+        Total = request.values.get("totalGrade")
+        sortList[4]=Total
+    #print(sortList)
+    for i in range(5):
+        if (sortList[i] != 0 and sortList[i] != ''): 
+            flag = 1
+            sql += " order by "
+            break
+    if (flag):
+        flag=0
+        for i in range(5):
+            if (sortList[i] == "asc"): sql += (scoreList[i]+",")
+            elif (sortList[i] == "desc"): sql += (scoreList[i]+" desc,")
+        sql = sql[:-1] #去掉最后一个,
     
-    
-    return render_template('/student/index.html')
+    cursor.execute(sql)
+    all_data = cursor.fetchall()
+    return render_template('student/index.html',result = all_data)
+
 
 #个人成绩界面（根据课程属性筛选）（表格）
 @app.route('/student/GradeByAttri', methods=['GET','POST'])
@@ -326,25 +395,18 @@ def getList(search):
         return showList
     return None
 
-#GPA计算界面
-@app.route('/student/GPACalculator')
-def GPACalculator():
+#GPA界面(GPA显示及走向)
+@app.route('/student/GPA')
+def GPA():
     global userID
     grade = getGrade(userID)
     gpa = getGPA(userID,grade,4,2)
-    return render_template('student/GPACalculator.html',GPA=gpa)
-
-#查看GPA走向界面（折线）
-@app.route('/student/GPATrend')
-def GPATrend():
-
-    global userID
-    grade = getGrade(userID)
-    GPA = []
+    GPAlist = []
     for i in range(1,5):
         for j in range(1,3):
-            GPA.append(getGPA(userID,grade,i,j))
-    return render_template('student/GPATrend.html', data=GPA,name=getName(userID))
+            GPAlist.append(getGPA(userID,grade,i,j))
+    return render_template('student/GPA.html',GPA=gpa, data=GPAlist,name=getName(userID))
+
 
 #我的附加分界面（表格）
 @app.route('/student/MyExtra')
@@ -371,8 +433,9 @@ def MyComprehensiveEval():
             where userId={}'''.format(userID)
     cursor.execute(sql)
     scores = cursor.fetchall()
-    return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=userID)
+    return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=getName(userID))
 
+<<<<<<< HEAD
 #综合积分汇总界面（表格）
 @app.route('/student/TotalComprehensiveEval', methods=['GET','POST'])
 def TotalComprehensiveEval():
@@ -418,6 +481,8 @@ def TotalComprehensiveEval():
     cursor.execute(sql)
     all_data = cursor.fetchall()
     return render_template('student/TotalComprehensiveEval.html',result = all_data)
+=======
+>>>>>>> 849d28846d3d1a74b4b4f86785e3832a57a11afe
 
 
 
@@ -729,8 +794,13 @@ def CompByYear():
 @app.route('/student')
 def mostu_index():
     if userIDisNone():
+<<<<<<< HEAD
         return redirect(url_for('welcome'))
     return render_template('/student/index_monitor.html', username=fillinusername())
+=======
+        return redirect(url_for('index'))
+    return render_template('/monitor/index.html', username=fillinusername())
+>>>>>>> 849d28846d3d1a74b4b4f86785e3832a57a11afe
     sql = "select userName from dbo.[user] where userID='" + userID + "'"
     cursor.execute(sql)
     userName = cursor.fetchall()
@@ -742,7 +812,7 @@ def mostu_index():
 @app.route('/student/GradeByAttri', methods=['GET', 'POST'])
 def moGradeByAttri():
     if userIDisNone():
-        return redirect(url_for('welcome'))
+        return redirect(url_for('index'))
     global userID
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like
@@ -792,7 +862,7 @@ def moGradeByAttri():
 @app.route('/student/GradeBySemester', methods=['GET', 'POST'])
 def moGradeBySemester():
     if userIDisNone():
-        return redirect(url_for('welcome'))
+        return redirect(url_for('index'))
     global userID
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like
@@ -851,7 +921,7 @@ def moGradeBySemester():
 @app.route('/student/GPACalculator')
 def moGPACalculator():
     if userIDisNone():
-        return redirect(url_for('welcome'))
+        return redirect(url_for('index'))
     global userID
     grade = getGrade(userID)
     gpa = getGPA(userID, grade, 4, 2)
@@ -862,7 +932,7 @@ def moGPACalculator():
 @app.route('/student/GPATrend')
 def moGPATrend():
     if userIDisNone():
-        return redirect(url_for('welcome'))
+        return redirect(url_for('index'))
     global userID
     grade = getGrade(userID)
     GPA = []
@@ -876,7 +946,7 @@ def moGPATrend():
 @app.route('/student/MyExtra')
 def moMyExtra():
     if userIDisNone():
-        return redirect(url_for('welcome'))
+        return redirect(url_for('index'))
     global userID
     items = getBonus(userID)
     return render_template('student/MyExtra.html', result=items, username=fillinusername())
@@ -895,7 +965,7 @@ def mogetBonus(userID):
 @app.route('/student/MyComprehensiveEval')
 def moMyComprehensiveEval():
     if userIDisNone():
-        return redirect(url_for('welcome'))
+        return redirect(url_for('index'))
     global userID
     sql = '''select moralScore,intellectualScore,socialScore,bonus 
             from evaluationFinalScore 
@@ -910,7 +980,7 @@ def moMyComprehensiveEval():
 @app.route('/student/TotalComprehensiveEval', methods=['GET', 'POST'])
 def moTotalComprehensiveEval():
     if userIDisNone():
-        return redirect(url_for('welcome'))
+        return redirect(url_for('index'))
     global userID
     sql = '''select grade, departId 
             from EvaluationFinalScore 
@@ -959,7 +1029,7 @@ def moTotalComprehensiveEval():
 @app.route('/student/Class', methods=['GET', 'POST'])
 def Class():
     if userIDisNone():
-        return redirect(url_for('welcome'))
+        return redirect(url_for('index'))
     global userID
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like

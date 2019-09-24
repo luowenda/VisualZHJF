@@ -3,12 +3,13 @@
 {% block title %}多学生比较{% endblock %}
 
 {% block main %}
+<br>
 <form action="{{  url_for('CompByStu') }}" method="POST">
-<textarea name="MultiID" method="GET" action="/" placeholder="输入学号，使用英文逗号(,)分隔" style="border:solid 1px" rows="8" cols="60" method="POST"></textarea>
+<textarea name="MultiID" style="height:150px" method="GET" action="/" placeholder="输入学号，使用英文逗号(,)分隔" style="border:solid 1px" rows="8" cols="60" method="POST"></textarea>
 <br>
 <input class="btn btn-primary" type="submit" value="比较">
 </form>
-
+<br>
 <div id="main2" style="width: 800px;height:500px;margin: 0 auto;"></div>
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
 <script type="text/javascript">

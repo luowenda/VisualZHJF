@@ -13,7 +13,7 @@
     </script>
 <form action="{{  url_for('FailedCourses') }}" method='POST' onsubmit="setBlank()">
             &nbsp&nbsp&nbsp&nbsp请输入学号：
-            <input type="text" name="userID" id="userID" method="POST"/>
+            <input type="text" name="userID" id="userID" style="width: 200px" method="POST"/>
             <script type="text/javascript">
                 document.getElementById('userID').value = getUserID();
             </script>
@@ -23,6 +23,7 @@
 <br />
 <div>&nbsp&nbsp&nbsp&nbsp{{name}}的挂科情况如下：</div>
 <br />
+<div id="main2" style="width: 800px;height:500px;margin: 0 auto;">
 <table class="table table-striped">
     <thead>
         <tr>
@@ -42,4 +43,6 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
+<div style="height: 50px"></div> <!--占行用-->
 {% endblock %}

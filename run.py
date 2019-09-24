@@ -179,10 +179,10 @@ def index():
         if not all([userID,pwd]):
             if userID == "":
                 error = "请输入用户名"
-                return render_template('welcome.html',error=error)
+                return render_template('index.html',error=error)
             else:
                 error = "请输入密码"
-                return render_template('welcome.html',error=error)
+                return render_template('index.html',error=error)
 
         sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
         sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
@@ -210,10 +210,7 @@ def index():
                 return redirect(url_for('tea_index'))
         else:
             error="账号或密码错误"
-            return render_template('welcome.html',error = error)
-
-def deny():
-    return "Permission denied"
+            return render_template('index.html',error = error)
 
 
 #学生界面首页（综合积分界面）
@@ -624,15 +621,23 @@ def countUser(currID,grade,year,seme,lowgrade,highgrade):
 #个人查询-成绩走向
 @app.route('/teacher/GradeTrend',methods=['GET','POST'])
 def GradeTrend():
+    
+    gpa=None
+    GPAlist=[]
+    name=None
+
     if request.method == "POST":   
         userID = request.values.get("userID")
         name = getName(userID)
         grade = getGrade(userID)
         gpa = getGPA(userID,grade,4,2)
+        GPAlist = []
+        for i in range(1,5):
+            for j in range(1,3):
+                GPAlist.append(getGPA(userID,grade,i,j))
         return render_template('/teacher/GradeTrend.html',
-                            name = name,
-                            GPA = round(gpa,2))
-    return render_template('/teacher/GradeTrend.html')
+                            GPA=gpa, data=GPAlist,name=name)
+    return render_template('/teacher/GradeTrend.html', GPA=gpa, data=GPAlist,name=name)
 
 #个人查询-挂科情况统计
 @app.route('/teacher/FailedCourses',methods=['GET','POST'])

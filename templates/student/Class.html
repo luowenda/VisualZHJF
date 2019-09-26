@@ -1,5 +1,5 @@
 <!--班级成绩界面（根据课程名称筛选）-->
-        {% extends 'monitor/base.html' %}
+        {% extends 'student/base.html' %}
 
         {% block title %}班级成绩{% endblock %}
 
@@ -27,7 +27,8 @@
         <input class="btn btn-primary" type="submit" value="查询"></form>
         <br />
         <br />
-        <table class="table table-striped" style="width: 500px;height:500px;margin: 0 auto">
+        <div style="width: 1000px;min-height: 500px; height:auto;margin: 0 auto;">
+        <table class="table table-striped" style="width: 500px;margin: 0 auto">
 	        <thead>
 		        <tr>
 			        <th>姓名</th>
@@ -44,6 +45,8 @@
 	        {% endfor %}
 	        </tbody>
         </table>
+    </div>
+        <div style="height: 50px"></div> <!--占行用-->
         {% endblock %}
         
 		

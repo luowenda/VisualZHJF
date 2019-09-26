@@ -56,8 +56,9 @@
     <script type="text/javascript">
         document.getElementById('semester').value = getSemester();
     </script>
+    <br>
     &nbsp&nbsp&nbsp&nbsp课程名称：
-        <input type="text" name="courseName" id="courseName" method="POST"/>
+        <input type="text" name="courseName" id="courseName" style="width: 150px" method="POST"/>
         <script type="text/javascript">
             document.getElementById('courseName').value = getCourse();
         </script>
@@ -116,6 +117,7 @@
                     myChart.setOption(option);
                 
                     </script>
+                    <div style="height: 110px"></div> <!--占行用-->
                 </body>
                 </html>
 {% endblock %}

@@ -21,16 +21,16 @@ import pymssql
 
 
 conn = pymssql.connect(
-                        # server='172.16.108.171',
-                        # user='sa',
-                        # password='123456',
-                        # database='zhjfdemo1',
-                        # )
-                        server='202.112.194.247',
-                       user='zonghejifenrd',
-                       password='zhjf2019rd',
-                       database='zonghejifen',
-                       charset='utf8')
+                        server='172.16.108.177',
+                        user='sa',
+                        password='123456',
+                        database='zhjfdemo1',
+                        )
+                    #     server='202.112.194.247',
+                    #    user='zonghejifenrd',
+                    #    password='zhjf2019rd',
+                    #    database='zonghejifen',
+                    #    charset='utf8')
 
 
 #查看连接是否成功
@@ -203,7 +203,7 @@ def login():
                 return render_template('index.html',error=error)
 
         sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
-        sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"' and academicYear='"+GetAcademicYear+"'" 
+        sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"' and academicYear='"+GetAcademicYear()+"'" 
         cursor.execute(sql1)
         #用一个rs_***变量获取数据
         rs_userid = cursor.fetchall()

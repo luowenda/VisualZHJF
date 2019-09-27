@@ -21,12 +21,12 @@ import pymssql
 
 
 conn = pymssql.connect(
-                        server='172.16.108.177',
+                        server='.',
                         user='sa',
-                        password='123456',
+                        password='ZHJF2019eggs',
                         database='zhjfdemo1',
                         )
-                    #     server='202.112.194.247',
+                    #    server='202.112.194.247',
                     #    user='zonghejifenrd',
                     #    password='zhjf2019rd',
                     #    database='zonghejifen',

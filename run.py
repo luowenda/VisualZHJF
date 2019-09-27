@@ -207,11 +207,9 @@ def login():
         cursor.execute(sql1)
         #用一个rs_***变量获取数据
         rs_userid = cursor.fetchall()
-        num=0
-        for data in rs_userid:
-            num=num+1
 
-        if(num!=0):
+
+        if(len(rs_userid)!=0):
             #用户登录设置session的userID和username
             session['userID']=userID
             session['username']=fillinusername(userID)
@@ -220,8 +218,8 @@ def login():
             rs_roleid= cursor.fetchall()
             print(rs_roleid)
             roleID=rs_roleid[1][0]
-            print(userID)
-            print(roleID)
+            # print(userID)
+            # print(roleID)
 
             if(roleID==1):
                 #将用户角色加入session

@@ -1,7 +1,7 @@
 
 # encoding:utf-8
 
-
+import datetime
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_material import Material
 import config
@@ -16,6 +16,7 @@ import re
 import pymssql
 
 
+<<<<<<< HEAD
 conn = pymssql.connect(host='127.0.0.1:1433',
                        user='sa',
                        password='123456',
@@ -26,6 +27,24 @@ conn = pymssql.connect(host='127.0.0.1:1433',
 #                        password='zhjf2019rd',
 #                        database='zonghejifen',
 #                        charset='utf8')
+=======
+
+
+
+
+conn = pymssql.connect(
+                        server='.',
+                        user='sa',
+                        password='ZHJF2019eggs',
+                        database='zhjfdemo1',
+                        )
+                    #    server='202.112.194.247',
+                    #    user='zonghejifenrd',
+                    #    password='zhjf2019rd',
+                    #    database='zonghejifen',
+                    #    charset='utf8')
+
+>>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 
 #查看连接是否成功
 cursor = conn.cursor()
@@ -44,43 +63,68 @@ def internal_server_error(e):
 #lwd
 app.secret_key='BLCU is our school'
 
-# @app.before_request
-# def is_login():
-#     # if request.path == '/':
-#     #     return None
-#     if 'userID' not in session:
-#         return None
-#     elif session['role']=='student'and '/student'in request.path:
-#         return None
-#     elif session['role']=='teacher'and '/teacher'in request.path:
-#         return None
-#     else:
-#         return redirect(url_for('login'))
-#     #   return '无访问权限'
+@app.before_request
+def is_login():
+    
+    if request.path =='/':
+        return redirect('/login/')
+    if request.path =='/login/':
+        return None
+    if '/static'in str(request):
+        return None
+    if session.get('userID')==None:
+        return redirect('/login/') 
+    if session['role']=='student'and '/student'in request.path:
+        return None
+    if session['role']=='monitor'and '/student'in request.path:
+        return None
+    if session['role']=='teacher'and '/teacher'in request.path:
+        return None
+    else:
+        return '无法访问该界面'
+
+def GetAcademicYear():
+    now_year = datetime.datetime.now().year
+    last_year = now_year - 1
+    rs = str(last_year)[2:] + '-' + str(now_year)[2:]
+    return rs
+
+
 
 def getName(userID):
     getUserName = 'select userName from [user] where userID = \'{}\''.format(userID)
     cursor.execute(getUserName)
-    name = (cursor.fetchall())[0][0]
+    res = cursor.fetchall()
+    if(len(res)):
+        name = res[0][0]
+    else:
+        name=''
     return name
 
 def getGrade(userID):
-    sql = '''select grade from [currGrade] where userID like {}'''.format(userID) #匹配字符串用like
+    sql = '''select grade from [currGrade] where userID like \'{}\''''.format(userID) #匹配字符串用like
     cursor.execute(sql)
     content1 = cursor.fetchall()
-    return content1[0][0]
+    if(len(content1)):
+        return content1[0][0]
+    else:
+        return 0
 
 def getGPA(userID,grade,year,semester):
     #获取classID
-    sql = '''select classID from [UserRoleMapping] where userID like {}'''.format(userID) #匹配字符串用like
+    sql = '''select classID from [UserRoleMapping] where userID like \'{}\''''.format(userID) #匹配字符串用like
     cursor.execute(sql)
     content1 = cursor.fetchall()
-    classID = content1[0][0]
+    classID = 0
+    departID = 0
+    if(len(content1)):
+        classID = content1[0][0]
     #获取departID
     sql = '''select departID from [class] where classID={}'''.format(classID)
     cursor.execute(sql)
     content2 = cursor.fetchall()
-    departID = content2[0][0]
+    if(len(content2)):
+        departID = content2[0][0]
     #获取大纲课程currID列表
     currList=[]
     for i in range(1,year+1):
@@ -118,13 +162,14 @@ def getGPA(userID,grade,year,semester):
     creditList=[] #每个成绩对应课程的学分
     for j in currList:
         sql = '''select examGrade, credit from [currGrade] as t1, [curriculum] as t2 
-                where userID={} and t1.currID={} 
+                where userID=\'{}\' and t1.currID={} 
                 and t1.currID = t2.currID 
                 and isReexam=0'''.format(userID,j)
         cursor.execute(sql)
         content = cursor.fetchall()
-        gradeList.append(content[0][0])
-        creditList.append(content[0][1])
+        if(len(content)):
+            gradeList.append(content[0][0])
+            creditList.append(content[0][1])
     #计算GPA(排除得分为0课程)
     pointList=[]
     creditListPoped=[]
@@ -153,16 +198,19 @@ def getGPA(userID,grade,year,semester):
     else:
         gpa = pointSum/creditSum
     return round(gpa,2) 
-def fillinusername():
+def fillinusername(userID):
     sql="select userName from dbo.[user] where userID='"+userID+"'"
     cursor.execute(sql)
     userName=cursor.fetchall()
-    userName=userName[0][0]
+    if(len(userName)):
+        userName=userName[0][0]
+    else:
+        userName = ''
     return userName
 
-userID=None
 
 
+<<<<<<< HEAD
 @app.route('/', methods = ['POST','GET'])
 def index():
     error=None
@@ -174,92 +222,132 @@ def index():
     else:
         global userID
         global roleID
+=======
+#登陆界面
+@app.route('/login/', methods = ['POST','GET'])
+def login():
+    if request.method=='GET':
+        session.clear()
+        return render_template('index.html', error=None)
+    else:
+        error=None
+
+        # global roleID
+>>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
         userID = request.form['username']
         pwd = request.form['passwd']
         if not all([userID,pwd]):
             if userID == "":
                 error = "请输入用户名"
+<<<<<<< HEAD
                 return render_template('welcome.html',error=error)
             else:
                 error = "请输入密码"
                 return render_template('welcome.html',error=error)
+=======
+                return render_template('index.html',error=error)
+            else:
+                error = "请输入密码"
+                return render_template('index.html',error=error)
+>>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 
         sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
-        sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"
+        sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"' and academicYear='"+GetAcademicYear()+"'" 
         cursor.execute(sql1)
         #用一个rs_***变量获取数据
         rs_userid = cursor.fetchall()
+<<<<<<< HEAD
         num=0
         for data in rs_userid:
             num=num+1
 
         if(num!=0):
+=======
+        
+
+        if(len(rs_userid) != 0):
+>>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
             #用户登录设置session的userID和username
             session['userID']=userID
-            session['username']=fillinusername()
+            session['username']=fillinusername(userID)
 
             cursor.execute(sql2)
-            rs_roleid= cursor.fetchone()
-            roleID=rs_roleid[0]
+            rs_roleid= cursor.fetchall()
+            print(rs_roleid)
+            roleID=rs_roleid[1][0]
+            # print(userID)
+            # print(roleID)
+
             if(roleID==1):
                 #将用户角色加入session
                 session['role']='student'
+                return redirect(url_for('stu_index'))
+            elif(roleID==2):
+                session['role']='monitor'
                 return redirect(url_for('stu_index'))
             else:
                 session['role']='teacher'
                 return redirect(url_for('tea_index'))
         else:
             error="账号或密码错误"
+<<<<<<< HEAD
             return render_template('welcome.html',error = error)
+=======
+            return render_template('index.html',error = error)
+>>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 
 def deny():
     return "Permission denied"
 
+# def deny():
+#     return "Permission denied"
 
 #学生界面首页（综合积分界面）
 @app.route('/student', methods=['GET','POST'])
 def stu_index():
-    global userID
+    all_data=[[]]
+    userID=session.get('userID')
     sql = '''select grade, departId 
             from EvaluationFinalScore 
-            where userId={}'''.format(userID)
+            where userId = \'{}\''''.format(userID)
     cursor.execute(sql)
     content = cursor.fetchall()
-    grade = content[0][0]
-    depart = content[0][1]
-    #使用user表必须使用[user]才不会报错
-    sql = '''select userName,round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
-            from [EvaluationFinalScore],[user] 
-            where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
-    sortList=[0,0,0,0,0]
-    scoreList=["moralScore","intellectualScore","socialScore","bonus","finalScore"]
-    flag=0 #是否有排序条件
-    if request.method == "POST":   
-        Moral = request.values.get("moralGrade")
-        sortList[0]=Moral
-        Intel = request.values.get("intelGrade")
-        sortList[1]=Intel
-        Social = request.values.get("socialGrade")
-        sortList[2]=Social
-        Extra = request.values.get("extraGrade")
-        sortList[3]=Extra
-        Total = request.values.get("totalGrade")
-        sortList[4]=Total
-    #print(sortList)
-    for i in range(5):
-        if (sortList[i] != 0 and sortList[i] != ''): 
-            flag = 1
-            sql += " order by "
-            break
-    if (flag):
-        flag=0
+    if(len(content)):
+        grade = content[0][0]
+        depart = content[0][1]
+        #使用user表必须使用[user]才不会报错
+        sql = '''select userName,round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
+                from [EvaluationFinalScore],[user] 
+                where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
+        sortList=[0,0,0,0,0]
+        scoreList=["moralScore","intellectualScore","socialScore","bonus","finalScore"]
+        flag=0 #是否有排序条件
+        if request.method == "POST":   
+            Moral = request.values.get("moralGrade")
+            sortList[0]=Moral
+            Intel = request.values.get("intelGrade")
+            sortList[1]=Intel
+            Social = request.values.get("socialGrade")
+            sortList[2]=Social
+            Extra = request.values.get("extraGrade")
+            sortList[3]=Extra
+            Total = request.values.get("totalGrade")
+            sortList[4]=Total
+        #print(sortList)
         for i in range(5):
-            if (sortList[i] == "asc"): sql += (scoreList[i]+",")
-            elif (sortList[i] == "desc"): sql += (scoreList[i]+" desc,")
-        sql = sql[:-1] #去掉最后一个,
-    
-    cursor.execute(sql)
-    all_data = cursor.fetchall()
+            if (sortList[i] != 0 and sortList[i] != ''): 
+                flag = 1
+                sql += " order by "
+                break
+        if (flag):
+            flag=0
+            for i in range(5):
+                if (sortList[i] == "asc"): sql += (scoreList[i]+",")
+                elif (sortList[i] == "desc"): sql += (scoreList[i]+" desc,")
+            sql = sql[:-1] #去掉最后一个,
+        
+        cursor.execute(sql)
+        all_data = cursor.fetchall()
     return render_template('student/index.html',result = all_data)
 
 
@@ -267,17 +355,21 @@ def stu_index():
 @app.route('/student/GradeByAttri', methods=['GET','POST'])
 def GradeByAttri():
     
-    global userID
+    userID=session.get('userID')
     #获取classID
-    sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID) #匹配字符串用like
+    sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID) #匹配字符串用like
     cursor.execute(sql)
     content1 = cursor.fetchall()
-    classID = content1[0][0]
+    classID = 0
+    if(len(content1)):
+        classID = content1[0][0]
     #获取departID
     sql = 'select departID from [class] where classID={}'.format(classID)
     cursor.execute(sql)
     content2 = cursor.fetchall()
-    departID = content2[0][0]
+    departID = 0
+    if(len(content2)):
+        departID = content2[0][0]
 
     result = []
     attri = ['专业课', '必修课', '公共课']
@@ -297,9 +389,9 @@ def GradeByAttri():
                                                                       from(select  rank() over (order by examGrade desc) rank,*
                                                                            from currGrade  
                                                                            where currID = t1.currID ) T
-                                                                      where userID = {}) as ran 
+                                                                      where userID = \'{}\') as ran 
                           from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 
-                          where userID={} and t2.departID={}
+                          where userID=\'{}\' and t2.departID={}
                           and t1.currID = t2.currID 
                           and t1.currID = t3.currID 
                           and t1.grade = t2.grade 
@@ -315,23 +407,29 @@ def GradeByAttri():
 @app.route('/student/GradeBySemester', methods=['GET','POST'])
 def GradeBySemester():
 
-    global userID
+    userID=session.get('userID')
     # 获取classID
-    sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like
+    sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID)  # 匹配字符串用like
     cursor.execute(sql)
     content1 = cursor.fetchall()
-    classID = content1[0][0]
+    classID = 0
+    if(len(content1)):
+        classID = content1[0][0]
     # 获取departID
     sql = 'select departID from [class] where classID={}'.format(classID)
     cursor.execute(sql)
     content2 = cursor.fetchall()
-    departID = content2[0][0]
+    departID = 0
+    if(len(content2)):
+        departID = content2[0][0]
 
     getYear = '''select distinct academicYear 
-                    from currArrange'''
+                    from currArrange
+                    order by academicYear'''
     year = getList(getYear)
     getSemester = '''select distinct semester 
-                    from currArrange'''
+                    from currArrange
+                    order by semester'''
     semester = getList(getSemester)
 
     result = []
@@ -346,9 +444,9 @@ def GradeBySemester():
                                                                       from(select  rank() over (order by examGrade desc) rank,*
                                                                            from currGrade  
                                                                            where currID = t1.currID ) T
-                                                                      where userID = {}) as ran
+                                                                      where userID = \'{}\') as ran
                       from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 
-                      where userID={} and t2.departID={}
+                      where userID=\'{}\' and t2.departID={}
                       and t1.currID = t2.currID 
                       and t1.currID = t3.currID 
                       and t1.grade = t2.grade 
@@ -372,7 +470,7 @@ def getList(search):
 #GPA界面(GPA显示及走向)
 @app.route('/student/GPA')
 def GPA():
-    global userID
+    userID=session.get('userID')
     grade = getGrade(userID)
     gpa = getGPA(userID,grade,4,2)
     GPAlist = []
@@ -386,14 +484,14 @@ def GPA():
 @app.route('/student/MyExtra')
 def MyExtra():
 
-    global userID
+    userID=session.get('userID')
     items = getBonus(userID)
     return render_template('student/MyExtra.html',result = items)
 
 def getBonus(userID):
     sql = '''select content, bonusValue, semester
             from bonusItem2user as t1,bonusItem as t2 
-            where ownerId={} and t1.bonusItemID=t2.bonusItemID'''.format(userID)
+            where ownerId=\'{}\' and t1.bonusItemID=t2.bonusItemID'''.format(userID)
     cursor.execute(sql)
     items = cursor.fetchall()
     return items
@@ -401,25 +499,31 @@ def getBonus(userID):
 #我的综合积分界面（雷达）
 @app.route('/student/MyComprehensiveEval')
 def MyComprehensiveEval():
-    global userID
+    userID=session.get('userID')
     sql = '''select moralScore,intellectualScore,socialScore,bonus 
             from evaluationFinalScore 
-            where userId={}'''.format(userID)
+            where userId=\'{}\''''.format(userID)
     cursor.execute(sql)
     scores = cursor.fetchall()
-    return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=getName(userID))
+    if(len(scores)):
+        return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=getName(userID))
+    else:
+        return render_template('student/MyComprehensiveEval.html', score=[],name=getName(userID))
 
 #综合积分汇总界面（表格）
 @app.route('/student/TotalComprehensiveEval', methods=['GET','POST'])
 def TotalComprehensiveEval():
-    global userID
+    userID=session.get('userID')
     sql = '''select grade, departId 
             from EvaluationFinalScore 
-            where userId={}'''.format(userID)
+            where userId=\'{}\''''.format(userID)
     cursor.execute(sql)
     content = cursor.fetchall()
-    grade = content[0][0]
-    depart = content[0][1]
+    grade = ''
+    depart = ''
+    if(len(content)):
+        grade = content[0][0]
+        depart = content[0][1]
     #使用user表必须使用[user]才不会报错
     sql = '''select userName,round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
             from [EvaluationFinalScore],[user] 
@@ -458,16 +562,28 @@ def TotalComprehensiveEval():
 #班级成绩
 @app.route('/student/Class', methods=['GET', 'POST'])
 def Class():
+<<<<<<< HEAD
     global userID
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like
     cursor.execute(sql)
     content1 = cursor.fetchall()
     classID = content1[0][0]
+=======
+    userID=session.get('userID')
+    # 获取classID
+    sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID)  # 匹配字符串用like
+    cursor.execute(sql)
+    content1 = cursor.fetchall()
+    classID = 0
+    if(len(content1)):
+        classID = content1[0][0]
+>>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
     # 获取departID
     sql = 'select departID from [class] where classID={}'.format(classID)
     cursor.execute(sql)
     content2 = cursor.fetchall()
+<<<<<<< HEAD
     departID = content2[0][0]
 
     getLesson = '''select distinct currName
@@ -479,6 +595,21 @@ def Class():
     if request.method == "POST":
         selectedLesson = request.values.get("lesson")
 
+=======
+    departID = 0
+    if(len(content2)):
+        departID = content2[0][0]
+
+    getLesson = '''select distinct currName
+                   from curriculum as t1,currArrange as t2
+                   where (isCompulsory=1 or isSpec=1) and isPE=0 and t1.currID=t2.currID and t2.departID={}'''.format(departID)
+    lesson = getList(getLesson)
+
+    result = []
+    if request.method == "POST":
+        selectedLesson = request.values.get("lesson")
+
+>>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
         # 获取属性课程列表
         sql = '''select userName,examGrade
                  from [user] as t1,currGrade as t2,UserRoleMapping as t3, curriculum as t4
@@ -586,19 +717,22 @@ def CourseOverview():
         getCurrID = '''select currID 
                        from curriculum
                        where currName = \'{}\''''.format(courseName)
-        curID = int(getList(getCurrID)[0])
+        curID = 0
+        res = getList(getCurrID)
+        if(res):
+            curID = int(res[0])
 
-        under60 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),0,61)
-        result.append(under60[0])
-        btw67 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),60,71)
-        result.append(btw67[0])
-        btw78 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),70,81)
-        result.append(btw78[0])
-        btw89 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),80,91)
-        result.append(btw89[0])
-        above90 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),90,101)
-        result.append(above90[0])
-
+            under60 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),0,61)
+            result.append(under60[0])
+            btw67 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),60,71)
+            result.append(btw67[0])
+            btw78 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),70,81)
+            result.append(btw78[0])
+            btw89 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),80,91)
+            result.append(btw89[0])
+            above90 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),90,101)
+            result.append(above90[0])
+            
     return render_template('/teacher/CourseOverview.html',
                             grade = grade,
                             year = year,
@@ -612,27 +746,38 @@ def countUser(currID,grade,year,seme,lowgrade,highgrade):
                     where currID = {} and grade = {} and academicYear = \'{}\' 
                     and semester = {} and examGrade between {} and {}'''.format(currID,grade,year,seme,lowgrade,highgrade)
     cursor.execute(getUserNum)
-    num = (cursor.fetchall())[0]
+    res = cursor.fetchall()
+    num = 0
+    if(res):
+        num = res[0]
     return num
 
 #个人查询-成绩走向
 @app.route('/teacher/GradeTrend',methods=['GET','POST'])
 def GradeTrend():
+    
+    gpa=None
+    GPAlist=[]
+    name=None
+
     if request.method == "POST":   
         userID = request.values.get("userID")
         name = getName(userID)
         grade = getGrade(userID)
         gpa = getGPA(userID,grade,4,2)
+        GPAlist = []
+        for i in range(1,5):
+            for j in range(1,3):
+                GPAlist.append(getGPA(userID,grade,i,j))
         return render_template('/teacher/GradeTrend.html',
-                            name = name,
-                            GPA = round(gpa,2))
-    return render_template('/teacher/GradeTrend.html')
+                            GPA=gpa, data=GPAlist,name=name)
+    return render_template('/teacher/GradeTrend.html', GPA=gpa, data=GPAlist,name=name)
 
 #个人查询-挂科情况统计
 @app.route('/teacher/FailedCourses',methods=['GET','POST'])
 def FailedCourses():
     name = ''
-    courses = []
+    courses = [[]]
     if request.method == "POST":   
         userID = request.values.get("userID")
         name = getName(userID)
@@ -654,7 +799,7 @@ def getCourses(userID):
 @app.route('/teacher/Bonus',methods=['GET','POST'])
 def Bonus():
 
-    items = []
+    items = [[]]
     if request.method == "POST":   
         userID = request.values.get("userID")
         items = getBonus(userID)
@@ -693,9 +838,7 @@ def CompByStu():
     return render_template('/teacher/CompByStu.html', 
                                     names = names, 
                                     courses = courses, 
-                                    grades = grades)
-
-    
+                                    grades = grades)    
 
 
 #多人（班级）比较-班级成绩对比
@@ -704,7 +847,7 @@ def CompByClass():
 
     two_class = []
 
-    getYear = 'select distinct yearIn from class'
+    getYear = 'select distinct yearIn from class order by yearIn'
     year = getList(getYear)
 
     getMajor = '''select distinct departName 
@@ -714,13 +857,13 @@ def CompByClass():
                                         from class)'''
     major = getList(getMajor)
 
-    getClass = 'select distinct className from class'
+    getClass = 'select distinct className from class order by className'
     classes = getList(getClass)
 
     c1 = []
     c2 = []
     courses = []
-    grades = []
+    grades = [[]]
     if request.method == "POST":   
         selectedYear = request.values.get("year")
         selectedMajor = request.values.get("major")
@@ -734,44 +877,40 @@ def CompByClass():
                          from department 
                          where departName = \'{}\''''.format(selectedMajor)
         deprtID = int(getList(getDepartID)[0])
-        
-        getClass1ID = '''select classID
-                         from class
-                         where className = \'{}\' and departID = {} and yearIn = {}'''.format(selectedClass1,deprtID,selectedYear)
-        class1ID = int(getList(getClass1ID)[0])
 
-        getClass2ID = '''select classID
-                         from class
-                         where className = \'{}\' and departID = {} and yearIn = {}'''.format(selectedClass2,deprtID,selectedYear)
-        class2ID = int(getList(getClass2ID)[0])
-
-        getResult = '''select currName,round(avg(examGrade),2) as avgGrade into c1
-                        from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
-                        inner join curriculum on currGrade.currID = curriculum.currID
-                        where classID = {} and grade = {} and examGrade != 0
-                        group by currName
-
-                        select currName,round(avg(examGrade),2) as avgGrade into c2
-                        from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
-                        inner join curriculum on currGrade.currID = curriculum.currID
-                        where classID = {} and grade = {} and examGrade != 0
-                        group by currName
-
-                        select c1.currName,c1.avgGrade as c1Grade,c2.avgGrade as c2Grade
-                        from c1 inner join c2 on c1.currName  = c2.currName
-
-                        drop table c1
-                        drop table c2'''.format(int(class1ID),int(selectedYear),int(class2ID),int(selectedYear))
+        getResult = '''select c1,c1avgGrade,c2avgGrade 
+                        from 
+                            (select currName as c1,round(avg(examGrade),2) as c1avgGrade 
+                            from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
+                            inner join curriculum on currGrade.currID = curriculum.currID
+                            where classID = (select classID
+                                            from class
+                                            where className = \'{}\' and departID = {} and yearIn = {})
+                                and grade = {} 
+                                and examGrade != 0
+                            group by classID,currName)C1
+                        inner join 
+                            (select currName as c2,round(avg(examGrade),2) as c2avgGrade
+                            from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
+                            inner join curriculum on currGrade.currID = curriculum.currID
+                            where classID = (select classID
+                                            from class
+                                            where className = \'{}\' and departID = {} and yearIn = {})
+                                and grade = {}
+                                and examGrade != 0
+                            group by classID,currName)C2
+                        on c1=c2'''.format(selectedClass1,deprtID,selectedYear,int(selectedYear),
+                                           selectedClass2,deprtID,selectedYear,int(selectedYear))
         cursor.execute(getResult)
         result = cursor.fetchall()
-        
-        for item in result:
-            courses.append(item[0])
-            c1.append(item[1])
-            c2.append(item[2])
-        grades.append(c1)
-        grades.append(c2)
-
+        if(len(result)):
+            for item in result:
+                courses.append(item[0])
+                c1.append(item[1])
+                c2.append(item[2])
+            grades = []
+            grades.append(c1)
+            grades.append(c2)
 
     return render_template('/teacher/CompByClass.html',
                                 year = year,
@@ -791,10 +930,17 @@ def CompByYear():
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     app.run()#debug=True, host='0.0.0.0'
+=======
+    app.run(host='0.0.0.0')#debug=True, host='0.0.0.0'
+>>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 

@@ -573,7 +573,7 @@ def MajorOverview():
         if(res):
             deprtID = int(res[0])
 
-        getResult = '''select userName,round(intellectualScore,2),round(moralScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
+        getResult = '''select userName,round(intellectualScore,2),round(moralScore,2),round(socialScore,2),round(bonus,1),round(finalScore,2)
                        from evaluationFinalScore inner join [user] on evaluationFinalScore.userID = [user].userID
                        where departID = {} and academicYear = \'{}\' and grade = {}'''.format(deprtID,selectedYear,int(selectedGrade))
         cursor.execute(getResult)

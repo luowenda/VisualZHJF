@@ -13,9 +13,9 @@
             function getAttri(){
             return localStorage.getItem("user_selected_attri");}
         </script>
-       <form action="{{  url_for('GradeByAttri') }}" method="POST" onsubmit="setAttri()">
+       <form style="margin:0 auto; max-width:600px; width:auto;" action="{{  url_for('GradeByAttri') }}" method="POST" onsubmit="setAttri()">
         <br />
-        &nbsp&nbsp&nbsp&nbsp请选择课程属性：
+        请选择课程属性：
         <select class="custom-select" name="attri" id="attri" method="GET" action="/" style="width:200px;margin: 0 auto;">
             {% for attriitem in attri %}
              <option value="{{attriitem}}">{{  attriitem  }}</option>"
@@ -28,8 +28,8 @@
         <input class="btn btn-primary" type="submit" value="查询"></form>
         <br />
         <br />
-        <div style="width: 1000px;min-height: 500px; height:auto;margin: 0 auto;">
-        <table class="table table-striped" style="width: 500px;margin: 0 auto">
+        <div style="min-height:500px; height:auto; max-width: 750px; width:auto; margin: 0 auto;">
+        <table class="table table-striped">
 	        <thead>
 		        <tr>
 			        <th>课程名称</th>

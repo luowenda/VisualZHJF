@@ -67,16 +67,10 @@
           </div>
         </li>
 		
-		{% if session['role']=='student' %}
-		<li class="nav-item dropdown" style="width:100px; text-align:center">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            班级成绩
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="\student\Class">班级成绩</a>
-          </div>
-        </li>
+    {% if session['role']=='student' %}
+    <li class="nav-item" style="width:80px; text-align:center">
+      <a class="nav-link" id="student" href="\student\Class">班级成绩</a>
+    </li>
 		{% endif %}
       </ul>
     <!-- welcome info -->

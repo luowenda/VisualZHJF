@@ -5,14 +5,8 @@ import datetime
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_material import Material
 import config
-import os
 import json
 import re
-# EG
-# from flask_bootstrap import Bootstrap
-# from flask_wtf import FlaskForm
-# from wtforms import StringField, SubmitField
-# from wtforms.validators import DataRequired
 import pymssql
 
 
@@ -273,33 +267,6 @@ def stu_index():
         sql = '''select userName,round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
                 from [EvaluationFinalScore],[user] 
                 where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
-        sortList=[0,0,0,0,0]
-        scoreList=["moralScore","intellectualScore","socialScore","bonus","finalScore"]
-        flag=0 #是否有排序条件
-        if request.method == "POST":   
-            Moral = request.values.get("moralGrade")
-            sortList[0]=Moral
-            Intel = request.values.get("intelGrade")
-            sortList[1]=Intel
-            Social = request.values.get("socialGrade")
-            sortList[2]=Social
-            Extra = request.values.get("extraGrade")
-            sortList[3]=Extra
-            Total = request.values.get("totalGrade")
-            sortList[4]=Total
-        #print(sortList)
-        for i in range(5):
-            if (sortList[i] != 0 and sortList[i] != ''): 
-                flag = 1
-                sql += " order by "
-                break
-        if (flag):
-            flag=0
-            for i in range(5):
-                if (sortList[i] == "asc"): sql += (scoreList[i]+",")
-                elif (sortList[i] == "desc"): sql += (scoreList[i]+" desc,")
-            sql = sql[:-1] #去掉最后一个,
-        
         cursor.execute(sql)
         all_data = cursor.fetchall()
     return render_template('student/index.html',result = all_data)

@@ -33,7 +33,7 @@
     <input class="btn btn-primary" type="submit" value="比较">
 </form>
 <br>
-<div id="main2" style="width: 800px;height:500px;margin: 0 auto;"></div>
+<div id="main2" style="height:500px;margin: 0 auto; width:75%;"></div>
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
 <script type="text/javascript">
 	var myChart2 = echarts.init(document.getElementById('main2'));
@@ -51,9 +51,6 @@
             legend: {
                 data:{{two_class|tojson}}
             },
-			
-        
-          
 
             toolbox: {
                 show : true,
@@ -103,5 +100,7 @@
             ]
         };
     myChart2.setOption(option2);
+    window.onresize = function(){
+        myChart2.resize();}
 </script>
 {% endblock %}

@@ -740,7 +740,6 @@ def Bonus():
 #多人（班级）比较-学生成绩
 @app.route('/teacher/CompByStu', methods=['GET','POST'])
 def CompByStu():
-
     names = []
     courses = []
     grades = []

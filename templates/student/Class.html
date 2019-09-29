@@ -12,9 +12,9 @@
         function getLesson(){
         return localStorage.getItem("user_selected_lesson");}
         </script>
-        <form action="{{  url_for('Class') }}" method="POST" onsubmit="setBlank()">
+        <form style="margin:0 auto; max-width:600px; width:auto;" action="{{  url_for('Class') }}" method="POST" onsubmit="setBlank()">
         <br />
-        &nbsp&nbsp&nbsp&nbsp请选择课程：
+        请选择课程：
         <select class="custom-select" name="lesson" id="lesson" method="GET" action="/" style="width:200px;margin: 0 auto;">
             {% for lessonitem in lesson %}
              <option value="{{lessonitem}}"> {{ lessonitem  }}</option>"
@@ -27,8 +27,8 @@
         <input class="btn btn-primary" type="submit" value="查询"></form>
         <br />
         <br />
-        <div style="width: 1000px;min-height: 500px; height:auto;margin: 0 auto;">
-        <table class="table table-striped" style="width: 500px;margin: 0 auto">
+        <div style="max-width:750px; width:auto; min-height:500px; height:auto; margin:0 auto;">
+        <table class="table table-striped">
 	        <thead>
 		        <tr>
 			        <th>姓名</th>

@@ -20,9 +20,9 @@
   function getDepart(){
   return localStorage.getItem("user_selected_depart");}
 </script>
-<form action="{{  url_for('MajorOverview') }}" method="POST" onsubmit="setBlank()">
+<form style="margin:0 auto; max-width:950px; width:auto;" action="{{  url_for('MajorOverview') }}" method="POST" onsubmit="setBlank()">
   <br />
-        &nbsp&nbsp&nbsp&nbsp请选择年级：   
+  请选择年级：   
 <select class="custom-select" name="grade" id="grade" method="GET" action="/" style="width:200px;margin: 0 auto;"> 
     {% for gradeitem in grade %} 
      <option value="{{gradeitem}}">{{  gradeitem  }}</option>" 
@@ -55,7 +55,7 @@
 
 <br />
 <br />
-<div style="width: 1000px;min-height: 500px; height:auto;margin: 0 auto;">
+<div style="max-width: 750px; min-height:500px; height:auto; width:auto; margin: 0 auto;">
 <table class="table table-striped">
 	<thead>
 		<tr>

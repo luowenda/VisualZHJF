@@ -14,7 +14,7 @@
 
 
         <div class="row">
-                <div class="col s12 l6 offset-l4">
+                <div class="col s12 m6 offset-m4 l6 offset-l4">
                     
                         <div class="card teal">
                             <span class="card-title">&nbsp&nbsp截至目前，{{name}}的绩点为：</span>
@@ -27,7 +27,7 @@
                     <div class="col s12 l2"></div>
                 </div>
             
-            <div id="main2" style="width: 800px;height:500px;margin: 0 auto;">
+            <div id="main2" style="width: 800px;height:500px;margin: 0 auto; width:75%;"></div>
             <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
             <script type="text/javascript">
                 var myChart2 = echarts.init(document.getElementById('main2'));
@@ -91,8 +91,9 @@
                         ]
                     };
                 myChart2.setOption(option2);
+                window.onresize = function(){
+                myChart2.resize();}
             </script>
-            </div>
             <div style="height: 20px"></div> <!--占行用-->
 
 {% endblock %}

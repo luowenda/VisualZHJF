@@ -3,6 +3,9 @@
 {% block title %}专业总览{% endblock %}
 
 {% block main %}
+<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<script type="text/javascript" src="../../static/js/datatables.min.js"></script>
 <script type="text/javascript" >
   function setBlank(){
   var value1 = document.getElementById('grade').value;
@@ -20,9 +23,9 @@
   function getDepart(){
   return localStorage.getItem("user_selected_depart");}
 </script>
-<form action="{{  url_for('MajorOverview') }}" method="POST" onsubmit="setBlank()">
+<form style="margin:0 auto; max-width:950px; width:auto;" action="{{  url_for('MajorOverview') }}" method="POST" onsubmit="setBlank()">
   <br />
-        &nbsp&nbsp&nbsp&nbsp请选择年级：   
+  请选择年级：   
 <select class="custom-select" name="grade" id="grade" method="GET" action="/" style="width:200px;margin: 0 auto;"> 
     {% for gradeitem in grade %} 
      <option value="{{gradeitem}}">{{  gradeitem  }}</option>" 
@@ -55,14 +58,27 @@
 
 <br />
 <br />
-<div style="width: 1000px;min-height: 500px; height:auto;margin: 0 auto;">
-<table class="table table-striped">
+<script type="text/javascript">
+  $(document).ready(function () {
+      $('#dtBasicExample').DataTable( {
+      "paging":   false,
+      "searching": false,
+      "info":     false,
+      columnDefs: [{
+      orderable: false,
+      targets: 0}]
+      } );
+      $('.dataTables_length').addClass('bs-select');
+  });
+  </script>
+<div style="max-width: 750px; min-height:500px; height:auto; width:auto; margin: 0 auto;">
+<table id="dtBasicExample" class="display" width="100%" class="table table-striped">
 	<thead>
 		<tr>
 			<th>姓名</th>
       <th>智育分</th>
       <th>德育分</th>
-      <th>体育附加分</th>
+      <th>体育分</th>
       <th>附加分</th>
       <th>总分</th>
 		</tr>

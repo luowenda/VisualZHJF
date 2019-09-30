@@ -212,7 +212,7 @@ def login():
                 return render_template('index.html',error=error)
 
         sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
-        sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"' and academicYear='"+GetAcademicYear()+"'" 
+        sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"'"# and academicYear='"+GetAcademicYear()+"'" 
         cursor.execute(sql1)
         #用一个rs_***变量获取数据
         rs_userid = cursor.fetchall()
@@ -226,7 +226,7 @@ def login():
             cursor.execute(sql2)
             rs_roleid= cursor.fetchall()
             print(rs_roleid)
-            roleID=rs_roleid[1][0]
+            roleID=rs_roleid[0][0]
             # print(userID)
             # print(roleID)
 
@@ -515,7 +515,7 @@ def Class():
         cursor.execute(sql)
         result = cursor.fetchall()
     return render_template('/student/Class.html', lesson=lesson, result=result,
-                           username=fillinusername())
+                           username=fillinusername(userID))
 
 
 
@@ -564,7 +564,7 @@ def MajorOverview():
                             depart = depart,
                             result = result,
                             selectedNull = selectedNull,
-                            username=fillinusername())
+                            username=fillinusername(session.get('userID')))
         getDepartID = '''select departID 
                          from department 
                          where departName = \'{}\''''.format(selectedDepart)
@@ -585,7 +585,7 @@ def MajorOverview():
                             depart = depart,
                             result = result,
                             selectedNull = '',
-                            username=fillinusername())
+                            username=fillinusername(session.get('userID')))
 
 #课程总览
 @app.route('/teacher/CourseOverview',methods=['GET','POST'])

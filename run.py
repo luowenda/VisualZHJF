@@ -15,11 +15,15 @@ import pymssql
 
 
 conn = pymssql.connect(
-                        server='.',
-                        user='sa',
-                        password='ZHJF2019eggs',
-                        database='zhjfdemo1',
-                        )
+    server='172.16.108.188',
+    user='sa',
+    password='123456',
+    database='zhjfdemo1')
+                        # server='.',
+                        # user='sa',
+                        # password='ZHJF2019eggs',
+                        # database='zhjfdemo1',
+                        # )
                     #    server='202.112.194.247',
                     #    user='zonghejifenrd',
                     #    password='zhjf2019rd',
@@ -50,6 +54,8 @@ def is_login():
     if request.path =='/':
         return redirect('/login/')
     if request.path =='/login/':
+        return None
+    if request.path =='/logout/':
         return None
     if '/static'in str(request):
         return None
@@ -189,20 +195,33 @@ def fillinusername(userID):
         userName = ''
     return userName
 
-
+#注销界面
+@app.route('/logout/')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 #登陆界面
 @app.route('/login/', methods = ['POST','GET'])
 def login():
     if request.method=='GET':
-        session.clear()
-        return render_template('index.html', error=None)
+        # session.clear()
+        if session.get('userID'):
+            if session.get('role')=='student':
+                return redirect(url_for('stu_index'))
+            elif session.get('role')=='monitor':
+                return redirect(url_for('stu_index'))
+            elif session.get('role')=='teacher':
+                return redirect(url_for('tea_index'))
+        else:
+            return render_template('index.html', error=None)
     else:
         error=None
 
         # global roleID
         userID = request.form['username']
         pwd = request.form['passwd']
+        rememberme = request.form.get('rememberme')
         if not all([userID,pwd]):
             if userID == "":
                 error = "请输入用户名"
@@ -220,8 +239,13 @@ def login():
 
         if(len(rs_userid) != 0):
             #用户登录设置session的userID和username
-            session['userID']=userID
-            session['username']=fillinusername(userID)
+            if rememberme =="1":
+                session.permanent = True
+                session['userID']=userID
+                session['username']=fillinusername(userID)
+            else:
+                session['userID']=userID
+                session['username']=fillinusername(userID)
 
             cursor.execute(sql2)
             rs_roleid= cursor.fetchall()

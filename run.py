@@ -801,6 +801,7 @@ def CompByStu():
     grades = []
     if request.method == "POST":
         stuID = request.values.get("MultiID")
+        stuID = stuID.strip()
         pattern = re.compile(r'([0-9]+,[0-9]+)+')
         if(pattern.match(stuID) == None):
             wrongPat = '请按格式输入学号'
@@ -816,7 +817,7 @@ def CompByStu():
         ID = stuList[0]
         getStuCour = '''select curriculum.currName
                         from currGrade inner join curriculum on currGrade.currID = curriculum.currID
-                        where userID = \'{}\' and examGrade != 0'''.format(ID)
+                        where userID = \'{}\' and examGrade != 0.0'''.format(ID)
         courses = getList(getStuCour)
         for ID in stuList:
             name = getName(int(ID))
@@ -829,7 +830,11 @@ def CompByStu():
                 getCourGrade = '''select examGrade
                                     from currGrade inner join curriculum on currGrade.currID = curriculum.currID
                                     where userID = \'{}\' and currName = \'{}\''''.format(ID,course)
-                grade = getList(getCourGrade)[0]
+                res = getList(getCourGrade)
+                if(res != None):
+                    grade = res[0]
+                else:
+                    grade = None
                 gradeList.append(grade)
             grades.append(gradeList)
     return render_template('/teacher/CompByStu.html', 
@@ -923,7 +928,7 @@ def CompByClass():
             grades = []
             grades.append(c1)
             grades.append(c2)
-
+            
     return render_template('/teacher/CompByClass.html',
                                 year = year,
                                 major = major,

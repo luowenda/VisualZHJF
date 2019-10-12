@@ -15,15 +15,11 @@ import pymssql
 
 
 conn = pymssql.connect(
-    server='172.16.108.188',
-    user='sa',
-    password='123456',
-    database='zhjfdemo1')
-                        # server='.',
-                        # user='sa',
-                        # password='ZHJF2019eggs',
-                        # database='zhjfdemo1',
-                        # )
+                        server='.',
+                        user='sa',
+                        password='ZHJF2019eggs',
+                        database='zhjfdemo1',
+                        )
                     #    server='202.112.194.247',
                     #    user='zonghejifenrd',
                     #    password='zhjf2019rd',
@@ -320,6 +316,9 @@ def GradeByAttri():
     attri = ['专业课', '必修课', '公共课']
     if request.method == "POST":
         selectedAttri = request.values.get("attri")
+        if(selectedAttri == None):
+            selectedNull = '请选择课程属性'
+            return render_template('student/GradeByAttri.html',attri = attri, result = result,selectedNull = selectedNull)
         if selectedAttri == '专业课':
             selectedAttri = 'isSpec'
         elif selectedAttri == '必修课':
@@ -381,7 +380,9 @@ def GradeBySemester():
     if request.method == "POST":
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
-
+        if(selectedSemester == None or selectedYear == None):
+            selectedNull = '请选择选项'
+            return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result,selectedNull = selectedNull)
         # 获取属性课程列表
         sql = '''select distinct currName, period, credit, examGrade,(select count(distinct userID) 
                                                                        from currGrade where currID = t1.currID) as num,  
@@ -531,6 +532,11 @@ def Class():
     result = []
     if request.method == "POST":
         selectedLesson = request.values.get("lesson")
+        if(selectedLesson == None):
+            selectedNull = '请选择课程'
+            return render_template('/student/Class.html', lesson=lesson, result=result,
+                        username=fillinusername(userID),
+                        selectedNull=selectedNull)
 
         # 获取属性课程列表
         sql = '''select userName,examGrade
@@ -636,6 +642,17 @@ def CourseOverview():
         selectedSeme = request.values.get("semester")
         courseName = request.values.get("courseName")
         
+        if selectedGrade == None or selectedSeme == None or selectedYear == None or courseName == None:
+            selectedNull = '请选择选项'
+            result = [[]]
+            return render_template('/teacher/CourseOverview.html',
+                            grade = grade,
+                            year = year,
+                            semester = semester,
+                            result = result,
+                            selectedNull = selectedNull
+                            )
+
         getCurrID = '''select currID 
                        from curriculum
                        where currName = \'{}\''''.format(courseName)
@@ -659,7 +676,7 @@ def CourseOverview():
                             grade = grade,
                             year = year,
                             semester = semester,
-                            result = result,
+                            result = result
                             )
 
 def countUser(currID,grade,year,seme,lowgrade,highgrade):
@@ -736,6 +753,17 @@ def CompByStu():
     grades = []
     if request.method == "POST":
         stuID = request.values.get("MultiID")
+        pattern = re.compile(r'([0-9]+,[0-9]+)+')
+        if(pattern.match(stuID) == None):
+            wrongPat = '请按格式输入学号'
+            names = []
+            courses = [[]]
+            grades = [[]]
+            return render_template('/teacher/CompByStu.html', 
+                                names = names, 
+                                courses = courses, 
+                                grades = grades,
+                                wrongPat = wrongPat)   
         stuList = stuID.split(",")
         ID = stuList[0]
         getStuCour = '''select curriculum.currName
@@ -790,14 +818,29 @@ def CompByClass():
         selectedMajor = request.values.get("major")
         selectedClass1 = request.values.get("class1")
         selectedClass2 = request.values.get("class2")
-        
+ 
+        if selectedClass1 == '班级1' or selectedClass2 == '班级2' or selectedMajor == '专业' or selectedYear == '年级':
+            selectedNull = '请选择选项'
+            return render_template('/teacher/CompByClass.html',
+                            year = year,
+                            major = major,
+                            classes = classes, 
+                            two_class = two_class,
+                            courses = courses, 
+                            grades = grades,
+                            selectedNull = selectedNull)
+    
         two_class.append(selectedYear+selectedMajor+selectedClass1)
         two_class.append(selectedYear+selectedMajor+selectedClass2)
 
         getDepartID = '''select departID 
-                         from department 
-                         where departName = \'{}\''''.format(selectedMajor)
-        deprtID = int(getList(getDepartID)[0])
+                        from department 
+                        where departName = \'{}\''''.format(selectedMajor)
+        res = getList(getDepartID)
+        if(len(res)):
+            deprtID = int(getList(getDepartID)[0])
+        else:
+            deprtID = 0
 
         getResult = '''select c1,c1avgGrade,c2avgGrade 
                         from 
@@ -821,7 +864,7 @@ def CompByClass():
                                 and examGrade != 0
                             group by classID,currName)C2
                         on c1=c2'''.format(selectedClass1,deprtID,selectedYear,int(selectedYear),
-                                           selectedClass2,deprtID,selectedYear,int(selectedYear))
+                                        selectedClass2,deprtID,selectedYear,int(selectedYear))
         cursor.execute(getResult)
         result = cursor.fetchall()
         if(len(result)):

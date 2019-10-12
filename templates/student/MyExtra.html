@@ -4,8 +4,47 @@
         {% block title %}我的附加分{% endblock %}
 
         {% block main %}
+        <script type="text/javascript" >
+          function setBlank(){
+          var value1 = document.getElementById('year').value;
+          var value2 = document.getElementById('semester').value;
+          localStorage.setItem("user_selected_year", value1);
+          localStorage.setItem("user_selected_semester", value2);}
+  
+          function getYear(){
+          return localStorage.getItem("user_selected_year");}
+  
+          function getSemester(){
+          return localStorage.getItem("user_selected_semester");}
+          </script>
+          <form style="margin:0 auto; max-width: 800px; width:auto;" action="{{  url_for('MyExtra') }}" method="POST" onsubmit="setBlank()">
+          <br />
+          请选择学年：
+          <select class="custom-select" name="year" id="year" method="GET" action="/" style="width:200px;margin: 0 auto;">
+              {% for yearitem in year %}
+               <option value="{{yearitem}}"> {{  yearitem  }}</option>"
+              {% endfor %}
+          </select>
+          <script type="text/javascript">
+              document.getElementById('year').value = getYear();
+          </script>
+          &nbsp&nbsp&nbsp&nbsp请选择学期：
+          <br>
+          <select class="custom-select" name="semester" id="semester" method="GET" action="/" style="width:200px;margin: 0 auto;">
+              {% for semesteritem in semester %}
+               <option value="{{semesteritem}}">{{  semesteritem  }}</option>"
+              {% endfor %}
+          </select>
+          <script type="text/javascript">
+              document.getElementById('semester').value = getSemester();
+          </script>
+          &nbsp&nbsp&nbsp&nbsp
+          <input class="btn btn-primary" type="submit" value="查询"></form>
+          <br />
+          <br />
+          {{selectedNull}}
         <div style="height:30px;margin: 0 auto;"></div>
-        <h3>&nbsp&nbsp&nbsp&nbsp你在本学年的附加分项如下：</h3>
+        <h3>&nbsp&nbsp&nbsp&nbsp你的附加分项如下：</h3>
         <br>
         <div style="max-width:750px; min-height:500px; height:auto; width:auto; margin: 0 auto;">
           <table class="table table-striped">
@@ -13,6 +52,7 @@
               <tr>
                 <th>项目内容</th>
                 <th>分数</th>
+                <th>学年</th>
                 <th>学期</th> <!--#数据库存在学期为3，不知道为啥-->
               </tr>
             </thead>

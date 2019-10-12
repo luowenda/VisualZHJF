@@ -427,21 +427,52 @@ def GPA():
 
 
 #我的附加分界面（表格）
-@app.route('/student/MyExtra')
+@app.route('/student/MyExtra',methods=['GET','POST'])
 def MyExtra():
-
     userID=session.get('userID')
-    items = getBonus(userID)
-    return render_template('student/MyExtra.html',result = items)
-
-def getBonus(userID):
-    sql = '''select content, bonusValue, semester
-            from bonusItem2user as t1,bonusItem as t2 
-            where ownerId=\'{}\' and t1.bonusItemID=t2.bonusItemID'''.format(userID)
+    sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID)  # 匹配字符串用like
     cursor.execute(sql)
-    items = cursor.fetchall()
-    return items
+    content1 = cursor.fetchall()
+    classID = 0
+    if(len(content1)):
+        classID = content1[0][0]
+    # 获取departID
+    sql = 'select departID from [class] where classID={}'.format(classID)
+    cursor.execute(sql)
+    content2 = cursor.fetchall()
+    departID = 0
+    if(len(content2)):
+        departID = content2[0][0]
 
+    getYear = '''select distinct academicYear 
+                    from bonusItem
+                    order by academicYear'''
+    year = getList(getYear)
+    getSemester = '''select distinct semester 
+                    from bonusItem
+                    order by semester'''
+    semester = getList(getSemester)
+
+    result = [[]]
+    if request.method == "POST":
+        selectedYear = request.values.get("year")
+        selectedSemester = request.values.get("semester")
+        if(selectedSemester == None or selectedYear == None):
+            selectedNull = '请选择选项'
+            return render_template('student/MyExtra.html',year = year,semester = semester,result = result,selectedNull = selectedNull)
+        result = getBonus(userID,selectedYear,int(selectedSemester))
+    return render_template('student/MyExtra.html',year = year,semester = semester,result = result)
+
+def getBonus(userID,year,semester):
+    items = [[]]
+    sql = '''select content, bonusValue,academicYear,semester
+            from bonusItem2user as t1,bonusItem as t2 
+            where ownerId=\'{}\' and t1.bonusItemID=t2.bonusItemID and academicYear=\'{}\' and semester={}'''.format(userID,year,semester)
+    cursor.execute(sql)
+    if(len(items)):   
+        items = cursor.fetchall()
+    return items
+    
 #我的综合积分界面（雷达）
 @app.route('/student/MyComprehensiveEval')
 def MyComprehensiveEval():
@@ -738,11 +769,28 @@ def getCourses(userID):
 @app.route('/teacher/Bonus',methods=['GET','POST'])
 def Bonus():
 
-    items = [[]]
+    name=''
+    result = [[]]
+    getYear = '''select distinct academicYear 
+                    from bonusItem
+                    order by academicYear'''
+    year = getList(getYear)
+    getSemester = '''select distinct semester 
+                    from bonusItem
+                    order by semester'''
+    semester = getList(getSemester)
+
     if request.method == "POST":   
         userID = request.values.get("userID")
-        items = getBonus(userID)
-    return render_template('/teacher/Bonus.html',result = items)
+        selectedYear = request.values.get("year")
+        selectedSemester = request.values.get("semester")
+        
+        if(selectedSemester == None or selectedYear == None or userID == None):
+            selectedNull = '请选择选项'
+            return render_template('teacher/Bonus.html',year = year,semester = semester,result = result,selectedNull = selectedNull)
+        name = fillinusername(userID)
+        result = getBonus(userID,selectedYear,int(selectedSemester))
+    return render_template('teacher/Bonus.html',year = year,semester = semester,result = result,name=name)
 
 
 #多人（班级）比较-学生成绩

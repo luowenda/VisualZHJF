@@ -15,16 +15,16 @@ import pymssql
 
 
 conn = pymssql.connect(
-                        server='.',
-                        user='sa',
-                        password='ZHJF2019eggs',
-                        database='zhjfdemo1',
-                        )
-                    #    server='202.112.194.247',
-                    #    user='zonghejifenrd',
-                    #    password='zhjf2019rd',
-                    #    database='zonghejifen',
-                    #    charset='utf8')
+                        # server='.',
+                        # user='sa',
+                        # password='ZHJF2019eggs',
+                        # database='zhjfdemo1',
+                        # )
+                       server='202.112.194.247',
+                       user='zonghejifenrd',
+                       password='zhjf2019rd',
+                       database='zonghejifen',
+                       charset='utf8')
 
 
 #查看连接是否成功
@@ -819,6 +819,12 @@ def CompByStu():
                         from currGrade inner join curriculum on currGrade.currID = curriculum.currID
                         where userID = \'{}\' and examGrade != 0.0'''.format(ID)
         courses = getList(getStuCour)
+        if(courses == None):
+            courses =[[]]
+            return render_template('/teacher/CompByStu.html', 
+                                    names = names, 
+                                    courses = courses, 
+                                    grades = grades)  
         for ID in stuList:
             name = getName(int(ID))
             names.append(name)

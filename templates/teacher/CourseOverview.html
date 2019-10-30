@@ -27,6 +27,7 @@
     function getCourse(){
     return localStorage.getItem("user_selected_course");}
 </script>
+{{selectedNull}}
 <form style="margin:0 auto; max-width:900px; width:auto;" action="{{  url_for('CourseOverview') }}" method="POST" onsubmit="setBlank()">
     <br />
     请选择年级：    

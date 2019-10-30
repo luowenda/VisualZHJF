@@ -15,20 +15,16 @@ import pymssql
 
 
 conn = pymssql.connect(
-    server='172.16.108.188',
-    user='sa',
-    password='123456',
-    database='zhjfdemo1')
                         # server='.',
                         # user='sa',
                         # password='ZHJF2019eggs',
                         # database='zhjfdemo1',
                         # )
-                    #    server='202.112.194.247',
-                    #    user='zonghejifenrd',
-                    #    password='zhjf2019rd',
-                    #    database='zonghejifen',
-                    #    charset='utf8')
+                       server='202.112.194.247',
+                       user='zonghejifenrd',
+                       password='zhjf2019rd',
+                       database='zonghejifen',
+                       charset='utf8')
 
 
 #查看连接是否成功
@@ -320,6 +316,9 @@ def GradeByAttri():
     attri = ['专业课', '必修课', '公共课']
     if request.method == "POST":
         selectedAttri = request.values.get("attri")
+        if(selectedAttri == None):
+            selectedNull = '请选择课程属性'
+            return render_template('student/GradeByAttri.html',attri = attri, result = result,selectedNull = selectedNull)
         if selectedAttri == '专业课':
             selectedAttri = 'isSpec'
         elif selectedAttri == '必修课':
@@ -381,7 +380,9 @@ def GradeBySemester():
     if request.method == "POST":
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
-
+        if(selectedSemester == None or selectedYear == None):
+            selectedNull = '请选择选项'
+            return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result,selectedNull = selectedNull)
         # 获取属性课程列表
         sql = '''select distinct currName, period, credit, examGrade,(select count(distinct userID) 
                                                                        from currGrade where currID = t1.currID) as num,  
@@ -426,21 +427,52 @@ def GPA():
 
 
 #我的附加分界面（表格）
-@app.route('/student/MyExtra')
+@app.route('/student/MyExtra',methods=['GET','POST'])
 def MyExtra():
-
     userID=session.get('userID')
-    items = getBonus(userID)
-    return render_template('student/MyExtra.html',result = items)
-
-def getBonus(userID):
-    sql = '''select content, bonusValue, semester
-            from bonusItem2user as t1,bonusItem as t2 
-            where ownerId=\'{}\' and t1.bonusItemID=t2.bonusItemID'''.format(userID)
+    sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID)  # 匹配字符串用like
     cursor.execute(sql)
-    items = cursor.fetchall()
-    return items
+    content1 = cursor.fetchall()
+    classID = 0
+    if(len(content1)):
+        classID = content1[0][0]
+    # 获取departID
+    sql = 'select departID from [class] where classID={}'.format(classID)
+    cursor.execute(sql)
+    content2 = cursor.fetchall()
+    departID = 0
+    if(len(content2)):
+        departID = content2[0][0]
 
+    getYear = '''select distinct academicYear 
+                    from bonusItem
+                    order by academicYear'''
+    year = getList(getYear)
+    getSemester = '''select distinct semester 
+                    from bonusItem
+                    order by semester'''
+    semester = getList(getSemester)
+
+    result = [[]]
+    if request.method == "POST":
+        selectedYear = request.values.get("year")
+        selectedSemester = request.values.get("semester")
+        if(selectedSemester == None or selectedYear == None):
+            selectedNull = '请选择选项'
+            return render_template('student/MyExtra.html',year = year,semester = semester,result = result,selectedNull = selectedNull)
+        result = getBonus(userID,selectedYear,int(selectedSemester))
+    return render_template('student/MyExtra.html',year = year,semester = semester,result = result)
+
+def getBonus(userID,year,semester):
+    items = [[]]
+    sql = '''select content, bonusValue,academicYear,semester
+            from bonusItem2user as t1,bonusItem as t2 
+            where ownerId=\'{}\' and t1.bonusItemID=t2.bonusItemID and academicYear=\'{}\' and semester={}'''.format(userID,year,semester)
+    cursor.execute(sql)
+    if(len(items)):   
+        items = cursor.fetchall()
+    return items
+    
 #我的综合积分界面（雷达）
 @app.route('/student/MyComprehensiveEval')
 def MyComprehensiveEval():
@@ -531,6 +563,11 @@ def Class():
     result = []
     if request.method == "POST":
         selectedLesson = request.values.get("lesson")
+        if(selectedLesson == None):
+            selectedNull = '请选择课程'
+            return render_template('/student/Class.html', lesson=lesson, result=result,
+                        username=fillinusername(userID),
+                        selectedNull=selectedNull)
 
         # 获取属性课程列表
         sql = '''select userName,examGrade
@@ -636,6 +673,17 @@ def CourseOverview():
         selectedSeme = request.values.get("semester")
         courseName = request.values.get("courseName")
         
+        if selectedGrade == None or selectedSeme == None or selectedYear == None or courseName == None:
+            selectedNull = '请选择选项'
+            result = [[]]
+            return render_template('/teacher/CourseOverview.html',
+                            grade = grade,
+                            year = year,
+                            semester = semester,
+                            result = result,
+                            selectedNull = selectedNull
+                            )
+
         getCurrID = '''select currID 
                        from curriculum
                        where currName = \'{}\''''.format(courseName)
@@ -659,7 +707,7 @@ def CourseOverview():
                             grade = grade,
                             year = year,
                             semester = semester,
-                            result = result,
+                            result = result
                             )
 
 def countUser(currID,grade,year,seme,lowgrade,highgrade):
@@ -721,11 +769,28 @@ def getCourses(userID):
 @app.route('/teacher/Bonus',methods=['GET','POST'])
 def Bonus():
 
-    items = [[]]
+    name=''
+    result = [[]]
+    getYear = '''select distinct academicYear 
+                    from bonusItem
+                    order by academicYear'''
+    year = getList(getYear)
+    getSemester = '''select distinct semester 
+                    from bonusItem
+                    order by semester'''
+    semester = getList(getSemester)
+
     if request.method == "POST":   
         userID = request.values.get("userID")
-        items = getBonus(userID)
-    return render_template('/teacher/Bonus.html',result = items)
+        selectedYear = request.values.get("year")
+        selectedSemester = request.values.get("semester")
+        
+        if(selectedSemester == None or selectedYear == None or userID == None):
+            selectedNull = '请选择选项'
+            return render_template('teacher/Bonus.html',year = year,semester = semester,result = result,selectedNull = selectedNull)
+        name = fillinusername(userID)
+        result = getBonus(userID,selectedYear,int(selectedSemester))
+    return render_template('teacher/Bonus.html',year = year,semester = semester,result = result,name=name)
 
 
 #多人（班级）比较-学生成绩
@@ -736,12 +801,30 @@ def CompByStu():
     grades = []
     if request.method == "POST":
         stuID = request.values.get("MultiID")
+        stuID = stuID.strip()
+        pattern = re.compile(r'([0-9]+,[0-9]+)+')
+        if(pattern.match(stuID) == None):
+            wrongPat = '请按格式输入学号'
+            names = []
+            courses = [[]]
+            grades = [[]]
+            return render_template('/teacher/CompByStu.html', 
+                                names = names, 
+                                courses = courses, 
+                                grades = grades,
+                                wrongPat = wrongPat)   
         stuList = stuID.split(",")
         ID = stuList[0]
         getStuCour = '''select curriculum.currName
                         from currGrade inner join curriculum on currGrade.currID = curriculum.currID
-                        where userID = \'{}\' and examGrade != 0'''.format(ID)
+                        where userID = \'{}\' and examGrade != 0.0'''.format(ID)
         courses = getList(getStuCour)
+        if(courses == None):
+            courses =[[]]
+            return render_template('/teacher/CompByStu.html', 
+                                    names = names, 
+                                    courses = courses, 
+                                    grades = grades)  
         for ID in stuList:
             name = getName(int(ID))
             names.append(name)
@@ -753,7 +836,11 @@ def CompByStu():
                 getCourGrade = '''select examGrade
                                     from currGrade inner join curriculum on currGrade.currID = curriculum.currID
                                     where userID = \'{}\' and currName = \'{}\''''.format(ID,course)
-                grade = getList(getCourGrade)[0]
+                res = getList(getCourGrade)
+                if(res != None):
+                    grade = res[0]
+                else:
+                    grade = None
                 gradeList.append(grade)
             grades.append(gradeList)
     return render_template('/teacher/CompByStu.html', 
@@ -790,14 +877,29 @@ def CompByClass():
         selectedMajor = request.values.get("major")
         selectedClass1 = request.values.get("class1")
         selectedClass2 = request.values.get("class2")
-        
+ 
+        if selectedClass1 == '班级1' or selectedClass2 == '班级2' or selectedMajor == '专业' or selectedYear == '年级':
+            selectedNull = '请选择选项'
+            return render_template('/teacher/CompByClass.html',
+                            year = year,
+                            major = major,
+                            classes = classes, 
+                            two_class = two_class,
+                            courses = courses, 
+                            grades = grades,
+                            selectedNull = selectedNull)
+    
         two_class.append(selectedYear+selectedMajor+selectedClass1)
         two_class.append(selectedYear+selectedMajor+selectedClass2)
 
         getDepartID = '''select departID 
-                         from department 
-                         where departName = \'{}\''''.format(selectedMajor)
-        deprtID = int(getList(getDepartID)[0])
+                        from department 
+                        where departName = \'{}\''''.format(selectedMajor)
+        res = getList(getDepartID)
+        if(len(res)):
+            deprtID = int(getList(getDepartID)[0])
+        else:
+            deprtID = 0
 
         getResult = '''select c1,c1avgGrade,c2avgGrade 
                         from 
@@ -821,7 +923,7 @@ def CompByClass():
                                 and examGrade != 0
                             group by classID,currName)C2
                         on c1=c2'''.format(selectedClass1,deprtID,selectedYear,int(selectedYear),
-                                           selectedClass2,deprtID,selectedYear,int(selectedYear))
+                                        selectedClass2,deprtID,selectedYear,int(selectedYear))
         cursor.execute(getResult)
         result = cursor.fetchall()
         if(len(result)):
@@ -832,7 +934,7 @@ def CompByClass():
             grades = []
             grades.append(c1)
             grades.append(c2)
-
+            
     return render_template('/teacher/CompByClass.html',
                                 year = year,
                                 major = major,

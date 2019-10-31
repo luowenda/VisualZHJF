@@ -15,16 +15,16 @@ import pymssql
 
 
 conn = pymssql.connect(
-                        # server='.',
-                        # user='sa',
-                        # password='ZHJF2019eggs',
-                        # database='zhjfdemo1',
-                        # )
-                       server='202.112.194.247',
-                       user='zonghejifenrd',
-                       password='zhjf2019rd',
-                       database='zonghejifen',
-                       charset='utf8')
+                        server='.',
+                        user='sa',
+                        password='ZHJF2019eggs',
+                        database='zhjfdemo1',
+                        )
+                    #    server='202.112.194.247',
+                    #    user='zonghejifenrd',
+                    #    password='zhjf2019rd',
+                    #    database='zonghejifen',
+                    #    charset='utf8')
 
 
 #查看连接是否成功
@@ -245,8 +245,8 @@ def login():
 
             cursor.execute(sql2)
             rs_roleid= cursor.fetchall()
-            print(rs_roleid)
-            roleID=rs_roleid[0][0]
+            # print(rs_roleid)
+            roleID=sorted(rs_roleid)[-1][0] # 取最大的roleID，避免多重身份影响
             # print(userID)
             # print(roleID)
 
@@ -316,9 +316,6 @@ def GradeByAttri():
     attri = ['专业课', '必修课', '公共课']
     if request.method == "POST":
         selectedAttri = request.values.get("attri")
-        if(selectedAttri == None):
-            selectedNull = '请选择课程属性'
-            return render_template('student/GradeByAttri.html',attri = attri, result = result,selectedNull = selectedNull)
         if selectedAttri == '专业课':
             selectedAttri = 'isSpec'
         elif selectedAttri == '必修课':
@@ -380,9 +377,6 @@ def GradeBySemester():
     if request.method == "POST":
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
-        if(selectedSemester == None or selectedYear == None):
-            selectedNull = '请选择选项'
-            return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result,selectedNull = selectedNull)
         # 获取属性课程列表
         sql = '''select distinct currName, period, credit, examGrade,(select count(distinct userID) 
                                                                        from currGrade where currID = t1.currID) as num,  
@@ -457,9 +451,6 @@ def MyExtra():
     if request.method == "POST":
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
-        if(selectedSemester == None or selectedYear == None):
-            selectedNull = '请选择选项'
-            return render_template('student/MyExtra.html',year = year,semester = semester,result = result,selectedNull = selectedNull)
         result = getBonus(userID,selectedYear,int(selectedSemester))
     return render_template('student/MyExtra.html',year = year,semester = semester,result = result)
 
@@ -486,55 +477,6 @@ def MyComprehensiveEval():
         return render_template('student/MyComprehensiveEval.html', score=list(scores[0]),name=getName(userID))
     else:
         return render_template('student/MyComprehensiveEval.html', score=[],name=getName(userID))
-
-#综合积分汇总界面（表格）
-@app.route('/student/TotalComprehensiveEval', methods=['GET','POST'])
-def TotalComprehensiveEval():
-    userID=session.get('userID')
-    sql = '''select grade, departId 
-            from EvaluationFinalScore 
-            where userId=\'{}\''''.format(userID)
-    cursor.execute(sql)
-    content = cursor.fetchall()
-    grade = ''
-    depart = ''
-    if(len(content)):
-        grade = content[0][0]
-        depart = content[0][1]
-    #使用user表必须使用[user]才不会报错
-    sql = '''select userName,round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2),round(finalScore,2)
-            from [EvaluationFinalScore],[user] 
-            where grade={} and departId={} and EvaluationFinalScore.userId=[user].userID'''.format(grade,depart)
-    sortList=[0,0,0,0,0]
-    scoreList=["moralScore","intellectualScore","socialScore","bonus","finalScore"]
-    flag=0 #是否有排序条件
-    if request.method == "POST":   
-        Moral = request.values.get("moralGrade")
-        sortList[0]=Moral
-        Intel = request.values.get("intelGrade")
-        sortList[1]=Intel
-        Social = request.values.get("socialGrade")
-        sortList[2]=Social
-        Extra = request.values.get("extraGrade")
-        sortList[3]=Extra
-        Total = request.values.get("totalGrade")
-        sortList[4]=Total
-    #print(sortList)
-    for i in range(5):
-        if (sortList[i] != 0 and sortList[i] != ''): 
-            flag = 1
-            sql += " order by "
-            break
-    if (flag):
-        flag=0
-        for i in range(5):
-            if (sortList[i] == "asc"): sql += (scoreList[i]+",")
-            elif (sortList[i] == "desc"): sql += (scoreList[i]+" desc,")
-        sql = sql[:-1] #去掉最后一个,
-    
-    cursor.execute(sql)
-    all_data = cursor.fetchall()
-    return render_template('student/TotalComprehensiveEval.html',result = all_data)
 
 #班级成绩
 @app.route('/student/Class', methods=['GET', 'POST'])
@@ -588,8 +530,6 @@ def Class():
 def tea_index():
     return render_template('/teacher/index.html')
 
-
-
 #专业总览
 @app.route('/teacher/MajorOverview', methods=['GET','POST'])
 def MajorOverview():
@@ -615,17 +555,6 @@ def MajorOverview():
         selectedGrade = request.values.get("grade")
         selectedYear = request.values.get("year")
         selectedDepart = request.values.get("depart")
-        
-        if selectedDepart == None or selectedGrade == None or selectedYear == None:
-            selectedNull = '请选择选项'
-            result = [[]]
-            return render_template('/teacher/MajorOverview.html',
-                            grade = grade,
-                            year = year,
-                            depart = depart,
-                            result = result,
-                            selectedNull = selectedNull,
-                            username=fillinusername(session.get('userID')))
         getDepartID = '''select departID 
                          from department 
                          where departName = \'{}\''''.format(selectedDepart)
@@ -672,8 +601,7 @@ def CourseOverview():
         selectedYear = request.values.get("year")
         selectedSeme = request.values.get("semester")
         courseName = request.values.get("courseName")
-        
-        if selectedGrade == None or selectedSeme == None or selectedYear == None or courseName == None:
+        if courseName=="":       
             selectedNull = '请选择选项'
             result = [[]]
             return render_template('/teacher/CourseOverview.html',

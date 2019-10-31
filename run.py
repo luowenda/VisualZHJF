@@ -772,7 +772,7 @@ def CompByStu():
         ID = stuList[0]
         getStuCour = '''select curriculum.currName
                         from currGrade inner join curriculum on currGrade.currID = curriculum.currID
-                        where userID = \'{}\' and examGrade != 0.0'''.format(ID)
+                        where userID = \'{}\' and currGrade.examGrade != 0.0'''.format(ID)
         courses = getList(getStuCour)
         if(courses == None):
             courses =[[]]
@@ -784,8 +784,11 @@ def CompByStu():
         for ID in stuList:
             name = getName(int(ID))
             names.append(name)
+            getStuCour = '''select curriculum.currName
+                        from currGrade inner join curriculum on currGrade.currID = curriculum.currID
+                        where userID = \'{}\' and currGrade.examGrade != 0.0'''.format(ID)
             currStuCour = getList(getStuCour)
-            courses = list(set(currStuCour).intersection(set(courses)))
+            courses = list(set(currStuCour) & set(courses))
         for ID in stuList:
             gradeList = []
             for course in courses:

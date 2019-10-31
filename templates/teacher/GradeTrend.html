@@ -11,7 +11,11 @@
     <input class="btn btn-primary" type="submit" value="查询">
 </form>
 <br><br>
-
+{% if userNull==True %}
+<script type="text/javascript" >
+    M.toast({html: '请输入学生学号',classes: 'rounded, amber , black-text'})
+</script>
+{% endif %}
 
         <div class="row">
                 <div class="col s12 m6 offset-m4 l6 offset-l4">
@@ -26,7 +30,7 @@
                     </div>
                     <div class="col s12 l2"></div>
                 </div>
-            
+                          
             <div id="main2" style="width: 800px;height:500px;margin: 0 auto; width:75%;"></div>
             <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
             <script type="text/javascript">

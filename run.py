@@ -654,13 +654,19 @@ def countUser(currID,grade,year,seme,lowgrade,highgrade):
 #个人查询-成绩走向
 @app.route('/teacher/GradeTrend',methods=['GET','POST'])
 def GradeTrend():
-    
-    gpa=None
-    GPAlist=[]
-    name=None
-
+    gpa = None
+    GPAlist = []
+    name = None
+    userNull = False
     if request.method == "POST":   
         userID = request.values.get("userID")
+        if userID=="":       
+            userNull = True
+            return render_template('/teacher/GradeTrend.html', 
+                            GPA=gpa, 
+                            data=GPAlist,
+                            name=name,
+                            userNull = userNull)
         name = getName(userID)
         grade = getGrade(userID)
         gpa = getGPA(userID,grade,4,2)
@@ -668,9 +674,11 @@ def GradeTrend():
         for i in range(1,5):
             for j in range(1,3):
                 GPAlist.append(getGPA(userID,grade,i,j))
-        return render_template('/teacher/GradeTrend.html',
-                            GPA=gpa, data=GPAlist,name=name)
-    return render_template('/teacher/GradeTrend.html', GPA=gpa, data=GPAlist,name=name)
+    return render_template('/teacher/GradeTrend.html', 
+                                    GPA=gpa,
+                                    data=GPAlist,
+                                    name=name,
+                                    userNull = userNull)
 
 #个人查询-挂科情况统计
 @app.route('/teacher/FailedCourses',methods=['GET','POST'])

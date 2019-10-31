@@ -581,6 +581,7 @@ def MajorOverview():
 @app.route('/teacher/CourseOverview',methods=['GET','POST'])
 def CourseOverview():
     result=[]
+    selectedNull = False
     getGrade = '''select distinct grade 
                 from currGrade
                 order by grade'''
@@ -602,7 +603,7 @@ def CourseOverview():
         selectedSeme = request.values.get("semester")
         courseName = request.values.get("courseName")
         if courseName=="":       
-            selectedNull = '请选择选项'
+            selectedNull = True
             result = [[]]
             return render_template('/teacher/CourseOverview.html',
                             grade = grade,
@@ -611,7 +612,6 @@ def CourseOverview():
                             result = result,
                             selectedNull = selectedNull
                             )
-
         getCurrID = '''select currID 
                        from curriculum
                        where currName = \'{}\''''.format(courseName)
@@ -635,7 +635,8 @@ def CourseOverview():
                             grade = grade,
                             year = year,
                             semester = semester,
-                            result = result
+                            result = result,
+                            selectedNull = selectedNull
                             )
 
 def countUser(currID,grade,year,seme,lowgrade,highgrade):

@@ -4,6 +4,7 @@
 
 {% block main %}
 <script type="text/javascript" >
+
     function setBlank(){
     var value1 = document.getElementById('grade').value;
     var value2 = document.getElementById('year').value;
@@ -27,7 +28,7 @@
     function getCourse(){
     return localStorage.getItem("user_selected_course");}
 </script>
-{{selectedNull}}
+
 <form style="margin:0 auto; max-width:900px; width:auto;" action="{{  url_for('CourseOverview') }}" method="POST" onsubmit="setBlank()">
     <br />
     请选择年级：    
@@ -72,6 +73,12 @@
             <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
         </head>
         <body>
+            {% if selectedNull==True %}
+            <script type="text/javascript" >
+                M.toast({html: '请输入课程名称',classes: 'rounded, amber , black-text'})
+            </script>
+            {% endif %}
+            <!-- {{selectedNull}} -->
             <div id="main" style="width:75%; min-height:400px; margin: 0 auto"></div>
             <script type="text/javascript">
                 var myChart = echarts.init(document.getElementById('main'));
@@ -119,7 +126,11 @@
             window.onresize = function(){
             myChart.resize();}
             </script>
+<!-- <a onclick="M.toast({html: '请输入课程名称'})" id="toast"></a> -->
+
             <div style="height: 110px"></div> <!--占行用-->
+
         </body>
     </html>
+
 {% endblock %}

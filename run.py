@@ -685,13 +685,21 @@ def GradeTrend():
 def FailedCourses():
     name = ''
     courses = [[]]
+    userNull = False
     if request.method == "POST":   
         userID = request.values.get("userID")
+        if userID=="":       
+            userNull = True
+            return render_template('/teacher/FailedCourses.html', 
+                            name=name,
+                            courses = courses,
+                            userNull = userNull)
         name = getName(userID)
         courses = getCourses(userID)
     return render_template('/teacher/FailedCourses.html',
                             name = name,
-                            courses = courses
+                            courses = courses,
+                            userNull = userNull
                             )
 
 def getCourses(userID):

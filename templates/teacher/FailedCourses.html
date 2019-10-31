@@ -21,7 +21,13 @@
             <input class="btn btn-primary" type="submit" value="查询">
 </form>
 <br />
+{% if userNull==True %}
+<script type="text/javascript" >
+    M.toast({html: '请输入学生学号',classes: 'rounded, amber , black-text'})
+</script>
+{% else %}
 <div>&nbsp&nbsp&nbsp&nbsp{{name}}的挂科情况如下：</div>
+{% endif %}
 <br />
 <div style="max-width: 750px; min-height:500px; height:auto; width:auto; margin: 0 auto;">
 <table class="table table-striped">

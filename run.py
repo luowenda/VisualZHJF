@@ -530,8 +530,6 @@ def Class():
 def tea_index():
     return render_template('/teacher/index.html')
 
-
-
 #专业总览
 @app.route('/teacher/MajorOverview', methods=['GET','POST'])
 def MajorOverview():
@@ -557,17 +555,6 @@ def MajorOverview():
         selectedGrade = request.values.get("grade")
         selectedYear = request.values.get("year")
         selectedDepart = request.values.get("depart")
-        
-        if selectedDepart == None or selectedGrade == None or selectedYear == None:
-            selectedNull = '请选择选项'
-            result = [[]]
-            return render_template('/teacher/MajorOverview.html',
-                            grade = grade,
-                            year = year,
-                            depart = depart,
-                            result = result,
-                            selectedNull = selectedNull,
-                            username=fillinusername(session.get('userID')))
         getDepartID = '''select departID 
                          from department 
                          where departName = \'{}\''''.format(selectedDepart)
@@ -614,8 +601,7 @@ def CourseOverview():
         selectedYear = request.values.get("year")
         selectedSeme = request.values.get("semester")
         courseName = request.values.get("courseName")
-        
-        if selectedGrade == None or selectedSeme == None or selectedYear == None or courseName == None:
+        if courseName=="":       
             selectedNull = '请选择选项'
             result = [[]]
             return render_template('/teacher/CourseOverview.html',

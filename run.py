@@ -829,6 +829,7 @@ def CompByClass():
     c2 = []
     courses = []
     grades = [[]]
+    selectedNull = False
     if request.method == "POST":   
         selectedYear = request.values.get("year")
         selectedMajor = request.values.get("major")
@@ -836,7 +837,7 @@ def CompByClass():
         selectedClass2 = request.values.get("class2")
  
         if selectedClass1 == '班级1' or selectedClass2 == '班级2' or selectedMajor == '专业' or selectedYear == '年级':
-            selectedNull = '请选择选项'
+            selectedNull = True
             return render_template('/teacher/CompByClass.html',
                             year = year,
                             major = major,
@@ -898,7 +899,8 @@ def CompByClass():
                                 classes = classes, 
                                 two_class = two_class,
                                 courses = courses, 
-                                grades = grades)
+                                grades = grades,
+                                selectedNull = selectedNull)
 
 #多人（班级）比较-各届成绩对比
 @app.route('/teacher/CompByYear')

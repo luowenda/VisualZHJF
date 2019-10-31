@@ -33,7 +33,11 @@
     <input class="btn btn-primary" type="submit" value="比较">
 </form>
 <br>
-{{selectedNull}}
+{% if selectedNull==True %}
+<script type="text/javascript" >
+    M.toast({html: '请选择选项',classes: 'rounded, amber , black-text'})
+</script>
+{% endif %}
 <div id="main2" style="height:500px;margin: 0 auto; width:75%;"></div>
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
 <script type="text/javascript">

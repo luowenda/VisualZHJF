@@ -581,6 +581,7 @@ def MajorOverview():
 @app.route('/teacher/CourseOverview',methods=['GET','POST'])
 def CourseOverview():
     result=[]
+    selectedNull = False
     getGrade = '''select distinct grade 
                 from currGrade
                 order by grade'''
@@ -602,7 +603,7 @@ def CourseOverview():
         selectedSeme = request.values.get("semester")
         courseName = request.values.get("courseName")
         if courseName=="":       
-            selectedNull = '请选择选项'
+            selectedNull = True
             result = [[]]
             return render_template('/teacher/CourseOverview.html',
                             grade = grade,
@@ -611,7 +612,6 @@ def CourseOverview():
                             result = result,
                             selectedNull = selectedNull
                             )
-
         getCurrID = '''select currID 
                        from curriculum
                        where currName = \'{}\''''.format(courseName)
@@ -635,7 +635,8 @@ def CourseOverview():
                             grade = grade,
                             year = year,
                             semester = semester,
-                            result = result
+                            result = result,
+                            selectedNull = selectedNull
                             )
 
 def countUser(currID,grade,year,seme,lowgrade,highgrade):
@@ -653,13 +654,19 @@ def countUser(currID,grade,year,seme,lowgrade,highgrade):
 #个人查询-成绩走向
 @app.route('/teacher/GradeTrend',methods=['GET','POST'])
 def GradeTrend():
-    
-    gpa=None
-    GPAlist=[]
-    name=None
-
+    gpa = None
+    GPAlist = []
+    name = None
+    userNull = False
     if request.method == "POST":   
         userID = request.values.get("userID")
+        if userID=="":       
+            userNull = True
+            return render_template('/teacher/GradeTrend.html', 
+                            GPA=gpa, 
+                            data=GPAlist,
+                            name=name,
+                            userNull = userNull)
         name = getName(userID)
         grade = getGrade(userID)
         gpa = getGPA(userID,grade,4,2)
@@ -667,22 +674,32 @@ def GradeTrend():
         for i in range(1,5):
             for j in range(1,3):
                 GPAlist.append(getGPA(userID,grade,i,j))
-        return render_template('/teacher/GradeTrend.html',
-                            GPA=gpa, data=GPAlist,name=name)
-    return render_template('/teacher/GradeTrend.html', GPA=gpa, data=GPAlist,name=name)
+    return render_template('/teacher/GradeTrend.html', 
+                                    GPA=gpa,
+                                    data=GPAlist,
+                                    name=name,
+                                    userNull = userNull)
 
 #个人查询-挂科情况统计
 @app.route('/teacher/FailedCourses',methods=['GET','POST'])
 def FailedCourses():
     name = ''
     courses = [[]]
+    userNull = False
     if request.method == "POST":   
         userID = request.values.get("userID")
+        if userID=="":       
+            userNull = True
+            return render_template('/teacher/FailedCourses.html', 
+                            name=name,
+                            courses = courses,
+                            userNull = userNull)
         name = getName(userID)
         courses = getCourses(userID)
     return render_template('/teacher/FailedCourses.html',
                             name = name,
-                            courses = courses
+                            courses = courses,
+                            userNull = userNull
                             )
 
 def getCourses(userID):
@@ -696,7 +713,7 @@ def getCourses(userID):
 #个人查询-附加分统计
 @app.route('/teacher/Bonus',methods=['GET','POST'])
 def Bonus():
-
+    userNull = False
     name=''
     result = [[]]
     getYear = '''select distinct academicYear 
@@ -710,15 +727,24 @@ def Bonus():
 
     if request.method == "POST":   
         userID = request.values.get("userID")
+        if userID=="":       
+            userNull = True
+            return render_template('/teacher/Bonus.html',
+                            year = year,
+                            semester = semester,
+                            result = result,
+                            name = name,
+                            userNull = userNull)
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
-        
-        if(selectedSemester == None or selectedYear == None or userID == None):
-            selectedNull = '请选择选项'
-            return render_template('teacher/Bonus.html',year = year,semester = semester,result = result,selectedNull = selectedNull)
         name = fillinusername(userID)
         result = getBonus(userID,selectedYear,int(selectedSemester))
-    return render_template('teacher/Bonus.html',year = year,semester = semester,result = result,name=name)
+    return render_template('teacher/Bonus.html',
+                            year = year,
+                            semester = semester,
+                            result = result,
+                            name=name,
+                            userNull = userNull)
 
 
 #多人（班级）比较-学生成绩
@@ -727,12 +753,13 @@ def CompByStu():
     names = []
     courses = []
     grades = []
+    wrongPat = False
     if request.method == "POST":
         stuID = request.values.get("MultiID")
         stuID = stuID.strip()
         pattern = re.compile(r'([0-9]+,[0-9]+)+')
         if(pattern.match(stuID) == None):
-            wrongPat = '请按格式输入学号'
+            wrongPat = True
             names = []
             courses = [[]]
             grades = [[]]
@@ -752,7 +779,8 @@ def CompByStu():
             return render_template('/teacher/CompByStu.html', 
                                     names = names, 
                                     courses = courses, 
-                                    grades = grades)  
+                                    grades = grades,
+                                    wrongPat = wrongPat)  
         for ID in stuList:
             name = getName(int(ID))
             names.append(name)
@@ -774,7 +802,8 @@ def CompByStu():
     return render_template('/teacher/CompByStu.html', 
                                     names = names, 
                                     courses = courses, 
-                                    grades = grades)    
+                                    grades = grades,
+                                    wrongPat = wrongPat)    
 
 
 #多人（班级）比较-班级成绩对比
@@ -800,6 +829,7 @@ def CompByClass():
     c2 = []
     courses = []
     grades = [[]]
+    selectedNull = False
     if request.method == "POST":   
         selectedYear = request.values.get("year")
         selectedMajor = request.values.get("major")
@@ -807,7 +837,7 @@ def CompByClass():
         selectedClass2 = request.values.get("class2")
  
         if selectedClass1 == '班级1' or selectedClass2 == '班级2' or selectedMajor == '专业' or selectedYear == '年级':
-            selectedNull = '请选择选项'
+            selectedNull = True
             return render_template('/teacher/CompByClass.html',
                             year = year,
                             major = major,
@@ -869,7 +899,8 @@ def CompByClass():
                                 classes = classes, 
                                 two_class = two_class,
                                 courses = courses, 
-                                grades = grades)
+                                grades = grades,
+                                selectedNull = selectedNull)
 
 #多人（班级）比较-各届成绩对比
 @app.route('/teacher/CompByYear')

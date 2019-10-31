@@ -739,7 +739,12 @@ def Bonus():
         selectedSemester = request.values.get("semester")
         name = fillinusername(userID)
         result = getBonus(userID,selectedYear,int(selectedSemester))
-    return render_template('teacher/Bonus.html',year = year,semester = semester,result = result,name=name,userNull = userNull)
+    return render_template('teacher/Bonus.html',
+                            year = year,
+                            semester = semester,
+                            result = result,
+                            name=name,
+                            userNull = userNull)
 
 
 #多人（班级）比较-学生成绩
@@ -748,12 +753,13 @@ def CompByStu():
     names = []
     courses = []
     grades = []
+    wrongPat = False
     if request.method == "POST":
         stuID = request.values.get("MultiID")
         stuID = stuID.strip()
         pattern = re.compile(r'([0-9]+,[0-9]+)+')
         if(pattern.match(stuID) == None):
-            wrongPat = '请按格式输入学号'
+            wrongPat = True
             names = []
             courses = [[]]
             grades = [[]]
@@ -773,7 +779,8 @@ def CompByStu():
             return render_template('/teacher/CompByStu.html', 
                                     names = names, 
                                     courses = courses, 
-                                    grades = grades)  
+                                    grades = grades,
+                                    wrongPat = wrongPat)  
         for ID in stuList:
             name = getName(int(ID))
             names.append(name)
@@ -795,7 +802,8 @@ def CompByStu():
     return render_template('/teacher/CompByStu.html', 
                                     names = names, 
                                     courses = courses, 
-                                    grades = grades)    
+                                    grades = grades,
+                                    wrongPat = wrongPat)    
 
 
 #多人（班级）比较-班级成绩对比

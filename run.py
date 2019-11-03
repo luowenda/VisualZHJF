@@ -906,9 +906,100 @@ def CompByClass():
                                 selectedNull = selectedNull)
 
 #多人（班级）比较-各届成绩对比
-@app.route('/teacher/CompByYear')
+@app.route('/teacher/CompByYear', methods=['GET','POST'])
 def CompByYear():
-    return render_template('/teacher/CompByYear.html')
+    two_class = []
+
+    getYear = 'select distinct yearIn from class order by yearIn'
+    year = getList(getYear)
+
+    getMajor = '''select distinct departName 
+                    from department 
+                    where departID in 
+                                        (select departID 
+                                        from class)'''
+    major = getList(getMajor)
+
+    getClass = 'select distinct className from class order by className'
+    classes = getList(getClass)
+
+    c1 = []
+    c2 = []
+    courses = []
+    grades = [[]]
+    selectedNull = False
+    if request.method == "POST":   
+        selectedYear1 = request.values.get("year1")
+        selectedYear2 = request.values.get("year2")
+        selectedMajor = request.values.get("major")
+        selectedClass1 = request.values.get("class1")
+        selectedClass2 = request.values.get("class2")
+ 
+        if selectedClass1 == '班级1' or selectedClass2 == '班级2' or selectedMajor == '专业' or selectedYear1 == '年级1' or selectedYear2 == '年级2':
+            selectedNull = True
+            return render_template('/teacher/CompByYear.html',
+                            year = year,
+                            major = major,
+                            classes = classes, 
+                            two_class = two_class,
+                            courses = courses, 
+                            grades = grades,
+                            selectedNull = selectedNull)
+    
+        two_class.append(selectedYear1+selectedMajor+selectedClass1)
+        two_class.append(selectedYear2+selectedMajor+selectedClass2)
+
+        getDepartID = '''select departID 
+                        from department 
+                        where departName = \'{}\''''.format(selectedMajor)
+        res = getList(getDepartID)
+        if(len(res)):
+            deprtID = int(getList(getDepartID)[0])
+        else:
+            deprtID = 0
+
+        getResult = '''select c1,c1avgGrade,c2avgGrade 
+                        from 
+                            (select currName as c1,round(avg(examGrade),2) as c1avgGrade 
+                            from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
+                            inner join curriculum on currGrade.currID = curriculum.currID
+                            where classID = (select classID
+                                            from class
+                                            where className = \'{}\' and departID = {} and yearIn = {})
+                                and grade = {} 
+                                and examGrade != 0
+                            group by classID,currName)C1
+                        inner join 
+                            (select currName as c2,round(avg(examGrade),2) as c2avgGrade
+                            from UserRoleMapping inner join currGrade on UserRoleMapping.userID = currGrade.userID
+                            inner join curriculum on currGrade.currID = curriculum.currID
+                            where classID = (select classID
+                                            from class
+                                            where className = \'{}\' and departID = {} and yearIn = {})
+                                and grade = {}
+                                and examGrade != 0
+                            group by classID,currName)C2
+                        on c1=c2'''.format(selectedClass1,deprtID,selectedYear1,int(selectedYear1),
+                                        selectedClass2,deprtID,selectedYear2,int(selectedYear2))
+        cursor.execute(getResult)
+        result = cursor.fetchall()
+        if(len(result)):
+            for item in result:
+                courses.append(item[0])
+                c1.append(item[1])
+                c2.append(item[2])
+            grades = []
+            grades.append(c1)
+            grades.append(c2)
+            
+    return render_template('/teacher/CompByYear.html',
+                                year = year,
+                                major = major,
+                                classes = classes, 
+                                two_class = two_class,
+                                courses = courses, 
+                                grades = grades,
+                                selectedNull = selectedNull)
 
 
 

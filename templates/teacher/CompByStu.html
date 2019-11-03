@@ -3,9 +3,20 @@
 {% block title %}多学生比较{% endblock %}
 
 {% block main %}
+<script type="text/javascript" >
+    function setBlank(){
+    var value1 = document.getElementById('MultiID').value;
+    localStorage.setItem("user_input", value1);}
+
+    function getMultiID(){
+    return localStorage.getItem("user_input");}
+    </script>
 <br>
-<form action="{{  url_for('CompByStu') }}" method="POST">
-<textarea name="MultiID" style="height:150px" method="GET" action="/" placeholder="输入学号，使用英文逗号(,)分隔" style="border:solid 1px" rows="8" cols="60" method="POST"></textarea>
+<form action="{{  url_for('CompByStu') }}" method="POST" onsubmit="setBlank()">
+<textarea name="MultiID" id="MultiID" style="height:150px" method="GET" action="/" placeholder="输入学号，使用英文逗号(,)分隔" style="border:solid 1px" rows="8" cols="60" method="POST"></textarea>
+<script type="text/javascript">
+    document.getElementById('MultiID').value = getMultiID();
+</script>
 <br>
 <input class="btn btn-primary" type="submit" value="比较">
 </form>

@@ -838,8 +838,7 @@ def CompByClass():
         selectedMajor = request.values.get("major")
         selectedClass1 = request.values.get("class1")
         selectedClass2 = request.values.get("class2")
- 
-        if selectedClass1 == '班级1' or selectedClass2 == '班级2' or selectedMajor == '专业' or selectedYear == '年级':
+        if selectedClass1 is None or selectedClass2 is None or selectedMajor is None or selectedYear is None:
             selectedNull = True
             return render_template('/teacher/CompByClass.html',
                             year = year,

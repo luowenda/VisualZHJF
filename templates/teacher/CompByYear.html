@@ -3,41 +3,77 @@
 {% block title %}各届成绩对比{% endblock %}
 
 {% block main %}
+<script type="text/javascript" >
+    function setBlank(){
+      var value1 = document.getElementById('major').value;
+      var value2 = document.getElementById('year1').value;
+      var value3 = document.getElementById('year2').value;
+      var value4 = document.getElementById('class1').value;
+      var value5 = document.getElementById('class2').value;
+      localStorage.setItem("user_selected_major", value1);
+      localStorage.setItem("user_selected_year1", value2);
+      localStorage.setItem("user_selected_year2", value3);
+      localStorage.setItem("user_selected_class1", value4);
+      localStorage.setItem("user_selected_class2", value5);}
+
+    function getMajor(){
+    return localStorage.getItem("user_selected_major");}
+    function getYear1(){
+    return localStorage.getItem("user_selected_year1");}
+    function getYear2(){
+    return localStorage.getItem("user_selected_year2");} 
+    function getClass1(){
+    return localStorage.getItem("user_selected_class1");}
+    function getClass2(){
+    return localStorage.getItem("user_selected_class2");}
+</script>
 <br>
-<form action="{{  url_for('CompByYear') }}" method="POST">
-    请选择待比较班级：
-    <select class="custom-select" name="major" method="GET" action="/">
-        <option selected>专业</option> 
+<form action="{{  url_for('CompByYear') }}" method="POST" onsubmit="setBlank()">
+    请选择专业：
+    <select class="custom-select" name="major" id="major" method="GET" action="/">
         {% for majoritem in major %} 
          <option value="{{majoritem}}">{{  majoritem  }}</option>" 
         {% endfor %}
     </select>
-
-    <select class="custom-select" name="year1" method="GET" action="/">
-        <option selected>年级1</option> 
+    <script type="text/javascript">
+        document.getElementById('major').value = getMajor();
+    </script>
+    请选择年级1：
+    <select class="custom-select" name="year1" id="year1" method="GET" action="/">
         {% for yearitem in year %} 
          <option value="{{yearitem}}">{{  yearitem  }}</option>" 
         {% endfor %} 
-    </select> 
-    <select class="custom-select" name="class1" method="GET" action="/">
-        <option selected>班级1</option> 
+    </select>
+    <script type="text/javascript">
+        document.getElementById('year1').value = getYear1();
+    </script>
+    请选择班级1：
+    <select class="custom-select" name="class1" id="class1" method="GET" action="/">
         {% for class in classes %} 
          <option value="{{class}}">{{class}}</option>" 
         {% endfor %} 
     </select>
-
-    <select class="custom-select" name="year2" method="GET" action="/">
-        <option selected>年级2</option> 
+    <script type="text/javascript">
+        document.getElementById('class1').value = getClass1();
+    </script>
+    请选择年级2：
+    <select class="custom-select" name="year2" id="year2" method="GET" action="/">
         {% for yearitem in year %} 
          <option value="{{yearitem}}">{{  yearitem  }}</option>" 
         {% endfor %} 
-    </select> 
-    <select class="custom-select" name="class2" method="GET" action="/">
-        <option selected>班级2</option> 
+    </select>
+    <script type="text/javascript">
+        document.getElementById('year2').value = getYear2();
+    </script>
+    请选择班级2：
+    <select class="custom-select" name="class2" id="class2" method="GET" action="/"> 
         {% for class in classes %} 
         <option value="{{class}}">{{class}}</option>" 
         {% endfor %} 
-    </select> 
+    </select>
+    <script type="text/javascript">
+        document.getElementById('class2').value = getClass2();
+    </script>
     <input class="btn btn-primary" type="submit" value="比较">
 </form>
 <br>

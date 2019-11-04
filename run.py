@@ -831,7 +831,7 @@ def CompByClass():
     c1 = []
     c2 = []
     courses = []
-    grades = [[]]
+    grades = [[],[]]
     selectedNull = False
     if request.method == "POST":   
         selectedYear = request.values.get("year")
@@ -894,6 +894,7 @@ def CompByClass():
             grades = []
             grades.append(c1)
             grades.append(c2)
+            print(grades)
             
     return render_template('/teacher/CompByClass.html',
                                 year = year,
@@ -925,7 +926,7 @@ def CompByYear():
     c1 = []
     c2 = []
     courses = []
-    grades = [[]]
+    grades = [[],[]]
     selectedNull = False
     if request.method == "POST":   
         selectedYear1 = request.values.get("year1")

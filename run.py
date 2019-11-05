@@ -767,6 +767,7 @@ def CompByStu():
     courses = []
     grades = []
     wrongPat = False
+    noResult = False
     if request.method == "POST":
         stuID = request.values.get("MultiID")
         stuID = stuID.strip()
@@ -780,20 +781,15 @@ def CompByStu():
                                 names = names, 
                                 courses = courses, 
                                 grades = grades,
-                                wrongPat = wrongPat)   
+                                wrongPat = wrongPat,
+                                noResult = noResult)   
         stuList = stuID.split(",")
         ID = stuList[0]
         getStuCour = '''select curriculum.currName
                         from currGrade inner join curriculum on currGrade.currID = curriculum.currID
                         where userID = \'{}\' and currGrade.examGrade != 0.0'''.format(ID)
         courses = getList(getStuCour)
-        if(courses == None):
-            courses =[[]]
-            return render_template('/teacher/CompByStu.html', 
-                                    names = names, 
-                                    courses = courses, 
-                                    grades = grades,
-                                    wrongPat = wrongPat)  
+        
         for ID in stuList:
             name = getName(int(ID))
             names.append(name)
@@ -801,7 +797,20 @@ def CompByStu():
                         from currGrade inner join curriculum on currGrade.currID = curriculum.currID
                         where userID = \'{}\' and currGrade.examGrade != 0.0'''.format(ID)
             currStuCour = getList(getStuCour)
+
+            if(currStuCour is None):
+                noResult = True
+                names = []
+                courses =[[]]
+                grades = [[]]
+                return render_template('/teacher/CompByStu.html', 
+                                        names = names, 
+                                        courses = courses, 
+                                        grades = grades,
+                                        wrongPat = wrongPat,
+                                        noResult = noResult)  
             courses = list(set(currStuCour) & set(courses))
+            
         for ID in stuList:
             gradeList = []
             for course in courses:
@@ -809,17 +818,20 @@ def CompByStu():
                                     from currGrade inner join curriculum on currGrade.currID = curriculum.currID
                                     where userID = \'{}\' and currName = \'{}\''''.format(ID,course)
                 res = getList(getCourGrade)
+                
                 if(res != None):
                     grade = res[0]
                 else:
                     grade = None
                 gradeList.append(grade)
             grades.append(gradeList)
+    
     return render_template('/teacher/CompByStu.html', 
                                     names = names, 
                                     courses = courses, 
                                     grades = grades,
-                                    wrongPat = wrongPat)    
+                                    wrongPat = wrongPat,
+                                    noResult = noResult)    
 
 
 #多人（班级）比较-班级成绩对比

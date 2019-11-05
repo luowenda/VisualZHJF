@@ -341,6 +341,7 @@ def GradeByAttri():
                           and {} = 1'''.format(userID, userID, departID, selectedAttri)
         cursor.execute(sql)
         result = cursor.fetchall()
+        #_________ result=none _____________
     return render_template('student/GradeByAttri.html',attri = attri, result = result)
 
 
@@ -396,6 +397,7 @@ def GradeBySemester():
                       and t1.academicYear = \'{}\' '''.format(userID, userID, departID, selectedSemester, selectedYear)
         cursor.execute(sql)
         result = cursor.fetchall()
+        #____________ result = none ____________
     return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result)
 
 def getList(search):
@@ -423,20 +425,8 @@ def GPA():
 #我的附加分界面（表格）
 @app.route('/student/MyExtra',methods=['GET','POST'])
 def MyExtra():
+    noResult = False
     userID=session.get('userID')
-    sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID)  # 匹配字符串用like
-    cursor.execute(sql)
-    content1 = cursor.fetchall()
-    classID = 0
-    if(len(content1)):
-        classID = content1[0][0]
-    # 获取departID
-    sql = 'select departID from [class] where classID={}'.format(classID)
-    cursor.execute(sql)
-    content2 = cursor.fetchall()
-    departID = 0
-    if(len(content2)):
-        departID = content2[0][0]
 
     getYear = '''select distinct academicYear 
                     from bonusItem
@@ -452,7 +442,9 @@ def MyExtra():
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
         result = getBonus(userID,selectedYear,int(selectedSemester))
-    return render_template('student/MyExtra.html',year = year,semester = semester,result = result)
+    if result==[]:
+        noResult = True
+    return render_template('student/MyExtra.html',year = year,semester = semester,result = result,noResult = noResult)
 
 def getBonus(userID,year,semester):
     items = [[]]
@@ -468,7 +460,7 @@ def getBonus(userID,year,semester):
 @app.route('/student/MyComprehensiveEval')
 def MyComprehensiveEval():
     userID=session.get('userID')
-    sql = '''select moralScore,intellectualScore,socialScore,bonus 
+    sql = '''select round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2) 
             from evaluationFinalScore 
             where userId=\'{}\''''.format(userID)
     cursor.execute(sql)

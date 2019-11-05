@@ -575,6 +575,7 @@ def MajorOverview():
 @app.route('/teacher/CourseOverview',methods=['GET','POST'])
 def CourseOverview():
     result=[]
+    noResult = False
     selectedNull = False
     getGrade = '''select distinct grade 
                 from currGrade
@@ -604,7 +605,8 @@ def CourseOverview():
                             year = year,
                             semester = semester,
                             result = result,
-                            selectedNull = selectedNull
+                            selectedNull = selectedNull,
+                            noResult = noResult
                             )
         getCurrID = '''select currID 
                        from curriculum
@@ -624,13 +626,15 @@ def CourseOverview():
             result.append(btw89[0])
             above90 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),90,101)
             result.append(above90[0])
-            
+    if result == [0,0,0,0,0]:
+        noResult = True
     return render_template('/teacher/CourseOverview.html',
                             grade = grade,
                             year = year,
                             semester = semester,
                             result = result,
-                            selectedNull = selectedNull
+                            selectedNull = selectedNull,
+                            noResult = noResult
                             )
 
 def countUser(currID,grade,year,seme,lowgrade,highgrade):

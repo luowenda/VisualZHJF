@@ -78,6 +78,11 @@
                 M.toast({html: '请输入课程名称',classes: 'rounded, amber , black-text'})
             </script>
             {% endif %}
+            {% if noResult==True %}
+            <script type="text/javascript" >
+                M.toast({html: '无查询结果',classes: 'rounded, amber , black-text'})
+            </script>
+            {% endif %}
             <div id="main" style="width:75%; min-height:400px; margin: 0 auto"></div>
             <script type="text/javascript">
                 var myChart = echarts.init(document.getElementById('main'));

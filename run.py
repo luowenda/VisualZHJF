@@ -956,6 +956,7 @@ def CompByYear():
     courses = []
     grades = [[],[]]
     selectedNull = False
+    noResult = False
     if request.method == "POST":   
         selectedYear1 = request.values.get("year1")
         selectedYear2 = request.values.get("year2")
@@ -972,7 +973,8 @@ def CompByYear():
                             two_class = two_class,
                             courses = courses, 
                             grades = grades,
-                            selectedNull = selectedNull)
+                            selectedNull = selectedNull,
+                            noResult = noResult)
     
         two_class.append(selectedYear1+selectedMajor+selectedClass1)
         two_class.append(selectedYear2+selectedMajor+selectedClass2)
@@ -1011,6 +1013,8 @@ def CompByYear():
                                         selectedClass2,deprtID,selectedYear2,int(selectedYear2))
         cursor.execute(getResult)
         result = cursor.fetchall()
+        if result == []:
+            noResult = True
         if(len(result)):
             for item in result:
                 courses.append(item[0])
@@ -1027,7 +1031,8 @@ def CompByYear():
                                 two_class = two_class,
                                 courses = courses, 
                                 grades = grades,
-                                selectedNull = selectedNull)
+                                selectedNull = selectedNull,
+                                noResult = noResult)
 
 
 

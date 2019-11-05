@@ -722,6 +722,7 @@ def getCourses(userID):
 @app.route('/teacher/Bonus',methods=['GET','POST'])
 def Bonus():
     userNull = False
+    noResult = False
     name=''
     result = [[]]
     getYear = '''select distinct academicYear 
@@ -742,17 +743,21 @@ def Bonus():
                             semester = semester,
                             result = result,
                             name = name,
-                            userNull = userNull)
+                            userNull = userNull,
+                            noResult = noResult)
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
         name = fillinusername(userID)
         result = getBonus(userID,selectedYear,int(selectedSemester))
+    if result == []:
+        noResult = True
     return render_template('teacher/Bonus.html',
                             year = year,
                             semester = semester,
                             result = result,
                             name=name,
-                            userNull = userNull)
+                            userNull = userNull,
+                            noResult = noResult)
 
 
 #多人（班级）比较-学生成绩

@@ -295,7 +295,7 @@ def stu_index():
 #个人成绩界面（根据课程属性筛选）（表格）
 @app.route('/student/GradeByAttri', methods=['GET','POST'])
 def GradeByAttri():
-    
+    noResult = False
     userID=session.get('userID')
     #获取classID
     sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID) #匹配字符串用like
@@ -341,13 +341,15 @@ def GradeByAttri():
                           and {} = 1'''.format(userID, userID, departID, selectedAttri)
         cursor.execute(sql)
         result = cursor.fetchall()
-    return render_template('student/GradeByAttri.html',attri = attri, result = result)
+        if result==[]:
+            noResult = True
+    return render_template('student/GradeByAttri.html',attri = attri, result = result, noResult = noResult)
 
 
 #个人成绩界面（根据学期筛选）（表格）
 @app.route('/student/GradeBySemester', methods=['GET','POST'])
 def GradeBySemester():
-
+    noResult = False
     userID=session.get('userID')
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID)  # 匹配字符串用like
@@ -396,7 +398,9 @@ def GradeBySemester():
                       and t1.academicYear = \'{}\' '''.format(userID, userID, departID, selectedSemester, selectedYear)
         cursor.execute(sql)
         result = cursor.fetchall()
-    return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result)
+        if result==[]:
+            noResult = True
+    return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result, noResult = noResult)
 
 def getList(search):
     cursor.execute(search)
@@ -423,20 +427,8 @@ def GPA():
 #我的附加分界面（表格）
 @app.route('/student/MyExtra',methods=['GET','POST'])
 def MyExtra():
+    noResult = False
     userID=session.get('userID')
-    sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID)  # 匹配字符串用like
-    cursor.execute(sql)
-    content1 = cursor.fetchall()
-    classID = 0
-    if(len(content1)):
-        classID = content1[0][0]
-    # 获取departID
-    sql = 'select departID from [class] where classID={}'.format(classID)
-    cursor.execute(sql)
-    content2 = cursor.fetchall()
-    departID = 0
-    if(len(content2)):
-        departID = content2[0][0]
 
     getYear = '''select distinct academicYear 
                     from bonusItem
@@ -452,7 +444,9 @@ def MyExtra():
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
         result = getBonus(userID,selectedYear,int(selectedSemester))
-    return render_template('student/MyExtra.html',year = year,semester = semester,result = result)
+    if result==[]:
+        noResult = True
+    return render_template('student/MyExtra.html',year = year,semester = semester,result = result,noResult = noResult)
 
 def getBonus(userID,year,semester):
     items = [[]]
@@ -468,7 +462,7 @@ def getBonus(userID,year,semester):
 @app.route('/student/MyComprehensiveEval')
 def MyComprehensiveEval():
     userID=session.get('userID')
-    sql = '''select moralScore,intellectualScore,socialScore,bonus 
+    sql = '''select round(moralScore,2),round(intellectualScore,2),round(socialScore,2),round(bonus,2) 
             from evaluationFinalScore 
             where userId=\'{}\''''.format(userID)
     cursor.execute(sql)
@@ -581,6 +575,7 @@ def MajorOverview():
 @app.route('/teacher/CourseOverview',methods=['GET','POST'])
 def CourseOverview():
     result=[]
+    noResult = False
     selectedNull = False
     getGrade = '''select distinct grade 
                 from currGrade
@@ -610,7 +605,8 @@ def CourseOverview():
                             year = year,
                             semester = semester,
                             result = result,
-                            selectedNull = selectedNull
+                            selectedNull = selectedNull,
+                            noResult = noResult
                             )
         getCurrID = '''select currID 
                        from curriculum
@@ -630,13 +626,15 @@ def CourseOverview():
             result.append(btw89[0])
             above90 = countUser(curID,int(selectedGrade),selectedYear,int(selectedSeme),90,101)
             result.append(above90[0])
-            
+    if result == [0,0,0,0,0]:
+        noResult = True
     return render_template('/teacher/CourseOverview.html',
                             grade = grade,
                             year = year,
                             semester = semester,
                             result = result,
-                            selectedNull = selectedNull
+                            selectedNull = selectedNull,
+                            noResult = noResult
                             )
 
 def countUser(currID,grade,year,seme,lowgrade,highgrade):
@@ -658,6 +656,7 @@ def GradeTrend():
     GPAlist = []
     name = None
     userNull = False
+    noResult = False
     if request.method == "POST":   
         userID = request.values.get("userID")
         if userID=="":       
@@ -666,7 +665,8 @@ def GradeTrend():
                             GPA=gpa, 
                             data=GPAlist,
                             name=name,
-                            userNull = userNull)
+                            userNull = userNull,
+                            noResult = noResult)
         name = getName(userID)
         grade = getGrade(userID)
         gpa = getGPA(userID,grade,4,2)
@@ -674,11 +674,14 @@ def GradeTrend():
         for i in range(1,5):
             for j in range(1,3):
                 GPAlist.append(getGPA(userID,grade,i,j))
+    if GPAlist == [0,0,0,0,0,0,0,0]:
+        noResult = True
     return render_template('/teacher/GradeTrend.html', 
                                     GPA=gpa,
                                     data=GPAlist,
                                     name=name,
-                                    userNull = userNull)
+                                    userNull = userNull,
+                                    noResult = noResult)
 
 #个人查询-挂科情况统计
 @app.route('/teacher/FailedCourses',methods=['GET','POST'])
@@ -686,6 +689,7 @@ def FailedCourses():
     name = ''
     courses = [[]]
     userNull = False
+    noResult = False
     if request.method == "POST":   
         userID = request.values.get("userID")
         if userID=="":       
@@ -693,13 +697,17 @@ def FailedCourses():
             return render_template('/teacher/FailedCourses.html', 
                             name=name,
                             courses = courses,
-                            userNull = userNull)
+                            userNull = userNull,
+                            noResult = noResult)
         name = getName(userID)
         courses = getCourses(userID)
+    if courses == []:
+        noResult = True
     return render_template('/teacher/FailedCourses.html',
                             name = name,
                             courses = courses,
-                            userNull = userNull
+                            userNull = userNull,
+                            noResult = noResult
                             )
 
 def getCourses(userID):
@@ -714,6 +722,7 @@ def getCourses(userID):
 @app.route('/teacher/Bonus',methods=['GET','POST'])
 def Bonus():
     userNull = False
+    noResult = False
     name=''
     result = [[]]
     getYear = '''select distinct academicYear 
@@ -734,17 +743,21 @@ def Bonus():
                             semester = semester,
                             result = result,
                             name = name,
-                            userNull = userNull)
+                            userNull = userNull,
+                            noResult = noResult)
         selectedYear = request.values.get("year")
         selectedSemester = request.values.get("semester")
         name = fillinusername(userID)
         result = getBonus(userID,selectedYear,int(selectedSemester))
+    if result == []:
+        noResult = True
     return render_template('teacher/Bonus.html',
                             year = year,
                             semester = semester,
                             result = result,
                             name=name,
-                            userNull = userNull)
+                            userNull = userNull,
+                            noResult = noResult)
 
 
 #多人（班级）比较-学生成绩
@@ -754,6 +767,7 @@ def CompByStu():
     courses = []
     grades = []
     wrongPat = False
+    noResult = False
     if request.method == "POST":
         stuID = request.values.get("MultiID")
         stuID = stuID.strip()
@@ -767,20 +781,15 @@ def CompByStu():
                                 names = names, 
                                 courses = courses, 
                                 grades = grades,
-                                wrongPat = wrongPat)   
+                                wrongPat = wrongPat,
+                                noResult = noResult)   
         stuList = stuID.split(",")
         ID = stuList[0]
         getStuCour = '''select curriculum.currName
                         from currGrade inner join curriculum on currGrade.currID = curriculum.currID
                         where userID = \'{}\' and currGrade.examGrade != 0.0'''.format(ID)
         courses = getList(getStuCour)
-        if(courses == None):
-            courses =[[]]
-            return render_template('/teacher/CompByStu.html', 
-                                    names = names, 
-                                    courses = courses, 
-                                    grades = grades,
-                                    wrongPat = wrongPat)  
+        
         for ID in stuList:
             name = getName(int(ID))
             names.append(name)
@@ -788,7 +797,20 @@ def CompByStu():
                         from currGrade inner join curriculum on currGrade.currID = curriculum.currID
                         where userID = \'{}\' and currGrade.examGrade != 0.0'''.format(ID)
             currStuCour = getList(getStuCour)
+
+            if(currStuCour is None):
+                noResult = True
+                names = []
+                courses =[[]]
+                grades = [[]]
+                return render_template('/teacher/CompByStu.html', 
+                                        names = names, 
+                                        courses = courses, 
+                                        grades = grades,
+                                        wrongPat = wrongPat,
+                                        noResult = noResult)  
             courses = list(set(currStuCour) & set(courses))
+            
         for ID in stuList:
             gradeList = []
             for course in courses:
@@ -796,17 +818,20 @@ def CompByStu():
                                     from currGrade inner join curriculum on currGrade.currID = curriculum.currID
                                     where userID = \'{}\' and currName = \'{}\''''.format(ID,course)
                 res = getList(getCourGrade)
+                
                 if(res != None):
                     grade = res[0]
                 else:
                     grade = None
                 gradeList.append(grade)
             grades.append(gradeList)
+    
     return render_template('/teacher/CompByStu.html', 
                                     names = names, 
                                     courses = courses, 
                                     grades = grades,
-                                    wrongPat = wrongPat)    
+                                    wrongPat = wrongPat,
+                                    noResult = noResult)    
 
 
 #多人（班级）比较-班级成绩对比
@@ -814,7 +839,7 @@ def CompByStu():
 def CompByClass():
 
     two_class = []
-
+   
     getYear = 'select distinct yearIn from class order by yearIn'
     year = getList(getYear)
 
@@ -833,6 +858,7 @@ def CompByClass():
     courses = []
     grades = [[],[]]
     selectedNull = False
+    noResult = False
     if request.method == "POST":   
         selectedYear = request.values.get("year")
         selectedMajor = request.values.get("major")
@@ -847,7 +873,8 @@ def CompByClass():
                             two_class = two_class,
                             courses = courses, 
                             grades = grades,
-                            selectedNull = selectedNull)
+                            selectedNull = selectedNull,
+                            noResult = noResult)
     
         two_class.append(selectedYear+selectedMajor+selectedClass1)
         two_class.append(selectedYear+selectedMajor+selectedClass2)
@@ -886,6 +913,8 @@ def CompByClass():
                                         selectedClass2,deprtID,selectedYear,int(selectedYear))
         cursor.execute(getResult)
         result = cursor.fetchall()
+        if result == []:
+            noResult = True
         if(len(result)):
             for item in result:
                 courses.append(item[0])
@@ -894,8 +923,6 @@ def CompByClass():
             grades = []
             grades.append(c1)
             grades.append(c2)
-            print(grades)
-            
     return render_template('/teacher/CompByClass.html',
                                 year = year,
                                 major = major,
@@ -903,7 +930,8 @@ def CompByClass():
                                 two_class = two_class,
                                 courses = courses, 
                                 grades = grades,
-                                selectedNull = selectedNull)
+                                selectedNull = selectedNull,
+                                noResult = noResult)
 
 #多人（班级）比较-各届成绩对比
 @app.route('/teacher/CompByYear', methods=['GET','POST'])
@@ -928,6 +956,7 @@ def CompByYear():
     courses = []
     grades = [[],[]]
     selectedNull = False
+    noResult = False
     if request.method == "POST":   
         selectedYear1 = request.values.get("year1")
         selectedYear2 = request.values.get("year2")
@@ -944,7 +973,8 @@ def CompByYear():
                             two_class = two_class,
                             courses = courses, 
                             grades = grades,
-                            selectedNull = selectedNull)
+                            selectedNull = selectedNull,
+                            noResult = noResult)
     
         two_class.append(selectedYear1+selectedMajor+selectedClass1)
         two_class.append(selectedYear2+selectedMajor+selectedClass2)
@@ -983,6 +1013,8 @@ def CompByYear():
                                         selectedClass2,deprtID,selectedYear2,int(selectedYear2))
         cursor.execute(getResult)
         result = cursor.fetchall()
+        if result == []:
+            noResult = True
         if(len(result)):
             for item in result:
                 courses.append(item[0])
@@ -999,7 +1031,8 @@ def CompByYear():
                                 two_class = two_class,
                                 courses = courses, 
                                 grades = grades,
-                                selectedNull = selectedNull)
+                                selectedNull = selectedNull,
+                                noResult = noResult)
 
 
 

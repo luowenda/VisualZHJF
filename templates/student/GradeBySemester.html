@@ -41,6 +41,11 @@
         <input class="btn btn-primary" type="submit" value="查询"></form>
         <br />
         <br />
+{% if noResult==True %}
+<script type="text/javascript" >
+    M.toast({html: '无查询结果',classes: 'rounded, amber , black-text'})
+</script>
+{% endif %}
         <div style="min-height:500px; height:auto; max-width: 750px; width:auto; margin: 0 auto;">
         <table class="table table-striped">
 	        <thead>

@@ -295,7 +295,7 @@ def stu_index():
 #个人成绩界面（根据课程属性筛选）（表格）
 @app.route('/student/GradeByAttri', methods=['GET','POST'])
 def GradeByAttri():
-    
+    noResult = False
     userID=session.get('userID')
     #获取classID
     sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID) #匹配字符串用like
@@ -341,14 +341,15 @@ def GradeByAttri():
                           and {} = 1'''.format(userID, userID, departID, selectedAttri)
         cursor.execute(sql)
         result = cursor.fetchall()
-        #_________ result=none _____________
-    return render_template('student/GradeByAttri.html',attri = attri, result = result)
+        if result==[]:
+            noResult = True
+    return render_template('student/GradeByAttri.html',attri = attri, result = result, noResult = noResult)
 
 
 #个人成绩界面（根据学期筛选）（表格）
 @app.route('/student/GradeBySemester', methods=['GET','POST'])
 def GradeBySemester():
-
+    noResult = False
     userID=session.get('userID')
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID)  # 匹配字符串用like
@@ -397,8 +398,9 @@ def GradeBySemester():
                       and t1.academicYear = \'{}\' '''.format(userID, userID, departID, selectedSemester, selectedYear)
         cursor.execute(sql)
         result = cursor.fetchall()
-        #____________ result = none ____________
-    return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result)
+        if result==[]:
+            noResult = True
+    return render_template('/student/GradeBySemester.html', year = year, semester=semester ,result = result, noResult = noResult)
 
 def getList(search):
     cursor.execute(search)

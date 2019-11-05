@@ -31,7 +31,6 @@
       document.getElementById('year').value = getYear();
   </script>
   &nbsp&nbsp&nbsp&nbsp请选择学期：
-  <br>
   <select class="custom-select" name="semester" id="semester" method="GET" action="/" style="width:200px;margin: 0 auto;">
       {% for semesteritem in semester %}
        <option value="{{semesteritem}}">{{  semesteritem  }}</option>"

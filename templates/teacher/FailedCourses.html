@@ -26,6 +26,10 @@
 <script type="text/javascript" >
     M.toast({html: '请输入学生学号',classes: 'rounded, amber , black-text'})
 </script>
+{% elif noResult == True %}
+<script type="text/javascript" >
+    M.toast({html: '无查询结果',classes: 'rounded, amber , black-text'})
+</script>
 {% else %}
 <div>&nbsp&nbsp&nbsp&nbsp{{name}}的挂科情况如下：</div>
 {% endif %}

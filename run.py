@@ -689,6 +689,7 @@ def FailedCourses():
     name = ''
     courses = [[]]
     userNull = False
+    noResult = False
     if request.method == "POST":   
         userID = request.values.get("userID")
         if userID=="":       
@@ -696,13 +697,17 @@ def FailedCourses():
             return render_template('/teacher/FailedCourses.html', 
                             name=name,
                             courses = courses,
-                            userNull = userNull)
+                            userNull = userNull,
+                            noResult = noResult)
         name = getName(userID)
         courses = getCourses(userID)
+    if courses == []:
+        noResult = True
     return render_template('/teacher/FailedCourses.html',
                             name = name,
                             courses = courses,
-                            userNull = userNull
+                            userNull = userNull,
+                            noResult = noResult
                             )
 
 def getCourses(userID):

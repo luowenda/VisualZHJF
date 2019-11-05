@@ -839,7 +839,7 @@ def CompByStu():
 def CompByClass():
 
     two_class = []
-
+   
     getYear = 'select distinct yearIn from class order by yearIn'
     year = getList(getYear)
 
@@ -858,6 +858,7 @@ def CompByClass():
     courses = []
     grades = [[],[]]
     selectedNull = False
+    noResult = False
     if request.method == "POST":   
         selectedYear = request.values.get("year")
         selectedMajor = request.values.get("major")
@@ -872,7 +873,8 @@ def CompByClass():
                             two_class = two_class,
                             courses = courses, 
                             grades = grades,
-                            selectedNull = selectedNull)
+                            selectedNull = selectedNull,
+                            noResult = noResult)
     
         two_class.append(selectedYear+selectedMajor+selectedClass1)
         two_class.append(selectedYear+selectedMajor+selectedClass2)
@@ -911,6 +913,8 @@ def CompByClass():
                                         selectedClass2,deprtID,selectedYear,int(selectedYear))
         cursor.execute(getResult)
         result = cursor.fetchall()
+        if result == []:
+            noResult = True
         if(len(result)):
             for item in result:
                 courses.append(item[0])
@@ -919,8 +923,6 @@ def CompByClass():
             grades = []
             grades.append(c1)
             grades.append(c2)
-            print(grades)
-            
     return render_template('/teacher/CompByClass.html',
                                 year = year,
                                 major = major,
@@ -928,7 +930,8 @@ def CompByClass():
                                 two_class = two_class,
                                 courses = courses, 
                                 grades = grades,
-                                selectedNull = selectedNull)
+                                selectedNull = selectedNull,
+                                noResult = noResult)
 
 #多人（班级）比较-各届成绩对比
 @app.route('/teacher/CompByYear', methods=['GET','POST'])

@@ -656,6 +656,7 @@ def GradeTrend():
     GPAlist = []
     name = None
     userNull = False
+    noResult = False
     if request.method == "POST":   
         userID = request.values.get("userID")
         if userID=="":       
@@ -664,7 +665,8 @@ def GradeTrend():
                             GPA=gpa, 
                             data=GPAlist,
                             name=name,
-                            userNull = userNull)
+                            userNull = userNull,
+                            noResult = noResult)
         name = getName(userID)
         grade = getGrade(userID)
         gpa = getGPA(userID,grade,4,2)
@@ -672,11 +674,14 @@ def GradeTrend():
         for i in range(1,5):
             for j in range(1,3):
                 GPAlist.append(getGPA(userID,grade,i,j))
+    if GPAlist == [0,0,0,0,0,0,0,0]:
+        noResult = True
     return render_template('/teacher/GradeTrend.html', 
                                     GPA=gpa,
                                     data=GPAlist,
                                     name=name,
-                                    userNull = userNull)
+                                    userNull = userNull,
+                                    noResult = noResult)
 
 #个人查询-挂科情况统计
 @app.route('/teacher/FailedCourses',methods=['GET','POST'])

@@ -325,11 +325,11 @@ def GradeByAttri():
 
         #获取属性课程列表
         sql = '''select distinct currName, period, credit, examGrade, (select count(distinct userID) 
-                                                                       from currGrade where currID = t1.currID) as num,  
+                                                                       from currGrade where currID = t1.currID and grade = t1.grade) as num,  
                                                                       (select rank 
                                                                       from(select  rank() over (order by examGrade desc) rank,*
                                                                            from currGrade  
-                                                                           where currID = t1.currID ) T
+                                                                           where currID = t1.currID and grade = t1.grade) T
                                                                       where userID = \'{}\') as ran 
                           from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 
                           where userID=\'{}\' and t2.departID={}
@@ -366,9 +366,10 @@ def GradeBySemester():
     if(len(content2)):
         departID = content2[0][0]
 
-    getYear = '''select distinct academicYear 
-                    from currArrange
-                    order by academicYear'''
+    getYear = '''select distinct academicYear
+                    from [currGrade]
+                    where userID = \'{}\'
+                    order by academicYear'''.format(userID)
     year = getList(getYear)
     getSemester = '''select distinct semester 
                     from currArrange
@@ -381,11 +382,11 @@ def GradeBySemester():
         selectedSemester = request.values.get("semester")
         # 获取属性课程列表
         sql = '''select distinct currName, period, credit, examGrade,(select count(distinct userID) 
-                                                                       from currGrade where currID = t1.currID) as num,  
+                                                                       from currGrade where currID = t1.currID and grade = t1.grade) as num,  
                                                                       (select rank 
                                                                       from(select  rank() over (order by examGrade desc) rank,*
                                                                            from currGrade  
-                                                                           where currID = t1.currID ) T
+                                                                           where currID = t1.currID and grade = t1.grade) T
                                                                       where userID = \'{}\') as ran
                       from [currGrade] as t1, [currArrange] as t2, [curriculum] as t3 
                       where userID=\'{}\' and t2.departID={}

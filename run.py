@@ -16,35 +16,22 @@ import re
 import pymssql
 
 
-<<<<<<< HEAD
-conn = pymssql.connect(host='127.0.0.1:1433',
-                       user='sa',
-                       password='123456',
-                       database='zhjfdemo1',
-                       charset='utf8')
-# conn = pymssql.connect(host='202.112.194.247',
-#                        user='zonghejifenrd',
-#                        password='zhjf2019rd',
-#                        database='zonghejifen',
-#                        charset='utf8')
-=======
 
 
 
 
 conn = pymssql.connect(
-                        server='.',
-                        user='sa',
-                        password='ZHJF2019eggs',
-                        database='zhjfdemo1',
-                        )
-                    #    server='202.112.194.247',
-                    #    user='zonghejifenrd',
-                    #    password='zhjf2019rd',
-                    #    database='zonghejifen',
-                    #    charset='utf8')
+                        #server='.',
+                        #user='sa',
+                        #password='ZHJF2019eggs',
+                        #database='zhjfdemo1',
+                        #)
+                        server='202.112.194.247',
+                        user='zonghejifenrd',
+                        password='zhjf2019rd',
+                        database='zonghejifen',
+                        charset='utf8')
 
->>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 
 #查看连接是否成功
 cursor = conn.cursor()
@@ -210,19 +197,6 @@ def fillinusername(userID):
 
 
 
-<<<<<<< HEAD
-@app.route('/', methods = ['POST','GET'])
-def index():
-    error=None
-    
-    if request.method == 'GET':
-        session.clear()
-        return render_template('index.html',error=error)
-
-    else:
-        global userID
-        global roleID
-=======
 #登陆界面
 @app.route('/login/', methods = ['POST','GET'])
 def login():
@@ -233,40 +207,24 @@ def login():
         error=None
 
         # global roleID
->>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
         userID = request.form['username']
         pwd = request.form['passwd']
         if not all([userID,pwd]):
             if userID == "":
                 error = "请输入用户名"
-<<<<<<< HEAD
-                return render_template('welcome.html',error=error)
-            else:
-                error = "请输入密码"
-                return render_template('welcome.html',error=error)
-=======
                 return render_template('index.html',error=error)
             else:
                 error = "请输入密码"
                 return render_template('index.html',error=error)
->>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 
         sql1 = "select userID from dbo.[user] where userID='"+userID+"' and password='"+pwd+"'"
         sql2 = "select roleid from dbo.userrolemapping where userID ='"+userID+"' and academicYear='"+GetAcademicYear()+"'" 
         cursor.execute(sql1)
         #用一个rs_***变量获取数据
         rs_userid = cursor.fetchall()
-<<<<<<< HEAD
-        num=0
-        for data in rs_userid:
-            num=num+1
-
-        if(num!=0):
-=======
         
 
         if(len(rs_userid) != 0):
->>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
             #用户登录设置session的userID和username
             session['userID']=userID
             session['username']=fillinusername(userID)
@@ -290,11 +248,7 @@ def login():
                 return redirect(url_for('tea_index'))
         else:
             error="账号或密码错误"
-<<<<<<< HEAD
-            return render_template('welcome.html',error = error)
-=======
             return render_template('index.html',error = error)
->>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 
 def deny():
     return "Permission denied"
@@ -562,14 +516,6 @@ def TotalComprehensiveEval():
 #班级成绩
 @app.route('/student/Class', methods=['GET', 'POST'])
 def Class():
-<<<<<<< HEAD
-    global userID
-    # 获取classID
-    sql = 'select classID from [UserRoleMapping] where userID like {}'.format(userID)  # 匹配字符串用like
-    cursor.execute(sql)
-    content1 = cursor.fetchall()
-    classID = content1[0][0]
-=======
     userID=session.get('userID')
     # 获取classID
     sql = 'select classID from [UserRoleMapping] where userID like \'{}\''.format(userID)  # 匹配字符串用like
@@ -578,24 +524,10 @@ def Class():
     classID = 0
     if(len(content1)):
         classID = content1[0][0]
->>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
     # 获取departID
     sql = 'select departID from [class] where classID={}'.format(classID)
     cursor.execute(sql)
     content2 = cursor.fetchall()
-<<<<<<< HEAD
-    departID = content2[0][0]
-
-    getLesson = '''select distinct currName
-                   from curriculum as t1,currArrange as t2
-                   where (isCompulsory=1 or isSpec=1) and isPE=0 and t1.currID=t2.currID and t2.departID={}'''.format(departID)
-    lesson = getList(getLesson)
-
-    result = []
-    if request.method == "POST":
-        selectedLesson = request.values.get("lesson")
-
-=======
     departID = 0
     if(len(content2)):
         departID = content2[0][0]
@@ -609,7 +541,6 @@ def Class():
     if request.method == "POST":
         selectedLesson = request.values.get("lesson")
 
->>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
         # 获取属性课程列表
         sql = '''select userName,examGrade
                  from [user] as t1,currGrade as t2,UserRoleMapping as t3, curriculum as t4
@@ -930,17 +861,9 @@ def CompByYear():
 
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     app.run()#debug=True, host='0.0.0.0'
-=======
-    app.run(host='0.0.0.0')#debug=True, host='0.0.0.0'
->>>>>>> 34677f31e5479eb7d70c52aa6251e2a79f199293
 

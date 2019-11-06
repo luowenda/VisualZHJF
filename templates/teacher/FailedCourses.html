@@ -10,10 +10,11 @@
 
     function getUserID(){
     return localStorage.getItem("user_selected_userID");}
-    </script>
+</script>
+<br>
 <form action="{{  url_for('FailedCourses') }}" method='POST' onsubmit="setBlank()">
-            &nbsp&nbsp&nbsp&nbsp请输入学号：
-            <input type="text" name="userID" id="userID" style="width: 200px" method="POST"/>
+            &nbsp&nbsp&nbsp&nbsp
+            <input type="text" name="userID" placeholder="请输入学号" id="userID" style="width: 200px" method="POST"/>
             <script type="text/javascript">
                 document.getElementById('userID').value = getUserID();
             </script>
@@ -21,9 +22,19 @@
             <input class="btn btn-primary" type="submit" value="查询">
 </form>
 <br />
+{% if userNull==True %}
+<script type="text/javascript" >
+    M.toast({html: '请输入学生学号',classes: 'rounded, amber , black-text'})
+</script>
+{% elif noResult == True %}
+<script type="text/javascript" >
+    M.toast({html: '无查询结果',classes: 'rounded, amber , black-text'})
+</script>
+{% else %}
 <div>&nbsp&nbsp&nbsp&nbsp{{name}}的挂科情况如下：</div>
+{% endif %}
 <br />
-<div id="main2" style="width: 800px;min-height: 500px; height:500px;margin: 0 auto;">
+<div style="max-width: 750px; min-height:500px; height:auto; width:auto; margin: 0 auto;">
 <table class="table table-striped">
     <thead>
         <tr>

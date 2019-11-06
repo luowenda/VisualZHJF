@@ -5,13 +5,40 @@
 {% block main %}
 <script type="text/javascript" >
     function setBlank(){
-    var value1 = document.getElementById('userID').value;
-    localStorage.setItem("user_selected_userID", value1);}
+      var value1 = document.getElementById('userID').value;
+      var value2 = document.getElementById('year').value;
+      var value3 = document.getElementById('semester').value;
+      localStorage.setItem("user_selected_userID", value1);
+      localStorage.setItem("user_selected_year", value2);
+      localStorage.setItem("user_selected_semester", value3);}
 
     function getUserID(){
     return localStorage.getItem("user_selected_userID");}
-    </script>
+    function getYear(){
+    return localStorage.getItem("user_selected_year");} 
+    function getSemester(){
+    return localStorage.getItem("user_selected_semester");}
+</script>
 <form action="{{  url_for('Bonus') }}" method='POST' onsubmit="setBlank()">
+  <br />
+  请选择学年：
+  <select class="custom-select" name="year" id="year" method="GET" action="/" style="width:200px;margin: 0 auto;">
+      {% for yearitem in year %}
+       <option value="{{yearitem}}"> {{  yearitem  }}</option>"
+      {% endfor %}
+  </select>
+  <script type="text/javascript">
+      document.getElementById('year').value = getYear();
+  </script>
+  &nbsp&nbsp&nbsp&nbsp请选择学期：
+  <select class="custom-select" name="semester" id="semester" method="GET" action="/" style="width:200px;margin: 0 auto;">
+      {% for semesteritem in semester %}
+       <option value="{{semesteritem}}">{{  semesteritem  }}</option>"
+      {% endfor %}
+  </select>
+  <script type="text/javascript">
+      document.getElementById('semester').value = getSemester();
+  </script>
             &nbsp&nbsp&nbsp&nbsp请输入学号：
             <input type="text" name="userID" id="userID" style="width: 200px" method="POST"/>
             <script type="text/javascript">
@@ -20,13 +47,27 @@
                 &nbsp&nbsp&nbsp&nbsp
             <input class="btn btn-primary" type="submit" value="查询">
         </form>
-            <div style="height:30px;margin: 0 auto;"></div>
-            <div style="width: 500px;min-height: 500px; height:auto; margin: 0 auto;">
+
+<div style="height:30px;margin: 0 auto;"></div>
+{% if userNull==True %}
+<script type="text/javascript" >
+    M.toast({html: '请输入学生学号',classes: 'rounded, amber , black-text'})
+</script>
+{% elif noResult == True %}
+<script type="text/javascript" >
+    M.toast({html: '无查询结果',classes: 'rounded, amber , black-text'})
+</script>
+{% else %}
+<h3>&nbsp&nbsp&nbsp&nbsp{{name}}的附加分项如下：</h3>
+{% endif %}
+            <br>
+            <div style="max-width:750px; min-height:500px; height:auto; width:auto; margin: 0 auto;">
               <table class="table table-striped">
                 <thead>
                   <tr>
                     <th>项目内容</th>
                     <th>分数</th>
+                    <th>学年</th>
                     <th>学期</th> <!--#数据库存在学期为3，不知道为啥-->
                   </tr>
                 </thead>

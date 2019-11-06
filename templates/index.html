@@ -10,7 +10,7 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css" rel="stylesheet" media="screen">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/fonts.css') }}" rel="stylesheet">
-    
+    <link rel="icon" type="image/png" href="../static/image/favicon.png">
 </head>
 
 <body>
@@ -49,7 +49,7 @@
                               <div class="col l4">
                                   <!-- Remember me -->
                                   <div class="custom-control custom-checkbox">
-                                      <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
+                                      <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember" name="rememberme" value="1">
                                       <label class="custom-control-label" for="defaultLoginFormRemember">记住我</label>
                                   </div>
                               </div>

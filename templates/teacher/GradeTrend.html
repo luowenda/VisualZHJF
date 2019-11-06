@@ -3,31 +3,45 @@
 {% block title %}成绩走向{% endblock %}
 
 {% block main %}
+<script type="text/javascript" >
+    function setBlank(){
+    var value1 = document.getElementById('userID').value;
+    localStorage.setItem("user_selected_userID", value1);}
+    function getUserID(){
+    return localStorage.getItem("user_selected_userID");}
+</script>
 <br>
-<form action="{{  url_for('GradeTrend') }}" method='POST'>
+<form action="{{  url_for('GradeTrend') }}" method='POST' onsubmit="setBlank()">
     &nbsp&nbsp&nbsp&nbsp   
-    <input type="text" style="width: 200px" placeholder="请输入学号" name = "userID">
+    <input type="text" style="width: 200px" placeholder="请输入学号" name = "userID" id="userID" method="POST">
+    <script type="text/javascript">
+        document.getElementById('userID').value = getUserID();
+    </script>
     &nbsp&nbsp&nbsp&nbsp
     <input class="btn btn-primary" type="submit" value="查询">
 </form>
 <br><br>
-
-
+{% if userNull==True %}
+<script type="text/javascript" >
+    M.toast({html: '请输入学生学号',classes: 'rounded, amber , black-text'})
+</script>
+{% elif noResult==True %}
+<script type="text/javascript" >
+    M.toast({html: '无查询结果',classes: 'rounded, amber , black-text'})
+</script>
+{% else %}
         <div class="row">
-                <div class="col s12 l6 offset-l4">
+                <div class="col s12 m6 offset-m4 l6 offset-l4">
                     
                         <div class="card teal">
                             <span class="card-title">&nbsp&nbsp截至目前，{{name}}的绩点为：</span>
                             <h3 style="text-align: center" class="white-text">{{GPA}}</h3>
-                            <div class="card-content white-text">
-                            <p>基于北大4.0算法，详情请访问<a href="#" class="yellow-text">GPA计算方法</a></p>
-                            </div>
                         </div>
                     </div>
                     <div class="col s12 l2"></div>
                 </div>
-            
-            <div id="main2" style="width: 800px;height:500px;margin: 0 auto;">
+{% endif %}                          
+            <div id="main2" style="width: 800px;height:500px;margin: 0 auto; width:75%;"></div>
             <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
             <script type="text/javascript">
                 var myChart2 = echarts.init(document.getElementById('main2'));
@@ -91,8 +105,9 @@
                         ]
                     };
                 myChart2.setOption(option2);
+                window.onresize = function(){
+                myChart2.resize();}
             </script>
-            </div>
             <div style="height: 20px"></div> <!--占行用-->
 
 {% endblock %}

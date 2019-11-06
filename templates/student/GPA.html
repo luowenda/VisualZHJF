@@ -3,23 +3,29 @@
 {% block title %}GPA{% endblock %}
 
 {% block main %}
-
+<style>
+.card {height: auto; overflow: visible;}
+.hover_img a { position:relative; }
+.hover_img a span { position:absolute; display:none; z-index:99; }
+.hover_img a:hover span { display:block; height: 200px; width: 200px; overflow: visible;}
+</style>
 
 <div class="row">
-    <div class="col s12 l6 offset-l4">
+    <div class="col s12 m6 offset-m4 l6 offset-l4">
         
             <div class="card teal">
                 <span class="card-title">&nbsp&nbsp截至目前，你的绩点(GPA)为：</span>
                 <h3 style="text-align: center" class="white-text">{{GPA}}</h3>
                 <div class="card-content white-text">
-                <p>基于北大4.0算法，详情请访问<a href="#" class="yellow-text">GPA计算方法</a></p>
-                </div>
+                <div class="hover_img">
+                <p>基于北大4.0算法，详情请访问<a href="#" class="yellow-text">GPA计算方法<span><img src="../../static/image/gpa.jpg" alt="image" /></span></a></p>
+                </div></div>
             </div>
         </div>
         <div class="col s12 l2"></div>
     </div>
 
-<div id="main2" style="width: 800px;height:500px;margin: 0 auto;"></div>
+<div id="main2" style="width: 800px;height:500px;margin: 0 auto; width:75%;"></div>
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
 <script type="text/javascript">
 	var myChart2 = echarts.init(document.getElementById('main2'));
@@ -83,6 +89,9 @@
             ]
         };
     myChart2.setOption(option2);
+    window.onresize = function(){
+    myChart2.resize();}
+
 </script>
 
 {% endblock %}

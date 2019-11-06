@@ -3,6 +3,20 @@
 {% block title %}首页{% endblock %}
 
 {% block main %}
+<style>
+a:link.index-nav {
+  color: black;
+  text-decoration: underline;
+}
+a:visited.index-nav {
+    color: black;
+}
+a:hover.index-nav {
+  color: teal;
+}
+
+</style>
+
 <br>
 <br>
 <div class="row">
@@ -10,7 +24,7 @@
         <div class="col offset-s2 s4 offset-m2 m4 offset-l2 l4">
             <div class="center">
                 <i class="large material-icons">assessment</i>
-                <h3>专业总览</h3>
+                <h3><a class="index-nav" href="/teacher/MajorOverview">专业总览</a></h3>
                 <br>
                 <p class="light left">选择年级、学年及专业，查看该专业学生的综合积分情况。</p>
             </div>
@@ -20,7 +34,7 @@
         <div class="col s4 offset-s1 m4 offset-m1 l4 offset-l1">
             <div class="center">
                 <i class="large material-icons">assignment</i>
-                <h3>课程总览</h3>
+                <h3><a class="index-nav" href="teacher/CourseOverview">课程总览</a></h3>
                 <br>
                 <p class="light left">选择年级、学年及学期，输入课程名称即可查看当前课程的成绩分布直方图。</p>
             </div>
@@ -38,9 +52,9 @@
                 <br>
                 <p class="light left">提供查看单个学生成绩的功能：
                     <ol class="light left" style="list-style-type:circle">
-                        <li>成绩走向：基于历年成绩的GPA折线图</li>
-                        <li>挂科情况：展示所有未达到60分的科目</li>
-                        <li>附加分：展示所有的附加分项</li>
+                        <li><a class="index-nav" href="teacher/GradeTrend">成绩走向</a>：基于历年成绩的GPA折线图</li>
+                        <li><a class="index-nav" href="teacher/FailedCourses">挂科情况</a>：展示所有未达到60分的科目</li>
+                        <li><a class="index-nav" href="teacher/Bonus">附加分</a>：展示所有的附加分项</li>
                     </ol>
                 </p>
             </div>
@@ -53,9 +67,9 @@
                 <br>
                 <p class="light left">提供比较多个学生（或班级）的功能：
                     <ol class="light left" style="list-style-type:circle">
-                        <li>学生对比：展示多名学生所修相同科目的成绩折线图</li>
-                        <li>班级对比：支持同届同专业任意两个班级的平均成绩对比</li>
-                        <li>各届对比：比较不同届相同专业的班级平均成绩</li>
+                        <li><a class="index-nav" href="teacher/CompByStu">学生对比</a>：展示多名学生所修相同科目的成绩折线图</li>
+                        <li><a class="index-nav" href="teacher/CompByClass">班级对比</a>：支持同届同专业任意两个班级的平均成绩对比</li>
+                        <li><a class="index-nav" href="teacher/CompByYear">各届对比</a>：比较不同届相同专业的班级平均成绩</li>
                     </ol>
                 </p>
             </div>

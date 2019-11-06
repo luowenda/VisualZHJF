@@ -4,6 +4,9 @@
         {% block title %}班级成绩{% endblock %}
 
         {% block main %}
+        <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+
+        <script type="text/javascript" src="../../static/js/datatables.min.js"></script>
         <script type="text/javascript" >
         function setBlank(){
         var value1 = document.getElementById('lesson').value;
@@ -12,9 +15,9 @@
         function getLesson(){
         return localStorage.getItem("user_selected_lesson");}
         </script>
-        <form action="{{  url_for('Class') }}" method="POST" onsubmit="setBlank()">
+        <form style="margin:0 auto; max-width:600px; width:auto;" action="{{  url_for('Class') }}" method="POST" onsubmit="setBlank()">
         <br />
-        &nbsp&nbsp&nbsp&nbsp请选择课程：
+        请选择课程：
         <select class="custom-select" name="lesson" id="lesson" method="GET" action="/" style="width:200px;margin: 0 auto;">
             {% for lessonitem in lesson %}
              <option value="{{lessonitem}}"> {{ lessonitem  }}</option>"
@@ -27,8 +30,22 @@
         <input class="btn btn-primary" type="submit" value="查询"></form>
         <br />
         <br />
-        <div style="width: 1000px;min-height: 500px; height:auto;margin: 0 auto;">
-        <table class="table table-striped" style="width: 500px;margin: 0 auto">
+        {{selectedNull}}
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#dtBasicExample').DataTable( {
+                "paging":   false,
+                "searching": false,
+                "info":     false,
+                columnDefs: [{
+                orderable: false,
+                targets: 0}]
+                } );
+                $('.dataTables_length').addClass('bs-select');
+            });
+            </script>
+        <div style="max-width:750px; width:auto; min-height:500px; height:auto; margin:0 auto;">
+        <table id="dtBasicExample" class="display" width="100%" class="table table-striped">
 	        <thead>
 		        <tr>
 			        <th>姓名</th>

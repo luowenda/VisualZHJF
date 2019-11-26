@@ -29,7 +29,6 @@
               document.getElementById('year').value = getYear();
           </script>
           &nbsp&nbsp&nbsp&nbsp请选择学期：
-          <br>
           <select class="custom-select" name="semester" id="semester" method="GET" action="/" style="width:200px;margin: 0 auto;">
               {% for semesteritem in semester %}
                <option value="{{semesteritem}}">{{  semesteritem  }}</option>"
@@ -42,7 +41,11 @@
           <input class="btn btn-primary" type="submit" value="查询"></form>
           <br />
           <br />
-          
+{% if noResult==True %}
+<script type="text/javascript" >
+    M.toast({html: '无查询结果',classes: 'rounded, amber , black-text'})
+</script>
+{% endif %}
         <div style="height:30px;margin: 0 auto;"></div>
         <h3>&nbsp&nbsp&nbsp&nbsp你的附加分项如下：</h3>
         <br>
